@@ -6,6 +6,8 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 defined('GoogleMapApiKey') or define('GoogleMapApiKey', 'your_api_key');
 // google vision json file name
 defined('GoogleVisionFile') or define('GoogleVisionFile', 'file_name.json');
+// telegram bot id
+defined('TelegramBotId') or define('TelegramBotId', 'example');
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';
