@@ -1,0 +1,10 @@
+backend/runtime/*
+!backend/runtime/.gitignore
+frontend/runtime/*
+!frontend/runtime/.gitignore
+console/runtime/*
+!console/runtime/.gitignore
+
+common/config/main-local.php
+
+.idea

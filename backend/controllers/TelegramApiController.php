@@ -1,0 +1,542 @@
+<?php
+namespace backend\controllers;
+
+use app\models\Events;
+use app\models\Languages;
+use app\models\Teacher;
+use app\models\HashTag;
+use app\models\TelegramApi;
+use app\models\TelegramChatsLastMessage;
+use app\models\User2Teacher;
+use backend\models\EmailSendVerificationCode;
+use common\models\User;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use Yii;
+
+class TelegramApiController extends AppController
+{
+    /**
+     * @inheritdoc
+     */
+//    public function behaviors()
+//    {
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'rules' => [
+//                    [
+//                        'allow' => true,
+//                    ],
+//                ],
+//            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'delete' => ['POST'],
+//                ],
+//            ],
+//        ];
+//    }
+
+    public function actionGetUserByTelegramId()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->asArray()->one();
+
+        $result = [];
+        if(empty($user)) {
+            $user = new User();
+            $user->telegram = $data['telegram_id'];
+            $user->verificationCode = strtoupper(substr(md5(microtime()),rand(0,26),3) . '-' . substr(md5(microtime()),rand(0,26),3) . '-' . substr(md5(microtime()),rand(0,26),3));
+            $user->save(false);
+        } else $result['status'] = 'success';
+
+        // set default language if we can
+        $cur_user_lang = !empty($user->language) ? $user->language : (!empty($user['language']) ? $user['language'] : '');
+        if(!empty($data['telegram_language_code']) && empty($cur_user_lang)) {
+            $lang = Languages::find()->where(['code' => $data['telegram_language_code']])->one();
+            if(!empty($lang) && $lang->status === 'active') {
+                if(is_array($user)) {
+                    $userObj = User::find()->where(['id' => $user['id']])->one();
+                    $userObj->language = $lang->code;
+                    $userObj->save(false);
+                    $user['language'] = $lang->code;
+                } else {
+                    $user->language = $lang->code;
+                    $user->save(false);
+                }
+            }
+            else {
+                $new_lang = new Languages();
+                $new_lang->title = !empty(Languages::$languages_list[$data['telegram_language_code']]) ? Languages::$languages_list[$data['telegram_language_code']] : $data['telegram_language_code'];
+                $new_lang->code = $data['telegram_language_code'];
+                $new_lang->status = 'untranslated';
+                $new_lang->save();
+                $telegram_id = is_array($user) ? $user['telegram'] : $user->telegram;
+                TelegramApi::sendNotificationToAdminTelegram("Alarm! New language detected during new user registration! Title: {$new_lang->title}, code: {$new_lang->code}, user telegram ID: $telegram_id");
+            }
+        }
+
+        $result['user'] = $user;
+
+        return $result;
+    }
+
+    public function actionGetUserLastMessage()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        return ['status' => 'success', 'message' => TelegramChatsLastMessage::getLastMessage($data['telegram_id'])];
+    }
+
+    public function actionSetUserLastMessage()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        if(empty(TelegramChatsLastMessage::getLastMessage($data['telegram_id']))) {
+            TelegramChatsLastMessage::createLastMessage($data['telegram_id'], $data['message']);
+        } else {
+            TelegramChatsLastMessage::updateLastMessage($data['telegram_id'], $data['message']);
+        }
+
+        return ['status' => 'success', 'user' => User::find()->where(['telegram' => $data['telegram_id']])->one()];
+    }
+
+    public function actionSetUserEmail() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user_with_email = User::find()->where(['email' => $data['email']])->one();
+
+        if(!empty($user_with_email)) {
+            return ['status' => 'user_with_email_exist', 'user' => $user_with_email];
+        }
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $user->email = $data['email'];
+        $user->username = $data['email'];
+        $user->save(false);
+
+        return ['status' => 'success'];
+    }
+
+    public function actionSetPublicAlias() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        $usersWithPublicAlias = User::find()->where(['publicAlias' => $data['publicAlias']])
+            ->orWhere(['username' => $data['publicAlias']])
+            ->exists();
+
+        if(empty($user)) return ['status' => 'error'];
+        if($usersWithPublicAlias) return ['status' => 'error', 'type' => 'user_with_publicalias_exist', 'user' => $user];
+
+        $user->publicAlias = $data['publicAlias'];
+        $user->full_name = $data['publicAlias'];
+        $user->username = $data['publicAlias'];
+        $user->save(false);
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionSetUserPassword() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $password = base64_decode(urldecode($data['password']));
+        $user->setPassword($password);
+        $user->save(false);
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionSendVerificationEmail() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $model = new EmailSendVerificationCode();
+        $model->sendEmail($user);
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionSetUserVerified() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error', 'user' => $user];
+
+        if((string)$user->verificationCode !== (string)$data['code']) {
+            return ['status' => 'wrong_code', 'user' => $user];
+        }
+
+        $user->verifiedUser = '1';
+        $user->save();
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionBecomeTeacher() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $teacher = new Teacher();
+        $teacher->title = $data['teacher_title'];
+        $teacher->save();
+
+        User2Teacher::connectTeacherToUser($user->id, $teacher->id);
+
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $telegramData->active_teacher_id = $teacher->id;
+        $telegramData->save();
+
+        return ['status' => 'success', 'teacher_title' => $teacher->title];
+    }
+
+    public function actionUpdateTeacher() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+        if(empty($user)) return ['status' => 'error', 'text' => ''];
+
+        //get active teacher
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $teacher = Teacher::find()->where(['id' => $telegramData->active_teacher_id])->andWhere(['status' => 'active'])->one();
+
+        if(empty($teacher)) {
+            return ['status' => 'error', 'text' => 'There is no active teacher.'];
+        }
+
+        if(!empty($data['teacher_title'])) {
+            $teacher->title = $data['teacher_title'];
+        }
+
+        if(!empty($data['teacher_public_alias'])) {
+            $teacher->publicAlias = $data['teacher_public_alias'];
+        }
+
+        if(!empty($data['teacher_description'])) {
+            $teacher->description = $data['teacher_description'];
+        }
+
+        if(!empty($data['teacher_hashtags'])) {
+            $hashtags = HashTag::fromArrayToHashtags(explode(',', $data['teacher_hashtags']));
+            $teacher->hashtags = implode(',', $hashtags);
+        }
+
+        $teacher->save();
+
+        return ['status' => 'success', 'teacher' => $teacher];
+    }
+
+    public function actionGetTeachers() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $teachers = User2Teacher::getAllTeachersByUserId($user->id, 'active');
+        $res = [];
+        foreach ($teachers as $key => $teacher) {
+            $res[$key] = $teacher;
+            $res[$key]['hashtags'] = HashTag::fromIdsToNames($teacher['hashtags']);
+        }
+
+        return ['status' => 'success', 'teachers' => json_encode($res)];
+    }
+
+    public function actionSetActiveTeacher() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $teachers = User2Teacher::getAllTeachersByUserId($user->id);
+
+        $selectedCol = [];
+
+        foreach ($teachers as $teacher) {
+            if($teacher['publicAlias'] == $data['teacher_public_alias']) {
+                $selectedCol = $teacher;
+                break;
+            }
+        }
+
+        if(empty($selectedCol)) {
+            return ['status' => 'error', 'text' => 'There is no such teacher.'];
+        }
+
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $telegramData->active_teacher_id = $selectedCol['id'];
+        $telegramData->save();
+
+        return ['status' => 'success', 'teacher' => $selectedCol];
+    }
+
+    public function actionGetActiveTeacher() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $teacher = Teacher::find()->where(['id' => $telegramData->active_teacher_id])->andWhere(['status' => 'active'])->one();
+
+        if(empty($teacher)) {
+            return ['status' => 'error', 'text' => 'There is no active teacher.'];
+        }
+
+        return ['status' => 'success', 'teacher' => $teacher];
+    }
+
+    public function actionAssignTeacherToUser() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+        if(empty($user)) return ['status' => 'error', 'text' => ''];
+
+        $userToAssign = User::find()->where(['publicAlias' => $data['user_public_alias']])->one();
+        if(empty($userToAssign)) return ['status' => 'error', 'text' => 'The user with this public alias does not exist.'];
+
+        //get active teacher
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $teacher = Teacher::find()->where(['id' => $telegramData->active_teacher_id])->andWhere(['status' => 'active'])->one();
+
+        if(empty($teacher)) {
+            return ['status' => 'error', 'text' => 'There is no active teacher.'];
+        }
+
+        User2Teacher::connectTeacherToUser($userToAssign->id, $telegramData->active_teacher_id);
+
+        return ['status' => 'success', 'text' => 'The assignment was successful.'];
+    }
+
+    public function actionArchiveTeacher() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+        if(empty($user)) return ['status' => 'error', 'text' => ''];
+
+        //get active teacher
+        $telegramData = TelegramChatsLastMessage::getLastMessage($data['telegram_id']);
+        $teacher = Teacher::find()->where(['id' => $telegramData->active_teacher_id])->one();
+
+        if(empty($teacher)) {
+            return ['status' => 'error', 'text' => 'There is no active teacher.'];
+        }
+
+        $teacher->status = 'archive';
+
+        $teacher->save();
+
+        return ['status' => 'success', 'text' => 'Teacher successfully deleted.', 'teacher' => $teacher];
+    }
+
+    public function actionGetCodeForNewEmail() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user_with_email = User::find()->where(['email' => $data['email']])->one();
+
+        if(!empty($user_with_email)) {
+            return ['status' => 'user_with_email_exist', 'user' => $user_with_email];
+        }
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $user->verificationCode = strtoupper(substr(md5(microtime()),rand(0,26),3) . '-' . substr(md5(microtime()),rand(0,26),3) . '-' . substr(md5(microtime()),rand(0,26),3));
+        $user->temp_email = $data['email'];
+        $user->save(false);
+
+        $model = new EmailSendVerificationCode();
+        $model->sendEmail($user, $data['email']);
+
+        return ['status' => 'success'];
+    }
+
+    public function actionUpdateUserEmail() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        if((string)$user->verificationCode !== (string)$data['code']) {
+            return ['status' => 'wrong_code', 'user' => $user];
+        }
+
+        $user->email = $user->temp_email;
+        $user->username = $user->temp_email;
+        $user->verifiedUser = '1';
+        $user->save(false);
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionEventsUrlAdd() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+
+        $events_url = explode("\n", $data['events_url']);
+        $resultOfEvents = [];
+        foreach ($events_url as $item) {
+            $explodeByComma = explode(',', $item);
+            foreach ($explodeByComma as $commaItem) {
+                if(!empty(trim($commaItem))) {
+                    $commaItem = trim($commaItem);
+                    $resultOfEvents[] = $commaItem;
+                }
+            }
+        }
+
+        $result = [];
+        foreach ($resultOfEvents as $event_url) {
+            if(filter_var($event_url, FILTER_VALIDATE_URL) !== false && preg_match("~^(?:f|ht)tps?://~i", $event_url)) {
+                if(Events::find()->where(['facebook_url' => $event_url])->exists()) {
+                    $result['url_already_exist'][] = $event_url;
+                } else {
+                    $new_event = new Events();
+                    $new_event->facebook_url = $event_url;
+                    if($user->role === 'event_organizer') {
+                        $new_event->organizer_id = $user->id;
+                    }
+                    $new_event->save(false);
+                    $result['success'][] = $event_url;
+                }
+            } else {
+                $result['not_correct_url'][] = $event_url;
+            }
+        }
+
+        return ['status' => 'success', 'events_result' => $result, 'user' => $user];
+    }
+
+    public function actionGetMyEvents() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+
+        $events = Events::find()->where(['organizer_id' => $user->id])->all();
+
+        return ['status' => 'success', 'events' => $events];
+    }
+
+    public function actionSetUserLanguage(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data)) return ['status' => 'error'];
+
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->one();
+
+        if(empty($user)) return ['status' => 'error'];
+
+        $user->language = $data['language'];
+        $user->save(false);
+
+        return ['status' => 'success', 'user' => $user];
+    }
+
+    public function actionGetActiveLanguages() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+
+        return ['status' => 'success', 'user' => $user, 'languages' => Languages::find()->where(['status' => 'active'])->all()];
+    }
+
+    public function actionSendNotificationToAdmin() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+
+        $message = str_replace('{userPublicAlias}', $user->publicAlias, $data['message']);
+
+        TelegramApi::sendNotificationToAdminTelegram($message);
+
+        return ['status' => 'true', 'user' => $user];
+    }
+}
