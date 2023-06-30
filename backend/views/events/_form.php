@@ -48,18 +48,19 @@ use kartik\select2\Select2;
           <?= $form->field($model, 'end_timestamp')->widget(DateTimePicker::className()) ?>
       </div>
 
+      <div class="col-md-12">
+          <!--        (paste screenshot with text address from your buffer)-->
+          <?= $form->field($model, 'raw_facebook_place_image')->textInput(['maxlength' => true, 'style' => 'padding-right: 70px;'])->label('Address Screenshot (paste screenshot with text address from your buffer)') ?>
+          <img src="<?php echo Yii::getAlias('@web').'/assets/images/image-past.png'?>" alt="" style="position: absolute;width: 20px;right: 39px;top: 32px;">
+      </div>
+
       <div class="col-md-6">
           <?php
           $atts = ['maxlength' => true];
           echo $form->field($model, 'place')->textInput($atts) ?>
       </div>
 
-    <div class="col-md-2">
-<!--        (paste screenshot with text address from your buffer)-->
-        <?= $form->field($model, 'raw_facebook_place_image')->textInput(['maxlength' => true])->label('Address Screenshot') ?>
-    </div>
-
-    <div class="col-md-4">
+    <div class="col-md-6">
         <?php
         $atts = ['maxlength' => true];
         echo $form->field($model, 'address')->textInput($atts)->label('Address (processed or entered manually)*') ?>

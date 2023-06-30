@@ -79,6 +79,17 @@ class Events extends ActiveRecord
                 $this->addError($attribute, 'The description must be no more than 5000 characters.');
             }
         }, 'skipOnEmpty' => false, 'skipOnError' => false],
+            [['start_timestamp'], function($attribute, $params, $validator) {
+                if(!empty($this->end_timestamp) && $this->start_timestamp >= $this->end_timestamp) {
+                    $this->addError($attribute, $this->getAttributeLabel($attribute) . ' must be earlier than ' . $this->getAttributeLabel('end_timestamp'));
+                }
+            }, 'skipOnEmpty' => false, 'skipOnError' => false],
+            [['start_timestamp', 'end_timestamp'], function($attribute, $params, $validator) {
+                if($this->$attribute < 0) {
+                    $this->$attribute = '';
+                    $this->addError($attribute, 'Invalid start date format. Please enter the start date in the format: YYYY-MM-DD HH:MM');
+                }
+            }, 'skipOnEmpty' => false, 'skipOnError' => false]
         ];
     }
 

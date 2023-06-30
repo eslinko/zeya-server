@@ -2,3 +2,5 @@
 !.gitignore
 !js
 !site.js
+!images
+!*.png
