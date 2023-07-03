@@ -144,6 +144,18 @@ $currentUrl = Yii::$app->request->pathInfo;
                 'active' => strpos($currentUrl, 'teaching-transaction') !== false,],
             ],
           ];
+
+            $menu['items'][] =   [
+                'label' => 'Invitation Codes',
+                'icon' => 'sitemap fa-fw',
+                'url' => '#',
+                'items' => [
+                    ['label' => 'Invitation Codes', 'icon' => 'dashboard fa-fw', 'url' => ['/invitation-codes/'],
+                        'active' => strpos($currentUrl, 'invitation-codes') !== false,],
+                    ['label' => 'Add New', 'icon' => 'pencil fa-fw', 'url' => ['/invitation-codes/create'],],
+                    ['label' => 'View Logs', 'icon' => 'dashboard fa-fw', 'url' => ['/invitation-codes/logs'],],
+                ],
+            ];
             
           $menu['items'][] = [
             'label' => 'Settings',

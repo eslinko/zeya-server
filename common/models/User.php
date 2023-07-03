@@ -30,6 +30,7 @@ use yii\web\IdentityInterface;
  * @property string $currentLovestarsCounter
  * @property boolean $verifiedUser
  * @property string $verificationCode
+ * @property string $invitation_code_id
  * @property string $publicAlias
  * @property string $language
  */
@@ -82,7 +83,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'password_hash', 'role', 'status', 'full_name', 'telegram', 'verifiedUser', 'publicAlias'], 'required'],
             [['status'], 'integer'],
-            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language'], 'safe'],
+            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id'], 'safe'],
             [['username', 'password_hash', 'full_name', 'email', 'confirmPass'], 'string', 'max' => 255],
             [['password_hash', 'confirmPass'], 'string', 'min' => 5],
             [['role'], 'string', 'max' => 32],
