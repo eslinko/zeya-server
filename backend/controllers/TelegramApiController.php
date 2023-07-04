@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use app\models\Events;
+use app\models\InvitationCodes;
 use app\models\Languages;
 use app\models\Teacher;
 use app\models\HashTag;
@@ -539,4 +540,29 @@ class TelegramApiController extends AppController
 
         return ['status' => 'true', 'user' => $user];
     }
+
+    public function actionSetInvitationCode() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(empty($data) || empty($data['code'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return InvitationCodes::useCodeForInvitation($data['code'], $user->id);
+    }
+
+    public function actionGetMyInvitationCodes() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'codes' => InvitationCodes::getUserInvitationCodes($user->id)];
+    }
+
 }

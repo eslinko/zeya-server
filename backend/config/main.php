@@ -112,6 +112,11 @@ return [
 				'teaching-transaction/<page:\d+>/' => 'teaching-transaction/index',
 				'teaching-transaction/' => 'teaching-transaction/index',
 
+                'invitation-codes/view/<id:\d+>' => 'invitation-codes/view',
+//                'invitation-codes/update/<id:\d+>' => 'invitation-codes/update',
+                'invitation-codes/<page:\d+>/' => 'invitation-codes/index',
+                'invitation-codes/' => 'invitation-codes/index',
+
 				'admin/no-access' => '/admin/site/no-access',
 				'<action>' => 'site/<action>',
 			],
