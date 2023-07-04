@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $user_id
  * @property string $code
  * @property string $registered_user_id
+ * @property string $signup_date
  */
 class InvitationCodes extends ActiveRecord
 {
@@ -32,7 +33,7 @@ class InvitationCodes extends ActiveRecord
         return [
           [['user_id'], 'required'],
           [['code'], 'unique'],
-          [['registered_user_id'], 'safe'],
+          [['registered_user_id', 'signup_date'], 'safe'],
         ];
     }
 
@@ -46,6 +47,7 @@ class InvitationCodes extends ActiveRecord
             'user_id' => 'Code owner',
             'registered_user_id' => 'Invited person',
             'code' => 'Code',
+            'signup_date' => 'Signup date',
         ];
     }
 
@@ -103,6 +105,7 @@ class InvitationCodes extends ActiveRecord
         }
 
         $code->registered_user_id = $user_id;
+        $code->signup_date = time();
 
         if(!$code->save()) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
@@ -124,6 +127,7 @@ class InvitationCodes extends ActiveRecord
         foreach ($codes as $code) {
             $result[] = [
                 'code' => $code->code,
+                'signup_date' => $code->signup_date,
                 'user' => User::findOne(['id' => $code->registered_user_id])
             ];
         }

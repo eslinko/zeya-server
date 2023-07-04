@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'format' => 'html',
                 ],
+                'signup_date',
             ],
         ]) ?>
     </div>

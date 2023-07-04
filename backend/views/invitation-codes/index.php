@@ -42,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'format' => 'html',
                     ],
+                    'signup_date',
                   [
                       'class' => 'yii\grid\ActionColumn',
                       'template' => '<div class="icon-action-wrapper">{view}</div><div class="icon-action-wrapper">{delete}</div>',
