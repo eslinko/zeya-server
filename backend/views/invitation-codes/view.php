@@ -48,7 +48,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'format' => 'html',
                 ],
-                'signup_date',
+                [
+                    'attribute' => 'signup_date',
+                    'value' => function ($data) {
+                        return empty($data->signup_date) ? '<span class="not-set">(not set)</span>' : date('m/d/Y', $data->signup_date);
+                    },
+                    'format' => 'html',
+                ],
             ],
         ]) ?>
     </div>
