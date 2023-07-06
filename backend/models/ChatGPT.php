@@ -38,12 +38,21 @@ class ChatGPT {
         return json_decode($response, true);
     }
 
-//        $userMessage = 'Привет! Как мне добраться до ближайшей кафе?';
-//        $response = ChatGPT::sendChatGPTRequest($userMessage);
-//        echo "<pre>";
-//        var_dump($response);
-//        echo "</pre>";
-//        $assistantReply = $response['choices'][0]['message']['content'];
-//        echo $assistantReply;
-//        exit;
+    static function getUserInterests($user_text) {
+        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated. \n";
+        $message .= $user_text;
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+//$userMessage = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated. \n
+//            Мне нравится компьютерные игры, заниматься спортом, иногда я очень громко слушаю музыку и смотрю фильмы для взрослых";
+//$response = ChatGPT::sendChatGPTRequest($userMessage);
+//echo "<pre>";
+//var_dump($response);
+//echo "</pre>";
+//$assistantReply = $response['choices'][0]['message']['content'];
+//echo $assistantReply;
+//exit;
 }

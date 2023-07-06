@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use app\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
 use app\models\Languages;
@@ -547,7 +548,9 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if(empty($data) || empty($data['code'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if(empty($data)) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        if(empty($data['code'])) return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
 
         if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
@@ -563,6 +566,17 @@ class TelegramApiController extends AppController
         if(!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'codes' => InvitationCodes::getUserInvitationCodes($user->id)];
+    }
+
+    public function actionGetUserInterests() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if(!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'user_interests' => ChatGPT::getUserInterests($data['entered_text'])];
     }
 
 }
