@@ -33,6 +33,9 @@ use yii\web\IdentityInterface;
  * @property string $invitation_code_id
  * @property string $publicAlias
  * @property string $language
+ * @property string $calculated_interests
+ * @property string $interests_description
+ * @property string $last_request_to_chatgpt_date
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -83,7 +86,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'password_hash', 'role', 'status', 'full_name', 'telegram', 'verifiedUser', 'publicAlias'], 'required'],
             [['status'], 'integer'],
-            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id'], 'safe'],
+            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date'], 'safe'],
             [['username', 'password_hash', 'full_name', 'email', 'confirmPass'], 'string', 'max' => 255],
             [['password_hash', 'confirmPass'], 'string', 'min' => 5],
             [['role'], 'string', 'max' => 32],
@@ -112,6 +115,8 @@ class User extends ActiveRecord implements IdentityInterface
             'verifiedUser' => 'Verified User',
             'publicAlias' => 'Public Alias',
             'language' => 'Language',
+            'calculated_interests' => 'Calculated interests',
+            'interests_description' => 'Interests description',
         ];
     }
 

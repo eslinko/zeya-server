@@ -46,13 +46,26 @@ class ChatGPT {
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
     }
 
-//$userMessage = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated. \n
-//            Мне нравится компьютерные игры, заниматься спортом, иногда я очень громко слушаю музыку и смотрю фильмы для взрослых";
-//$response = ChatGPT::sendChatGPTRequest($userMessage);
-//echo "<pre>";
-//var_dump($response);
-//echo "</pre>";
-//$assistantReply = $response['choices'][0]['message']['content'];
-//echo $assistantReply;
-//exit;
+    static function calculatedInterestsToListByLang($calculated_interests, $lang = 'en') {
+        $message = "Take this list, translate it into " . $lang . " and display as numbered list, and no unnecessary text other than the list. Don't divide it into interests and values, just put it all in one list : \n";
+        $message .= $calculated_interests;
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+    static function addInterestToList($calculated_interests, $new_item) {
+        $message = "Translate this text into English: '{$new_item}', then add it to the end of this list, separated by commas: '{$calculated_interests}'. And return the new list without the other text";
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+    static function removeInterestFromUserList($calculated_interests, $number_of_list) {
+        $message = "Take this list '{$calculated_interests}' display as numbered list and delete number {$number_of_list} from it. Then separate the list with commas and return it to me without any extra text";
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
 }
