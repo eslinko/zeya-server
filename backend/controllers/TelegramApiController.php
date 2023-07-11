@@ -665,7 +665,7 @@ class TelegramApiController extends AppController
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
 
-        return ['status' => 'success', 'test' => $test];
+        return ['status' => 'success'];
     }
 
     public function actionRemoveInterestFromUserList()
@@ -677,11 +677,37 @@ class TelegramApiController extends AppController
 
         if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['number_to_remove'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        $new_calculated_interest = ChatGPT::removeInterestFromUserList($user->calculated_interests, $data['number_to_remove']);
-//        $user->calculated_interests = ChatGPT::removeInterestFromUserList($user->calculated_interests, $data['number_to_remove']);
-//        $user->save(false);
+        $calculated_interests = unserialize($user->calculated_interests);
+        $key = ((int) $data['number_to_remove'] - 1);
 
-        return ['status' => 'success', 'test' => $new_calculated_interest];
+        foreach ($calculated_interests as $lang => $list) {
+            $list_arr = explode(',', $list);
+            if(!empty($list_arr[$key])) {
+                unset($list_arr[$key]);
+            }
+            $calculated_interests[$lang] = implode(',', $list_arr);
+        }
+
+        $user->calculated_interests = serialize($calculated_interests);
+        $user->save(false);
+        return ['status' => 'success', 'interests_list' => User::calculatedInterestsToList($calculated_interests[$data['user_lang']])];
+    }
+
+    public function actionGetCalculatedInterestByListNumber() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text']) && !empty($data['user_lang'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        $calculated_interests = unserialize($user->calculated_interests);
+        $key = ((int) $data['entered_text'] - 1);
+        $choosed_interests = explode(',', $calculated_interests[$data['user_lang']])[$key];
+
+        if(empty($choosed_interests)) $choosed_interests = '';
+
+        return ['status' => 'success', 'choosed_interests' => $choosed_interests];
     }
 
 }
