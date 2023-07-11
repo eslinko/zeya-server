@@ -326,4 +326,13 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return $res;
     }
+
+    static function calculatedInterestsToList($calculated_interests) {
+        $arr = explode(',', $calculated_interests);
+        $res = "";
+        foreach ($arr as $i => $item) {
+            $res .= ($i + 1). ". ". trim($item) . "\n";
+        }
+        return $res;
+    }
 }

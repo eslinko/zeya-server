@@ -599,10 +599,15 @@ class TelegramApiController extends AppController
         if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $interests_description = $data['entered_text'];
-        $calculated_interests = ChatGPT::getUserInterests($interests_description);
-        $list_of_interests = ChatGPT::calculatedInterestsToListByLang($calculated_interests, !empty($data['user_lang']) ? $data['user_lang'] : '');
+        $calculated_interests = ['en' => ChatGPT::getUserInterests($interests_description)];
+        if($data['user_lang'] === 'en' || empty($data['user_lang'])) {
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests['en']);
+        } else {
+            $calculated_interests[$data['user_lang']] = ChatGPT::translateCalculatedInterest($calculated_interests['en'], $data['user_lang']);
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
+        }
 
-        $user->calculated_interests = $calculated_interests;
+        $user->calculated_interests = serialize($calculated_interests);
         $user->interests_description = $interests_description;
         $user->save(false);
 
@@ -618,7 +623,18 @@ class TelegramApiController extends AppController
 
         if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        $list_of_interests = ChatGPT::calculatedInterestsToListByLang($user->calculated_interests, !empty($data['user_lang']) ? $data['user_lang'] : '');
+        $calculated_interests = unserialize($user->calculated_interests);
+
+        if(!empty($data['user_lang']) && !empty($calculated_interests[$data['user_lang']])) {
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
+        } else if(!empty($data['user_lang'])) {
+            $calculated_interests[$data['user_lang']] = ChatGPT::translateCalculatedInterest($calculated_interests['en'], $data['user_lang']);
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
+            $user->calculated_interests = serialize($calculated_interests);
+        } else {
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests['en']);
+        }
+
         $user->last_request_to_chatgpt_date = time();
         $user->save(false);
 
@@ -634,10 +650,22 @@ class TelegramApiController extends AppController
 
         if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        $user->calculated_interests = ChatGPT::addInterestToList($user->calculated_interests, $data['entered_text']);
+        $calculated_interests = unserialize($user->calculated_interests);
+
+        $calculated_interests_languages = array_keys($calculated_interests);
+
+        $new_interest_translates = ChatGPT::translateNewItemOnAllLanguages($data['entered_text'], $calculated_interests_languages);
+
+        foreach ($new_interest_translates as $lang => $new_item) {
+            if(!empty($calculated_interests[$lang])) {
+                $calculated_interests[$lang] .= ',' . $new_item;
+            }
+        }
+
+        $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
 
-        return ['status' => 'success'];
+        return ['status' => 'success', 'test' => $test];
     }
 
     public function actionRemoveInterestFromUserList()

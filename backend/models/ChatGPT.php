@@ -39,7 +39,7 @@ class ChatGPT {
     }
 
     static function getUserInterests($user_text) {
-        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated. \n";
+        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated and return without any another symbols and text \n";
         $message .= $user_text;
         $response = self::sendChatGPTRequest($message);
 
@@ -54,11 +54,26 @@ class ChatGPT {
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
     }
 
-    static function addInterestToList($calculated_interests, $new_item) {
-        $message = "Translate this text into English: '{$new_item}', then add it to the end of this list, separated by commas: '{$calculated_interests}'. And return the new list without the other text";
+    static function translateNewItemOnAllLanguages($new_item, $languages) {
+        $languages_formatted = [];
+        foreach ($languages as $lang) {
+            $languages_formatted[] = self::languageCompareForBot($lang);
+        }
+        $message = "Translate this text into " . implode(',', $languages_formatted) . " languages: '{$new_item}', then return it without any another symbols and text and with format: language=translate,language=translate,language=translate";
         $response = self::sendChatGPTRequest($message);
 
-        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+        if(!empty($response['choices'][0]['message']['content'])) {
+            $arr = explode(',', $response['choices'][0]['message']['content']);
+            $res = [];
+            foreach ($arr as $item) {
+                $arr_item = explode('=', $item);
+                $res[self::languageCompareForBotInversely($arr_item[0])] = $arr_item[1];
+            }
+
+            return $res;
+        } else {
+            return false;
+        }
     }
 
     static function removeInterestFromUserList($calculated_interests, $number_of_list) {
@@ -66,6 +81,39 @@ class ChatGPT {
         $response = self::sendChatGPTRequest($message);
 
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+    static function translateCalculatedInterest($calculated_interests, $lang = 'en') {
+        $message = "Take this list, translate it into " . self::languageCompareForBot($lang) . " and return back: \n";
+        $message .= $calculated_interests;
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+    static function languageCompareForBot($lang){
+        switch ($lang){
+            case 'et':
+                $return = 'estonian';
+                break;
+            default:
+                $return = $lang;
+                break;
+        }
+        return $return;
+    }
+
+    static function languageCompareForBotInversely($lang){
+        switch ($lang){
+            case 'estonian':
+                $return = 'et';
+                break;
+            default:
+                $return = $lang;
+                break;
+        }
+
+        return $return;
     }
 
 }
