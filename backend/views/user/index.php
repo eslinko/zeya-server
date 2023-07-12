@@ -189,6 +189,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'template' => '<div class="icon-action-wrapper">{view}</div><div class="icon-action-wrapper">{update}</div><div class="icon-action-wrapper">{delete}</div>',
+                        'buttons' => [
+                            'delete' => function ($url) {
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                                    'title' => 'Deactivate',
+                                    'data' => [
+                                        'confirm' => 'Deactivate the user?',
+                                        'method' => 'post',
+                                    ],
+                                ]);
+                            },
+                        ],
                     ],
                 ],
             ]); ?>

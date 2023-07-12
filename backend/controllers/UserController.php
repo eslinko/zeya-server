@@ -232,11 +232,13 @@ class UserController extends AppController
      */
     public function actionDelete($id)
     {
-        Yii::$app->session->setFlash('danger', "The user {$this->findModel($id)->username} with the rights {$this->findModel($id)->role} was successfully deleted.");
+        Yii::$app->session->setFlash('danger', "The user {$this->findModel($id)->username} with the rights {$this->findModel($id)->role} was successfully deactivated.");
 	
-		User2Teacher::deleteAll(['userId' => $id]);
-		User2Partner::deleteAll(['userId' => $id]);
-        $this->findModel($id)->delete();
+//		User2Teacher::deleteAll(['userId' => $id]);
+//		User2Partner::deleteAll(['userId' => $id]);
+        $user = $this->findModel($id);
+        $user->status = '0';
+        $user->save(false);
 
         return $this->redirect(['index']);
     }

@@ -55,6 +55,7 @@ class TelegramApiController extends AppController
         if (empty($user)) {
             $user = new User();
             $user->telegram = $data['telegram_id'];
+            $user->status = 10;
             $user->verificationCode = strtoupper(substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3));
             $user->save(false);
         } else $result['status'] = 'success';
@@ -96,7 +97,10 @@ class TelegramApiController extends AppController
 
         if (empty($data)) return ['status' => 'error'];
 
-        return ['status' => 'success', 'message' => TelegramChatsLastMessage::getLastMessage($data['telegram_id'])];
+        $user = User::find()->where(['telegram' => $data['telegram_id']])->asArray()->one();
+        $user = empty($user) ? [] : $user;
+
+        return ['status' => 'success', 'message' => TelegramChatsLastMessage::getLastMessage($data['telegram_id']), 'user' => $user];
     }
 
     public function actionSetUserLastMessage()
@@ -625,7 +629,9 @@ class TelegramApiController extends AppController
 
         $calculated_interests = unserialize($user->calculated_interests);
 
-        if(!empty($data['user_lang']) && !empty($calculated_interests[$data['user_lang']])) {
+        if(empty($calculated_interests['en'])) {
+            $list_of_interests = '';
+        } else if(!empty($data['user_lang']) && !empty($calculated_interests[$data['user_lang']])) {
             $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
         } else if(!empty($data['user_lang'])) {
             $calculated_interests[$data['user_lang']] = ChatGPT::translateCalculatedInterest($calculated_interests['en'], $data['user_lang']);
@@ -657,11 +663,12 @@ class TelegramApiController extends AppController
         $new_interest_translates = ChatGPT::translateNewItemOnAllLanguages($data['entered_text'], $calculated_interests_languages);
 
         foreach ($new_interest_translates as $lang => $new_item) {
-            if(!empty($calculated_interests[$lang])) {
+            if(!empty($calculated_interests[$lang]) && $lang !== $data['user_lang']) {
                 $calculated_interests[$lang] .= ',' . $new_item;
             }
         }
 
+        $calculated_interests[$data['user_lang']] .= ',' . $data['entered_text'];
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
 
@@ -690,7 +697,7 @@ class TelegramApiController extends AppController
 
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
-        return ['status' => 'success', 'interests_list' => User::calculatedInterestsToList($calculated_interests[$data['user_lang']])];
+        return ['status' => 'success'];
     }
 
     public function actionGetCalculatedInterestByListNumber() {
