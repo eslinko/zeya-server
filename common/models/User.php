@@ -317,6 +317,7 @@ class User extends ActiveRecord implements IdentityInterface
     static function getArrWithIdLabel($users_arr) {
         $res = [];
         foreach ($users_arr as $user_item) {
+            if(empty($user_item['id'])) continue;
             $label = '';
             if(!empty($user_item['username'])) $label = $user_item['username'];
             else if(!empty($user_item['publicAlias'])) $label = $user_item['publicAlias'];

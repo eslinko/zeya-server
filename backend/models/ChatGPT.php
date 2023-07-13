@@ -39,7 +39,7 @@ class ChatGPT {
     }
 
     static function getUserInterests($user_text) {
-        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English. Make this list comma-separated and return without any another symbols and text \n";
+        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in Englishm, even if this text consists of a single word. Make this list comma-separated and return without any another symbols and text: \n";
         $message .= $user_text;
         $response = self::sendChatGPTRequest($message);
 
