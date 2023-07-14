@@ -16,6 +16,7 @@ use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
+use yii\db\Expression;
 
 class TelegramApiController extends AppController
 {
@@ -715,6 +716,22 @@ class TelegramApiController extends AppController
         if(empty($choosed_interests)) $choosed_interests = '';
 
         return ['status' => 'success', 'choosed_interests' => $choosed_interests];
+    }
+
+    public function actionClearAllInterests() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $user->calculated_interests = '';
+        $user->save(false);
+
+        return ['status' => 'success'];
     }
 
 }
