@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use SendGrid\Mail\Mail;
 use SendGrid;
 use Yii;
@@ -14,10 +15,6 @@ class SendGridMailer {
     }
 
     public function sendEmail($to, $subject, $content) {
-        echo "<pre>";
-        var_dump($to);
-        echo "</pre>";
-        exit;
         $email = new Mail();
         $email->setFrom(Yii::$app->params['supportEmail'], Yii::$app->params['siteName']);
         $email->setSubject($subject);
@@ -27,28 +24,22 @@ class SendGridMailer {
 //            "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
 //        );
 
-
-        echo "<pre>";
-        var_dump($this->sendGrid->send($email));
-        echo "</pre>";
-        exit;
         try {
             $response = $this->sendGrid->send($email);
-            echo "<pre>";
-            var_dump($response->statusCode());
-            echo "</pre>";
-            echo "<pre>";
-            var_dump('-------------------');
-            var_dump($response->headers());
-            echo "</pre>";
-            echo "<pre>";
-            var_dump('-------------------');
-            var_dump($response->body());
-            echo "</pre>";
+//            echo "<pre>";
+//            var_dump($response->statusCode());
+//            echo "</pre>";
+//            echo "<pre>";
+//            var_dump('-------------------');
+//            var_dump($response->headers());
+//            echo "</pre>";
+//            echo "<pre>";
+//            var_dump('-------------------');
+//            var_dump($response->body());
+//            echo "</pre>";
         } catch (Exception $e) {
             echo 'Caught exception: '. $e->getMessage() ."\n";
         }
-        exit;
         return $response;
     }
 }

@@ -432,16 +432,16 @@ class TelegramApiController extends AppController
 
         if (empty($user)) return ['status' => 'error'];
 
-        $sendgrid = new SendGridMailer();
-        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
-        exit;
+        $user->verificationCode = strtoupper(substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3));
+        $user->temp_email = $data['email'];
+        $user->save(false);
 
-//        $user->verificationCode = strtoupper(substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3));
-//        $user->temp_email = $data['email'];
-//        $user->save(false);
-//
         $model = new EmailSendVerificationCode();
         $model->sendEmail($user, $data['email']);
+
+//        $sendgrid = new SendGridMailer();
+//        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
+//        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
 
         return ['status' => 'success'];
     }
