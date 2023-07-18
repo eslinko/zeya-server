@@ -6,6 +6,7 @@ use app\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
 use app\models\Languages;
+use app\models\SendGridMailer;
 use app\models\Teacher;
 use app\models\HashTag;
 use app\models\TelegramApi;
@@ -431,10 +432,14 @@ class TelegramApiController extends AppController
 
         if (empty($user)) return ['status' => 'error'];
 
-        $user->verificationCode = strtoupper(substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3));
-        $user->temp_email = $data['email'];
-        $user->save(false);
+        $sendgrid = new SendGridMailer();
+        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
+        exit;
 
+//        $user->verificationCode = strtoupper(substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3) . '-' . substr(md5(microtime()), rand(0, 26), 3));
+//        $user->temp_email = $data['email'];
+//        $user->save(false);
+//
         $model = new EmailSendVerificationCode();
         $model->sendEmail($user, $data['email']);
 

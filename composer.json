@@ -19,7 +19,6 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "dmstr/yii2-adminlte-asset": "^2.1",
-        "costa-rico/yii2-images": "dev-master",
         "mihaildev/yii2-ckeditor": "*",
         "yiisoft/yii2-imagine": "^2.1",
         "yiisoft/yii2-jui": "^2.0",
@@ -28,7 +27,8 @@
         "phpoffice/phpspreadsheet": "^1.6",
         "kartik-v/yii2-widget-select2": "dev-master",
         "2amigos/yii2-date-time-picker-widget": "^1.0",
-        "google/cloud-vision": "*"
+        "google/cloud-vision": "*",
+        "sendgrid/sendgrid": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
@@ -41,6 +41,9 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
         }
     },
     "repositories": [

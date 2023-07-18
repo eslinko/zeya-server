@@ -21,15 +21,6 @@ return array (
       '@cebe/gravatar' => $vendorDir . '/cebe/yii2-gravatar/cebe/gravatar',
     ),
   ),
-  'costa-rico/yii2-images' => 
-  array (
-    'name' => 'costa-rico/yii2-images',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@rico/yii2images' => $vendorDir . '/costa-rico/yii2-images',
-    ),
-  ),
   'mihaildev/yii2-ckeditor' => 
   array (
     'name' => 'mihaildev/yii2-ckeditor',
