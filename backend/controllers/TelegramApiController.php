@@ -618,7 +618,7 @@ class TelegramApiController extends AppController
         }
 
         $user->calculated_interests = serialize($calculated_interests);
-        $user->interests_description = $interests_description;
+        $user->interests_description = json_decode($interests_description);
         $user->save(false);
 
         return ['status' => 'success', 'list_of_interests' => $list_of_interests];
