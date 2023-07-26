@@ -2,8 +2,6 @@
 
 namespace console\controllers;
 
-use common\models\TelegramApi;
-use common\models\User;
 use yii\console\Controller;
 use common\models\Daemon;
 
