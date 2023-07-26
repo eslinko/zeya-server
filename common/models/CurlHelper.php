@@ -1,6 +1,8 @@
 <?php
 
-namespace app\models;
+namespace common\models;
+
+use yii\base\ErrorException;
 
 class CurlHelper {
     static function curl($url, $data = [], $method = 'GET', $options = [])
@@ -30,7 +32,11 @@ class CurlHelper {
         curl_close($ch);
 
         if ($result === false) {
-            throw new ErrorException("Curl error: ".curl_error($ch), curl_errno($ch));
+            echo "<pre>";
+            var_dump(curl_error($ch));
+            var_dump(curl_errno($ch));
+            echo "</pre>";
+            exit;
         }
 
         return $result;

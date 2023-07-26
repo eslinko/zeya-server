@@ -9,7 +9,7 @@ use app\models\Languages;
 use app\models\SendGridMailer;
 use app\models\Teacher;
 use app\models\HashTag;
-use app\models\TelegramApi;
+use common\models\TelegramApi;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
 use backend\models\EmailSendVerificationCode;
@@ -83,7 +83,8 @@ class TelegramApiController extends AppController
                 $new_lang->status = 'untranslated';
                 $new_lang->save();
                 $telegram_id = is_array($user) ? $user['telegram'] : $user->telegram;
-                TelegramApi::sendNotificationToAdminTelegram("Alarm! New language detected during new user registration! Title: {$new_lang->title}, code: {$new_lang->code}, user telegram ID: $telegram_id");
+                $admins = User::find()->where(['role' => 'admin'])->all();
+                TelegramApi::sendNotificationToUsersTelegram("Alarm! New language detected during new user registration! Title: {$new_lang->title}, code: {$new_lang->code}, user telegram ID: $telegram_id", $admins);
             }
         }
 
@@ -566,7 +567,8 @@ class TelegramApiController extends AppController
 
         $message = str_replace('{userPublicAlias}', $user->publicAlias, $data['message']);
 
-        TelegramApi::sendNotificationToAdminTelegram($message);
+        $admins = User::find()->where(['role' => 'admin'])->all();
+        TelegramApi::sendNotificationToUsersTelegram($message, $admins);
 
         return ['status' => 'true', 'user' => $user];
     }
