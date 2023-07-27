@@ -36,6 +36,7 @@ class UserConnections extends ActiveRecord
         ];
     }
 
+
     /**
      * @inheritdoc
      */
@@ -51,13 +52,12 @@ class UserConnections extends ActiveRecord
         ];
     }
 
-
-
     static function getUserConnections($user_id) {
         $connections = UserConnections::find()->where(['user_id_1' => $user_id,'status'=>'accepted'])->all();
         $result = [];
         foreach ($connections as $con) {
             $user=User::findOne(['id' => $con->user_id_2]);
+
             $username = '';
             if(!empty($user)) {
                 $username = $user->publicAlias;
@@ -68,6 +68,7 @@ class UserConnections extends ActiveRecord
                     }
                 }
             }
+
             $result[] = [
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_2,
@@ -88,6 +89,7 @@ class UserConnections extends ActiveRecord
                     }
                 }
             }
+
             $result[] = [
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_1,
@@ -98,6 +100,7 @@ class UserConnections extends ActiveRecord
         return $result;
     }
     static function setUserConnection($user_id_1,$user_id_2, $status = 'pending'){
+
         $new_connection = new UserConnections();
         $new_connection->user_id_1 = $user_id_1;
         $new_connection->user_id_2 = $user_id_2;
@@ -138,6 +141,7 @@ class UserConnections extends ActiveRecord
             return ['status' => 'error'];
         }
     }
+
     static function getUserSecondaryUser($user_id) {
         $connections = self::getUserConnections($user_id);
         if(empty($connections)) return [];
@@ -183,3 +187,4 @@ class UserConnections extends ActiveRecord
     }
 
 }
+

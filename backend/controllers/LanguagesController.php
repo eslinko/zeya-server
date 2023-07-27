@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use app\models\Languages;
-use app\models\TelegramApi;
+use common\models\TelegramApi;
 use Yii;
 use common\models\User;
 use yii\data\ActiveDataProvider;

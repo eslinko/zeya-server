@@ -1,4 +1,7 @@
 <?php
+
+defined('TelegramBotId') or define('TelegramBotId', 'telegram_bot_id');
+
 return [
     'components' => [
         'db' => [

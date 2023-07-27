@@ -18,4 +18,5 @@ return [
             'defaultRoles' => ['user', 'admin', 'event_processor', 'event_organizer'],
         ],
     ],
+    'timeZone' => 'EET'
 ];
