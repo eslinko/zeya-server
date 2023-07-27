@@ -58,7 +58,6 @@ class UserConnections extends ActiveRecord
         $result = [];
         foreach ($connections as $con) {
             $user=User::findOne(['id' => $con->user_id_2]);
-            $username=$user->publicAlias;
             $username = '';
             if(!empty($user)) {
                 $username = $user->publicAlias;
