@@ -12,12 +12,14 @@ use app\models\HashTag;
 use common\models\TelegramApi;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
+use backend\models\UserConnections;
 use backend\models\EmailSendVerificationCode;
 use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 class TelegramApiController extends AppController
 {
@@ -117,6 +119,11 @@ class TelegramApiController extends AppController
             TelegramChatsLastMessage::createLastMessage($data['telegram_id'], $data['message']);
         } else {
             TelegramChatsLastMessage::updateLastMessage($data['telegram_id'], $data['message']);
+        }
+        $message=json_decode($data['message'],true);
+        if(isset($message['chat']['username'])){
+            //if user did not set up username, then username field is missing
+            User::setTelegramAlias($data['telegram_id'],$message['chat']['username']);
         }
 
         return ['status' => 'success', 'user' => User::find()->where(['telegram' => $data['telegram_id']])->one()];
@@ -586,7 +593,12 @@ class TelegramApiController extends AppController
 
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        return InvitationCodes::useCodeForInvitation($data['code'], $user->id);
+        $result = InvitationCodes::useCodeForInvitation($data['code'], $user->id);
+        if($result['status'] === 'success') {
+            $code_owner = InvitationCodes::getInvitationCodeOwnerUserId($data['code']);
+            if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
+        }
+        return $result;
     }
 
     public function actionGetMyInvitationCodes()
@@ -740,5 +752,71 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success'];
     }
+    public function actionGetUserConnections() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserConnections($user->id)];
+    }
+
+    public function actionGetUsersByAnyAliasWithoutConnectionsWithMe() {
+        //find users which are not connected with current user
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $existing_connections_one = ArrayHelper::getColumn(UserConnections::find()->where(['user_id_1'=>$user->id])->select('user_id_2')->asArray()->all(),'user_id_2');
+        $existing_connections_two = ArrayHelper::getColumn(UserConnections::find()->where(['user_id_2'=>$user->id])->select('user_id_1')->asArray()->all(),'user_id_1');
+        $existing_connections=array_merge($existing_connections_one,$existing_connections_two);
+
+        $users = User::find()->where(['publicAlias' => $data['alias']])->orWhere(['telegram_alias' => $data['alias']])->andWhere(['<>','id', $user->id])->andWhere(['NOT IN','id',$existing_connections])->asArray()->all();
+        return $users;
+    }
+    public function actionSetUserConnection(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return UserConnections::setUserConnection($user->id,$data['user_id_2']);
+    }
+    public function actionDeleteUserConnection(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::DeleteUserConnection($data['connection_id']);
+    }
+    public function actionGetUserByUserId(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = User::find()->where(['id' => $data['user_id']])->asArray()->one();
+        return ['status' => 'success', 'user' => $user];
+
+    }
+    public function actionAcceptUserConnectionRequest(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::AcceptUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
+    }
+    public function actionDeclineUserConnectionRequest(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::DeclineUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
+    }
 }

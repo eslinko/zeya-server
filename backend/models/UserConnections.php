@@ -5,6 +5,7 @@ namespace backend\models;
 use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "UserConnections".
  *
@@ -24,15 +25,18 @@ class UserConnections extends ActiveRecord
     {
         return 'UserConnections';
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['user_id_1','user_id_2'], 'required']
+          [['user_id_1','user_id_2'], 'required']
         ];
     }
+
+
     /**
      * @inheritdoc
      */
@@ -47,11 +51,12 @@ class UserConnections extends ActiveRecord
             'updated_at' => 'Updated at date'
         ];
     }
+
     static function getUserConnections($user_id) {
-        $connections = UserConnections::find()->where(['user_id_1' => $user_id])->all();
+        $connections = UserConnections::find()->where(['user_id_1' => $user_id,'status'=>'accepted'])->all();
         $result = [];
         foreach ($connections as $con) {
-            $user = User::findOne(['id' => $con->user_id_2]);
+            $user=User::findOne(['id' => $con->user_id_2]);
 
             $username = '';
             if(!empty($user)) {
@@ -67,14 +72,13 @@ class UserConnections extends ActiveRecord
             $result[] = [
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_2,
-                'created_on' => $con->created_at,
+                'created_on' => $con->updated_at,
                 'username' => $username
             ];
         }
-        $connections = UserConnections::find()->where(['user_id_2' => $user_id])->all();
+        $connections = UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'accepted'])->all();
         foreach ($connections as $con) {
             $user=User::findOne(['id' => $con->user_id_1]);
-
             $username = '';
             if(!empty($user)) {
                 $username = $user->publicAlias;
@@ -89,22 +93,48 @@ class UserConnections extends ActiveRecord
             $result[] = [
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_1,
-                'created_on' => $con->created_at,
+                'created_on' => $con->updated_at,
                 'username' => $username
             ];
         }
-
         return $result;
     }
-    static function setUserConnection($user_id_1, $user_id_2, $status = 'pending'){
-        // $user = User::find()->where(['id' => $user_id_1])->one();
-        //if (empty($user)) return ['status' => 'error'];
+    static function setUserConnection($user_id_1,$user_id_2, $status = 'pending'){
+
         $new_connection = new UserConnections();
         $new_connection->user_id_1 = $user_id_1;
         $new_connection->user_id_2 = $user_id_2;
         $new_connection->status = $status;
         $new_connection->save(false);
         if($new_connection->save(false)){
+            return ['status' => 'success'];
+        }
+        else{
+            return ['status' => 'error'];
+        }
+
+    }
+    static function DeleteUserConnection($connection_id){
+        $connection=UserConnections::findOne(['connection_id' => $connection_id]);
+        if($connection->delete()===false)
+            return ['status' => 'error'];
+        else
+            return ['status' => 'success'];
+    }
+    static function AcceptUserConnectionRequest($user_id_1,$user_id_2){
+        $connection=UserConnections::findOne(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2]);
+        $connection->status='accepted';
+        if($connection->save(false)){
+            return ['status' => 'success'];
+        }
+        else{
+            return ['status' => 'error'];
+        }
+    }
+    static function DeclineUserConnectionRequest($user_id_1,$user_id_2){
+        $connection=UserConnections::findOne(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2]);
+        $connection->status='declined';
+        if($connection->save(false)){
             return ['status' => 'success'];
         }
         else{
@@ -155,4 +185,6 @@ class UserConnections extends ActiveRecord
             }
         }
     }
+
 }
+
