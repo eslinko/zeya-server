@@ -100,8 +100,10 @@ class UserConnections extends ActiveRecord
         return $result;
     }
     static function setUserConnection($user_id_1,$user_id_2, $status = 'pending'){
-
-        $new_connection = new UserConnections();
+        $new_connection = UserConnections::find()->where(['user_id_2' => $user_id_2,'user_id_1' => $user_id_1])->orWhere(['user_id_2' => $user_id_1,'user_id_1' => $user_id_2])->one();
+        if($new_connection===NULL) {
+            $new_connection = new UserConnections();
+        }
         $new_connection->user_id_1 = $user_id_1;
         $new_connection->user_id_2 = $user_id_2;
         $new_connection->status = $status;
@@ -140,6 +142,13 @@ class UserConnections extends ActiveRecord
         else{
             return ['status' => 'error'];
         }
+    }
+    static function CheckUserConnection($user_id_1,$user_id_2){
+        $connection=UserConnections::findOne(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2]);
+        if($connection===NULL){
+            $connection=UserConnections::findOne(['user_id_1' => $user_id_2,'user_id_2' => $user_id_1]);
+        }
+        return $connection;
     }
 
     static function getUserSecondaryUser($user_id) {
