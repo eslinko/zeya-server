@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use app\models\ChatGPT;
+use backend\models\ChatGPT;
 use backend\models\UserConnections;
 use backend\models\UsersWithSharedInterests;
 use yii\db\Expression;
@@ -52,10 +52,15 @@ class Daemon {
     }
 
     public static function matchUsersByInterest() {
-//        $users = User::find()->all();
-        $users = User::find()->where(['in', 'telegram', ['476111864', '534621965']])->all();
+        $users = User::find()->all();
+        $i = 0;
         foreach ($users as $user) {
-            $current_user_calculated_interests = unserialize($user->calculated_interests);
+            $current_user_calculated_interests = !empty($user->calculated_interests) ? unserialize($user->calculated_interests) : [];
+            $shared_interests = UsersWithSharedInterests::find()
+                ->where(['user_id_1' => $user->id])
+                ->orWhere(['user_id_2' => $user->id])
+                ->asArray()
+                ->all();
 
             if(empty($current_user_calculated_interests)) {
                 continue;
@@ -64,29 +69,52 @@ class Daemon {
             $secondary_users = UserConnections::getUserSecondaryUser($user->id);
 
             foreach ($secondary_users as $secondary_user){
-                $secondary_user = User::findOne($secondary_user['user_id']);
-
+                $secondary_user_id = $secondary_user['user_id'];
+                $secondary_user = User::findOne($secondary_user_id);
                 if(empty($secondary_user)) {
                     continue;
                 }
 
-                $calculated_interests = unserialize($secondary_user->calculated_interests);
+                $matching_elements = array_filter($shared_interests, function ($element) use ($secondary_user_id) {
+                    return $element['user_id_1'] === $secondary_user_id || $element['user_id_2'] === $secondary_user_id;
+                });
+                $matching_elements = reset($matching_elements); // get first element
 
+                if(
+                    !empty($matching_elements) && empty($matching_elements['need_update'])
+                ) {
+                    continue;
+                }
+
+                $calculated_interests = unserialize($secondary_user->calculated_interests);
                 if(empty($calculated_interests)) {
                     continue;
                 }
 
-//                echo "<pre>";
-//                var_dump($current_user_calculated_interests, $calculated_interests);
-//                echo "</pre>";
-//                exit;
+                $i++;
+
                 $res = ChatGPT::compareInterests($current_user_calculated_interests['en'], $calculated_interests['en']);
 
-                echo nl2br($res);
+                // ищем json в строке
+                preg_match_all('/\{(?:[^{}]|(?R))*\}/x', $res, $matches);
+
+                $compared_interest_arr = !empty($matches[0]) ? json_decode($matches[0][0], true) : [];
+                if(!empty($compared_interest_arr)) {
+                    $compared_interest_arr = $compared_interest_arr['interests'];
+                }
+                $compared_interest_serialize = serialize($compared_interest_arr);
+
+                if(empty($matching_elements)) {
+                    UsersWithSharedInterests::setUserWithSharedInterests($user->id, $secondary_user->id, $compared_interest_serialize);
+                } else {
+                    UsersWithSharedInterests::updateUserWithSharedInterests($matching_elements['id'], $compared_interest_serialize);
+                }
+
+            }
+
+            if($i >= 20) {
                 exit;
             }
         }
-
-        exit;
     }
 }

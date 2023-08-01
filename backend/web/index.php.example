@@ -10,6 +10,8 @@ defined('GoogleVisionFile') or define('GoogleVisionFile', 'file_name.json');
 defined('TelegramBotId') or define('TelegramBotId', 'example');
 // chat gpt api key
 defined('ChatGPTApiKey') or define('ChatGPTApiKey', 'your_api_key');
+// sendgrid api key
+defined('SendGridApiKey') or define('SendGridApiKey', 'api_key');
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';

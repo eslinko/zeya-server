@@ -29,8 +29,10 @@ class TableCreator
     private function updateTables(): void
     {
         $this->userUpdate();
+        $this->UsersWithSharedInterestsUpdate();
     }
 
+    // create table methods
     private function userConnections(): void
     {
         $query = "
@@ -45,7 +47,22 @@ class TableCreator
             ";
         $this->db->createCommand($query)->execute();
     }
+    private function usersWithSharedInterests(): void
+    {
+        $query = "
+            CREATE TABLE IF NOT EXISTS UsersWithSharedInterests (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                user_id_1 INT NOT NULL,
+                user_id_2 INT NOT NULL,
+                shared_interests TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        ";
+        $this->db->createCommand($query)->execute();
+    }
 
+    // update table methods
     private function userUpdate(): void
     {
         $table = $this->db->schema->getTableSchema('User');
@@ -53,20 +70,12 @@ class TableCreator
             $this->db->createCommand()->addColumn('User', 'telegram_alias', 'varchar(33) AFTER telegram')->execute();
         }
     }
-        private function usersWithSharedInterests(): void
-        {
-            $query = "
-                CREATE TABLE IF NOT EXISTS UsersWithSharedInterests (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    user_id_1 INT NOT NULL,
-                    user_id_2 INT NOT NULL,
-                    shared_interests TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                );
-            ";
-            $this->db->createCommand($query)->execute();
-
+    private function UsersWithSharedInterestsUpdate(): void
+    {
+        $table = $this->db->schema->getTableSchema('UsersWithSharedInterests');
+        if (!isset($table->columns['need_update'])) {
+            $this->db->createCommand()->addColumn('UsersWithSharedInterests', 'need_update', 'int(1) DEFAULT NULL AFTER updated_at')->execute();
         }
+    }
 
 }
