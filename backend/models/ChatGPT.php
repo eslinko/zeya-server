@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 class ChatGPT {
     static function sendChatGPTRequest($message) {
@@ -96,9 +96,9 @@ class ChatGPT {
         {$interest_1} \n
         Then take this list of another user (who is a community member) interests: \n
         {$interest_2} \n
-        Then compare them if there are interests and values that those two users share. List them and return uncluttered by other text";
-        echo nl2br($message);
-        echo '<br><br>-----------------------------------<br><br>';
+        Then compare them if there are common interests between the two users. And generate a json array containing common interests in English. Return only json array with format: {\"interests\": [\"interest\", \"interest\", \"interest\"]}";
+//        echo nl2br($message);
+//        echo '<br><br>-----------------------------------<br><br>';
         $response = self::sendChatGPTRequest($message);
 
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;

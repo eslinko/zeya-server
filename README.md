@@ -12,7 +12,7 @@ cd common/config/
 ```bash
 copy cp main-local.php.example main-local.php
 ```
-4) Fill in the required fields with your database connection data in main-local.php file
+4) Fill in the required fields with your database connection data in main-local.php file. Fill telegram bot id and chat gpt api key
 5) Fill mailer data in main-local.php file to receive mail
 6) Fill in the fields in the params.php file with your data
 
@@ -25,7 +25,7 @@ copy cp main-local.php.example main-local.php
 ```bash
 cd backend/web && copy cp main-local.php.example main-local.php
 ```
-6) Define variable GoogleMapApiKey with Geocoding API Key and variable GoogleVisionFile with name of json file
+6) Define variable GoogleMapApiKey with Geocoding API Key and variable GoogleVisionFile with name of json file. And fill another needed api keys
 
 
 ## License

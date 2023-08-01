@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $shared_interests
  * @property string $created_at
  * @property string $updated_at
+ * @property string $need_update
  */
 class UsersWithSharedInterests extends ActiveRecord
 {
@@ -43,7 +44,8 @@ class UsersWithSharedInterests extends ActiveRecord
             'user_id_2' => 'User #2',
             'shared_interests' => 'Shared interests',
             'created_at' => 'Creation date',
-            'updated_at' => 'Updated at date'
+            'updated_at' => 'Updated at date',
+            'need_update' => 'Need update'
         ];
     }
     static function getUserWithSharedInterests($user_id) {
@@ -91,6 +93,32 @@ class UsersWithSharedInterests extends ActiveRecord
         else {
             return ['status' => 'error'];
         }
+    }
+
+    static function updateUserWithSharedInterests($id, $shared_interests) {
+        $compare = UsersWithSharedInterests::findOne($id);
+        if(empty($compare)) {
+            return false;
+        }
+
+        $compare->shared_interests = $shared_interests;
+        $compare->need_update = NULL;
+        return $compare->save(false);
+    }
+
+    static function setNeedUpdateSharedInterests($user_id) {
+        $compares = self::getUserWithSharedInterests($user_id);
+        if(empty($compares)) {
+            return false;
+        }
+
+        foreach ($compares as $compare) {
+            $object = UsersWithSharedInterests::findOne($compare['id']);
+            $object->need_update = 1;
+            $object->save(false);
+        }
+
+        return true;
     }
 
     static function setMockupDataForUser($user_id){

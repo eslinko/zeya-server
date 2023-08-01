@@ -2,13 +2,14 @@
 
 namespace backend\controllers;
 
-use app\models\ChatGPT;
+use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
 use app\models\Languages;
 use app\models\SendGridMailer;
 use app\models\Teacher;
 use app\models\HashTag;
+use backend\models\UsersWithSharedInterests;
 use common\models\TelegramApi;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
@@ -635,6 +636,8 @@ class TelegramApiController extends AppController
         $user->interests_description = json_decode($interests_description);
         $user->save(false);
 
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
         return ['status' => 'success', 'list_of_interests' => $list_of_interests];
     }
 
@@ -692,6 +695,8 @@ class TelegramApiController extends AppController
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
 
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
         return ['status' => 'success'];
     }
 
@@ -717,6 +722,9 @@ class TelegramApiController extends AppController
 
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
+
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
         return ['status' => 'success'];
     }
 
