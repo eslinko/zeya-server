@@ -15,6 +15,9 @@ class TableCreator
         $this->db = Yii::$app->db;
         $this->createTables();
         $this->updateTables();
+        if(!empty($_GET['test'])){
+            Daemon::matchUsersByInterest();
+        }
     }
 
     private function createTables(): void
