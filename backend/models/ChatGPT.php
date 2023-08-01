@@ -91,6 +91,19 @@ class ChatGPT {
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
     }
 
+    static function compareInterests($interest_1, $interest_2) {
+        $message = "Take this list of user (who is a community member) interests as a reference: \n
+        {$interest_1} \n
+        Then take this list of another user (who is a community member) interests: \n
+        {$interest_2} \n
+        Then compare them if there are interests and values that those two users share. List them and return uncluttered by other text";
+        echo nl2br($message);
+        echo '<br><br>-----------------------------------<br><br>';
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
     static function languageCompareForBot($lang){
         switch ($lang){
             case 'et':

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use app\models\ChatGPT;
 use backend\models\UserConnections;
 use backend\models\UsersWithSharedInterests;
 use yii\db\Expression;
@@ -48,5 +49,44 @@ class Daemon {
             $message = str_replace('{secondaryUsersWithSharedInterests}', $user_interests_count, $message);
             TelegramApi::sendNotificationToUserTelegram(urlencode($message), $user);
         }
+    }
+
+    public static function matchUsersByInterest() {
+//        $users = User::find()->all();
+        $users = User::find()->where(['in', 'telegram', ['476111864', '534621965']])->all();
+        foreach ($users as $user) {
+            $current_user_calculated_interests = unserialize($user->calculated_interests);
+
+            if(empty($current_user_calculated_interests)) {
+                continue;
+            }
+
+            $secondary_users = UserConnections::getUserSecondaryUser($user->id);
+
+            foreach ($secondary_users as $secondary_user){
+                $secondary_user = User::findOne($secondary_user['user_id']);
+
+                if(empty($secondary_user)) {
+                    continue;
+                }
+
+                $calculated_interests = unserialize($secondary_user->calculated_interests);
+
+                if(empty($calculated_interests)) {
+                    continue;
+                }
+
+//                echo "<pre>";
+//                var_dump($current_user_calculated_interests, $calculated_interests);
+//                echo "</pre>";
+//                exit;
+                $res = ChatGPT::compareInterests($current_user_calculated_interests['en'], $calculated_interests['en']);
+
+                echo nl2br($res);
+                exit;
+            }
+        }
+
+        exit;
     }
 }
