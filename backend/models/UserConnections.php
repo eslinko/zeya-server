@@ -99,6 +99,59 @@ class UserConnections extends ActiveRecord
         }
         return $result;
     }
+
+    static function getUserSentInvites($user_id){
+        $connections =  UserConnections::find()->where(['user_id_1' => $user_id,'status'=>'declined'])->orWhere(['user_id_1' => $user_id,'status'=>'pending'])->all();
+        $result = [];
+        foreach ($connections as $con) {
+            $user=User::findOne(['id' => $con->user_id_2]);
+
+            $username = '';
+            if(!empty($user)) {
+                $username = $user->publicAlias;
+                if(empty($username)){
+                    $username=$user->full_name;
+                    if(empty($username)){
+                        $username=$user->username;
+                    }
+                }
+            }
+            $result[] = [
+                'connection_id' => $con->connection_id,
+                'user_id' => $con->user_id_2,
+                'updated_at' => $con->updated_at,
+                'username' => $username,
+                'status' => $con->status
+            ];
+        }
+        return $result;
+    }
+
+    static function getUserRejectedInvites($user_id){
+        $connections =  UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'declined'])->all();
+        $result = [];
+        foreach ($connections as $con) {
+            $user=User::findOne(['id' => $con->user_id_1]);
+
+            $username = '';
+            if(!empty($user)) {
+                $username = $user->publicAlias;
+                if(empty($username)){
+                    $username=$user->full_name;
+                    if(empty($username)){
+                        $username=$user->username;
+                    }
+                }
+            }
+            $result[] = [
+                'connection_id' => $con->connection_id,
+                'user_id' => $con->user_id_1,
+                'updated_at' => $con->updated_at,
+                'username' => $username,
+            ];
+        }
+        return $result;
+    }
     static function setUserConnection($user_id_1,$user_id_2, $status = 'pending'){
         $new_connection = UserConnections::find()->where(['user_id_2' => $user_id_2,'user_id_1' => $user_id_1])->orWhere(['user_id_2' => $user_id_1,'user_id_1' => $user_id_2])->one();
         if($new_connection===NULL) {

@@ -612,6 +612,17 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success', 'codes' => InvitationCodes::getUserInvitationCodes($user->id)];
     }
+    public function actionGetMyNotUsedInvitationCodes()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'codes' => InvitationCodes::getUserNotUsedInvitationCodes($user->id)];
+    }
 
     public function actionSetUserInterests()
     {
@@ -761,6 +772,26 @@ class TelegramApiController extends AppController
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'connections' => UserConnections::getUserConnections($user->id)];
+    }
+    public function actionGetUserSentInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserSentInvites($user->id)];
+    }
+    public function actionGetUserRejectedInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserRejectedInvites($user->id)];
     }
 
     public function actionGetUsersByAnyAlias() {

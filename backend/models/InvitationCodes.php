@@ -134,6 +134,9 @@ class InvitationCodes extends ActiveRecord
 
         return $result;
     }
+    static function getUserNotUsedInvitationCodes($user_id) {
+        return InvitationCodes::find()->where(['user_id' => $user_id, 'registered_user_id' => NULL])->all();
+    }
     static function getInvitationCodeOwnerUserId($code){
         $db_code = InvitationCodes::find()->where(['code' => $code])->one();
         if(empty($db_code)) return ['status' => 'error'];
