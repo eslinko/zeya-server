@@ -125,6 +125,13 @@ $this->params['breadcrumbs'][] = $this->title;
                       'format' => 'html'
                     ],
                     [
+                        'attribute' => 'telegram_alias',
+                        'value' => function($data) {
+                            return $data->telegram_alias ?  $data->telegram_alias: '<span class="not-set">(not set)</span>';
+                        },
+                        'format' => 'html'
+                    ],
+                    [
                         'attribute' => 'email',
                         'value' => function($data) {
                             return $data->email ?  $data->email: '<span class="not-set">(not set)</span>';
