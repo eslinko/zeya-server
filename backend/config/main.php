@@ -117,6 +117,11 @@ return [
                 'invitation-codes/<page:\d+>/' => 'invitation-codes/index',
                 'invitation-codes/' => 'invitation-codes/index',
 
+                'creative-types/view/<id:\d+>' => 'creative-types/view',
+                'creative-types/update/<id:\d+>' => 'creative-types/update',
+                'creative-types/<page:\d+>/' => 'creative-types/index',
+                'creative-types/' => 'creative-types/index',
+
 				'admin/no-access' => '/admin/site/no-access',
 				'<action>' => 'site/<action>',
 			],

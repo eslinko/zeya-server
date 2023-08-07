@@ -156,6 +156,17 @@ $currentUrl = Yii::$app->request->pathInfo;
                     ['label' => 'View Logs', 'icon' => 'dashboard fa-fw', 'url' => ['/invitation-codes/logs'],],
                 ],
             ];
+
+            $menu['items'][] =   [
+                'label' => 'Creative Types',
+                'icon' => 'sitemap fa-fw',
+                'url' => '#',
+                'items' => [
+                    ['label' => 'Creative Types', 'icon' => 'dashboard fa-fw', 'url' => ['/creative-types/'],
+                        'active' => strpos($currentUrl, 'creative-types') !== false,],
+                    ['label' => 'Add New', 'icon' => 'pencil fa-fw', 'url' => ['/creative-types/create'],],
+                ],
+            ];
             
           $menu['items'][] = [
             'label' => 'Settings',
