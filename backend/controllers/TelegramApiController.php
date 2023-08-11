@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\CreativeTypes;
 use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
@@ -861,5 +862,22 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return ['status' => 'success','connection' => UserConnections::CheckUserConnection($data['user_id_1'],$data['user_id_2'])];
+    }
+
+    /*expressions*/
+    public function actionStartCreatingExpressions() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+//        $creative_types = CreativeTypes::find()->where(['IS NOT', 'id', 'NULL'])->asArray()->all();
+        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user['language'], 'id');
+
+        return ['status' => 'success', 'creative_types' => $creative_types];
     }
 }
