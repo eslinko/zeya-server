@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\CreativeExpressions;
 use app\models\CreativeTypes;
 use backend\models\ChatGPT;
 use app\models\Events;
@@ -93,6 +94,11 @@ class TelegramApiController extends AppController
         }
 
         $result['user'] = $user;
+        $result['expressions_in_proccess'] = CreativeExpressions::find()
+            ->where(['user_id' => $user['id']])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->asArray()
+            ->one();
 
         return $result;
     }
@@ -875,9 +881,82 @@ class TelegramApiController extends AppController
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
-//        $creative_types = CreativeTypes::find()->where(['IS NOT', 'id', 'NULL'])->asArray()->all();
-        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user['language'], 'id');
+        $new_expression = new CreativeExpressions();
+        $new_expression->user_id = $user['id'];
+        $new_expression->status = 'process_of_creation';
+        $new_expression->save(false);
 
+        return ['status' => 'success'];
+    }
+
+    public function actionGetCreativeTypes() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user['language'], 'id');
         return ['status' => 'success', 'creative_types' => $creative_types];
+    }
+
+    public function actionSetCreativeTypeToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['type_title'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $find_creative_type = CreativeTypes::find()
+            ->where(['type_en' => $data['type_title']])
+            ->orWhere(['type_ru' => $data['type_title']])
+            ->orWhere(['type_et' => $data['type_title']])
+            ->asArray()
+            ->one();
+
+        if(empty($find_creative_type)) {
+            return ['status' => 'error', 'text' => 'No such type was found! Try using a type from the suggested variants.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user['id']])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if(!empty($cur_expression)) {
+            $cur_expression->type = $find_creative_type['id'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success', 'finded_type' => $find_creative_type];
+    }
+
+    public function actionSetDescriptionToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['desc'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user['id']])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if(!empty($cur_expression)) {
+            $cur_expression->description = $data['desc'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
     }
 }
