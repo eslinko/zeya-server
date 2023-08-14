@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use backend\models\UserConnections;
 use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
@@ -84,8 +85,52 @@ class PartnerRuleAction extends ActiveRecord
 		
 		return $query;
 	}
-	
+	static function actionRegistrationGivesCodeOwnerLovestar($code_owner) {
+        //create BotPartner at first use
+        $bot_partner = Partner::findOne(['id'=>1]);
+        if($bot_partner === NULL) $bot_partner =  Partner::createBotPartner();
+        if($bot_partner === NULL) return ['status' => false, 'message' => 'Error, cannot create BotPartner at first use'];
+
+        //check do we have Registration by code rule
+        $reg_rule = PartnerRule::findOne(['id'=>2]);
+        if($reg_rule === NULL) $reg_rule =  PartnerRule::createRegistrationGivesCodeOwnerLovestarRule();
+        if($reg_rule === NULL) return ['status' => false, 'message' => 'Error, cannot create rule at first use: Registration gives code owner 1 Lovestar'];
+
+        return PartnerRuleAction::createAction(2, $code_owner);
+
+    }
+
+    static function actionRegistrationLovestar($user_id) {
+        //create BotPartner at first use
+        $bot_partner = Partner::findOne(['id'=>1]);
+        if($bot_partner === NULL) $bot_partner =  Partner::createBotPartner();
+        if($bot_partner === NULL) return ['status' => false, 'message' => 'Error, cannot create BotPartner at first use'];
+
+        //check do we have Registration rule
+        $reg_rule = PartnerRule::findOne(['id'=>1]);
+        if($reg_rule === NULL) $reg_rule =  PartnerRule::createRegistrationLovestarRule();
+        if($reg_rule === NULL) return ['status' => 'error','message' => 'Error, cannot create rule at first use: Registration rule'];
+
+        return PartnerRuleAction::createAction(1, $user_id);
+    }
 	static function createAction($rule_id, $emittedLovestarsUser) {
+/*        if($rule_id === 1 OR $rule_id === 2) {//built-in rule, create at first use
+            //create BotPartner at first use
+            $bot_partner = Partner::findOne(['id'=>1]);
+            if($bot_partner === NULL) $bot_partner =  Partner::createBotPartner();
+            if($bot_partner === NULL) return ['status' => false, 'message' => 'Error, cannot create BotPartner at first use'];
+
+            //check do we have Registration rule
+            $reg_rule = PartnerRule::findOne(['id'=>1]);
+            if($reg_rule === NULL) $reg_rule =  PartnerRule::createRegistrationLovestarRule();
+            if($reg_rule === NULL) return ['status' => 'error','message' => 'Error, cannot create rule at first use: Registration rule'];
+
+            //check do we have Registration by code rule
+            $reg_rule = PartnerRule::findOne(['id'=>2]);
+            if($reg_rule === NULL) $reg_rule =  PartnerRule::createRegistrationGivesCodeOwnerLovestarRule();
+            if($reg_rule === NULL) return ['status' => false, 'message' => 'Error, cannot create rule at first use: Registration gives code owner 1 Lovestar'];
+        }*/
+
 		$rule = PartnerRule::findOne($rule_id);
 		$user = User::findOne($emittedLovestarsUser);
 		if(empty($rule)) return ['status' => false, 'message' => 'Rule by ID not found.'];
@@ -102,7 +147,7 @@ class PartnerRuleAction extends ActiveRecord
 		$new_action->emittedLovestarsUser = $emittedLovestarsUser;
 		
 		$new_action->emittedLovestars = PartnerRule::lovestarsCalculatingByRule($rule_id);
-		
+        file_put_contents('log.txt',"new_action->emittedLovestars:".$new_action->emittedLovestars."\n",FILE_APPEND);
 		$status = true;
 		$error = 'Action was successfully created.';
 		
@@ -120,4 +165,23 @@ class PartnerRuleAction extends ActiveRecord
 		
 		return ['status' => $status, 'message' => $error, 'action_id' => $new_action->id];
 	}
+    static function actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner){
+        //create BotPartner at first use
+        $bot_partner = Partner::findOne(['id'=>1]);
+        if($bot_partner === NULL) $bot_partner =  Partner::createBotPartner();
+        if($bot_partner === NULL) return ['status' => 'error', 'message' => 'Error, cannot create BotPartner at first use'];
+
+        //check do we have Registration rule
+        $reg_rule = PartnerRule::findOne(['id'=>3]);
+        if($reg_rule === NULL) $reg_rule =  PartnerRule::createRuleRegistrationGivesLovestarToCodeOwnerConnections();
+        if($reg_rule === NULL) return ['status' => 'error','message' => 'Error, cannot create rule at first use: Registration rule'];
+
+        $connections = UserConnections::getUserConnections($code_owner);
+        $return_connections=[];
+        foreach ($connections as $con){
+            $resp = PartnerRuleAction::createAction(3, $con['user_id']);
+            if($resp['status'] === true)$return_connections[] = User::findOne([$con['user_id']]);
+        }
+        return $return_connections;
+    }
 }

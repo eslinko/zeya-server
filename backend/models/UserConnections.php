@@ -160,7 +160,7 @@ class UserConnections extends ActiveRecord
         $new_connection->user_id_1 = $user_id_1;
         $new_connection->user_id_2 = $user_id_2;
         $new_connection->status = $status;
-        $new_connection->save(false);
+        //$new_connection->save(false);
         if($new_connection->save(false)){
             return ['status' => 'success'];
         }
