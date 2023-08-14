@@ -79,4 +79,61 @@ class PartnerRule extends ActiveRecord
 
 		return ceil($rule->emissionCalculationBaseValue * $rule->emissionCalculationPercentage);
 	}
+    static public function createRegistrationLovestarRule(){
+        $new_rule = PartnerRule::find()->where(['id' => 1])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 1;
+        }
+
+        $new_rule->partnerId = 1;
+        $new_rule->title = 'Registration 1 Lovestar';
+        $new_rule->triggerName = 'Registration creates 1 lovestar';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
+    static public function createRegistrationGivesCodeOwnerLovestarRule(){
+        $new_rule = PartnerRule::find()->where(['id' => 2])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 2;
+        }
+
+        $new_rule->partnerId = 1;
+        $new_rule->title = 'Registration gives code owner 1 Lovestar';
+        $new_rule->triggerName = 'Registration gives code owner  1 lovestar';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
+    static function createRuleRegistrationGivesLovestarToCodeOwnerConnections(){
+        $new_rule = PartnerRule::find()->where(['id' => 3])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 3;
+        }
+
+        $new_rule->partnerId = 1;
+        $new_rule->title = 'Registration gives 1 Lovestar to code owner conections';
+        $new_rule->triggerName = 'Registration gives 1 lovestar to code owner connections';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
 }

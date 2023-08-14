@@ -311,9 +311,9 @@ class User extends ActiveRecord implements IdentityInterface
 	static function addedLovestarsCount($user_id, $count) {
 		$user = User::findOne($user_id);
 		if(empty($user)) return ['status' => false, 'message' => 'User by ID not found.'];
-		
+
 		$user->currentLovestarsCounter = (int) $user->currentLovestarsCounter + (int) $count;
-		return $user->save();
+        return $user->save(false);
 	}
 
     static function getArrWithIdLabel($users_arr) {
