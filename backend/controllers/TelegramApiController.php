@@ -2,6 +2,9 @@
 
 namespace backend\controllers;
 
+use app\models\Partner;
+use app\models\PartnerRule;
+use app\models\PartnerRuleAction;
 use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
@@ -597,7 +600,16 @@ class TelegramApiController extends AppController
         $result = InvitationCodes::useCodeForInvitation($data['code'], $user->id);
         if($result['status'] === 'success') {
             $code_owner = InvitationCodes::getInvitationCodeOwnerUserId($data['code']);
+            //give Lovestar
+            //PartnerRuleAction::createAction(2,$code_owner);
+            PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
+            //file_put_contents('log.txt',"1\n",FILE_APPEND);
+            $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
+            $result['code_owner_connections'] = $res;
+            //create connection
             if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
+            //find owner user
+            if(!isset($telegram_id['status'])) $result['owner_user'] = User::findOne($code_owner);
         }
         return $result;
     }
@@ -861,5 +873,15 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return ['status' => 'success','connection' => UserConnections::CheckUserConnection($data['user_id_1'],$data['user_id_2'])];
+    }
+    public function actionSetUserRegistrationLovecoins(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        //generate Lovecoin
+        //return PartnerRuleAction::createAction(1,$user['id']);
+        return PartnerRuleAction::actionRegistrationLovestar($user['id']);
     }
 }

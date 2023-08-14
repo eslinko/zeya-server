@@ -69,4 +69,20 @@ class Partner extends ActiveRecord
 
 		return $query;
 	}
+    static public function createBotPartner(){
+        $new_partner = Partner::find()->where(['id' => 1])->one();
+        if($new_partner===NULL) {
+            $new_partner = new Partner();
+            $new_partner->id = 1;
+        }
+
+        $new_partner->legalName = 'BotPartner';
+        $new_partner->description = 'BotPartner does bot actions';
+        if($new_partner->save(false)){
+            return $new_partner;
+        }
+        else{
+            return NULL;
+        }
+    }
 }

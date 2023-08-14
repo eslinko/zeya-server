@@ -142,4 +142,9 @@ class InvitationCodes extends ActiveRecord
         if(empty($db_code)) return ['status' => 'error'];
         return $db_code->user_id;
     }
+    static function getInvitationCodeOwnerTelegramId($code){
+        $db_code = InvitationCodes::find()->where(['code' => $code])->one();
+        if(empty($db_code)) return ['status' => 'error'];
+        return $db_code->telegram;
+    }
 }
