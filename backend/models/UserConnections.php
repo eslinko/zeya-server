@@ -73,7 +73,9 @@ class UserConnections extends ActiveRecord
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_2,
                 'created_on' => $con->updated_at,
-                'username' => $username
+                'username' => $username,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias
             ];
         }
         $connections = UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'accepted'])->all();
@@ -94,7 +96,9 @@ class UserConnections extends ActiveRecord
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_1,
                 'created_on' => $con->updated_at,
-                'username' => $username
+                'username' => $username,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias
             ];
         }
         return $result;
@@ -121,7 +125,9 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_2,
                 'updated_at' => $con->updated_at,
                 'username' => $username,
-                'status' => $con->status
+                'status' => $con->status,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias
             ];
         }
         return $result;
@@ -148,6 +154,8 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_1,
                 'updated_at' => $con->updated_at,
                 'username' => $username,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias
             ];
         }
         return $result;
