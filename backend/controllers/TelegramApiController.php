@@ -97,8 +97,14 @@ class TelegramApiController extends AppController
         }
 
         $result['user'] = $user;
+        if (is_array($user)) {
+            $user_id = $user['id'];
+        } else {
+            $user_id = $user->id;
+        }
+
         $result['expressions_in_proccess'] = CreativeExpressions::find()
-            ->where(['user_id' => $user['id']])
+            ->where(['user_id' => $user_id])
             ->andWhere(['status' => 'process_of_creation'])
             ->asArray()
             ->one();
