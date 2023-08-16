@@ -20,12 +20,14 @@ RUN set -eux; \
 	composer clear-cache
 
 # copy sources
-COPY . .
+COPY . ./
 RUN rm -Rf .docker/
 
 RUN set -eux; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
     php ./init --env=Production --overwrite=a
+
+RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
 RUN mv "/usr/local/etc/php/php.ini-production" "/usr/local/etc/php/php.ini"
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
