@@ -1,33 +1,36 @@
-FROM php:8.0-apache
+#syntax=docker/dockerfile:1.4
 
-# Configure PHP for Cloud Run.
-# Precompile PHP code with opcache.
-RUN docker-php-ext-install -j "$(nproc)" opcache
-RUN set -ex; \
-  { \
-    echo "; Cloud Run enforces memory & timeouts"; \
-    echo "memory_limit = -1"; \
-    echo "max_execution_time = 0"; \
-    echo "; File upload at Cloud Run network limit"; \
-    echo "upload_max_filesize = 32M"; \
-    echo "post_max_size = 32M"; \
-    echo "; Configure Opcache for Containers"; \
-    echo "opcache.enable = On"; \
-    echo "opcache.validate_timestamps = Off"; \
-    echo "; Configure Opcache Memory (Application-specific)"; \
-    echo "opcache.memory_consumption = 32"; \
-  } > "$PHP_INI_DIR/conf.d/cloud-run.ini"
+FROM yiisoftware/yii2-php:8.1-apache
 
-# Copy in custom code from the host machine.
-WORKDIR /var/www/html
+ENV YII_DEBUG=false
+ENV YII_ENV=prod
+
+WORKDIR /app/web
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_MEMORY_LIMIT -1
+ENV PATH="${PATH}:/root/.composer/vendor/bin"
+
+COPY --from=composer/composer:2-bin /composer /usr/bin/composer
+
+# prevent the reinstallation of vendors at every changes in the source code
+COPY composer.* ./
+RUN set -eux; \
+	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+	composer clear-cache
+
+# copy sources
 COPY . ./
+RUN rm -Rf .docker/
 
-# Use the PORT environment variable in Apache configuration files.
-# https://cloud.google.com/run/docs/reference/container-contract#port
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+RUN set -eux; \
+	composer dump-autoload --classmap-authoritative --no-dev; \
+    php ./init --env=Production --overwrite=a
 
-# Configure PHP for development.
-# Switch to the production php.ini for production operations.
-# RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-# https://github.com/docker-library/docs/blob/master/php/README.md#configuration
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN mv "/usr/local/etc/php/php.ini-production" "/usr/local/etc/php/php.ini"
+COPY .docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY .docker/apache/ports.conf /etc/apache2/ports.conf
+
+COPY .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
+
+EXPOSE 8080
