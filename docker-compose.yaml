@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  php:
+    image: yiisoftware/yii2-php:8.1-apache
+    volumes:
+      - ./.docker/php/php.ini:/usr/local/etc/php/conf.d/user.ini:ro
+      - ./:/app/web:delegated
+    env_file:
+      - .env.dev
+    ports:
+      - '8000:80'
+  db:
+    image: mariadb:lts
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "app_db"
+    ports:
+      - '3306:3306'
+
+networks:
+  default:
+    driver: bridge

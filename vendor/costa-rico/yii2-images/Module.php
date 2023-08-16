@@ -3,7 +3,6 @@
 namespace rico\yii2images;
 
 
-use rico\yii2images\models\PlaceHolder;
 use yii;
 use rico\yii2images\models\Image;
 
@@ -13,17 +12,7 @@ class Module extends \yii\base\Module
 
     public $imagesCachePath = '@app/web/imgCache';
 
-    public $graphicsLibrary = 'GD';
-
     public $controllerNamespace = 'rico\yii2images\controllers';
-
-    public $placeHolderPath;
-
-    public $waterMark = false;
-
-    public $className;
-
-    public $imageCompressionQuality = 85;
 
 
     public function getImage($item, $dirtyAlias)
@@ -39,13 +28,7 @@ class Module extends \yii\base\Module
 
 
         //Lets get image
-        if(empty($this->className)) {
-            $imageQuery = Image::find();
-        } else {
-            $class = $this->className;
-            $imageQuery = $class::find();
-        }
-        $image = $imageQuery
+        $image = Image::find()
             ->where([
                 'modelName' => $modelName,
                 'itemId' => $itemId,
@@ -58,15 +41,12 @@ class Module extends \yii\base\Module
                          ':alias' => $alias
                      ])*/
             ->one();
-        if(!$image){
-            return $this->getPlaceHolder();
-        }
-
         return $image;
     }
 
     public function getStorePath()
     {
+
         return Yii::getAlias($this->imagesStorePath);
     }
 
@@ -79,12 +59,10 @@ class Module extends \yii\base\Module
 
     public function getModelSubDir($model)
     {
-
         $modelName = $this->getShortClass($model);
-        $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->getPrimaryKey();
+        $modelDir = $modelName . 's/' . $modelName . $model->id;
+
         return $modelDir;
-
-
     }
 
 
@@ -178,14 +156,5 @@ class Module extends \yii\base\Module
         )
             throw new \Exception('Setup imagesStorePath and imagesCachePath images module properties!!!');
         // custom initialization code goes here
-    }
-
-    public function getPlaceHolder(){
-
-        if($this->placeHolderPath){
-            return new PlaceHolder();
-        }else{
-            return null;
-        }
     }
 }

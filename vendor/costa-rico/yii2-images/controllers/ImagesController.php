@@ -35,7 +35,7 @@ class ImagesController extends Controller
      * @param $alias
      *
      */
-    public function actionImageByItemAndAlias($item='', $dirtyAlias)
+    public function actionImageByItemAndAlias($item, $dirtyAlias)
     {
         $dotParts = explode('.', $dirtyAlias);
         if(!isset($dotParts[1])){
@@ -48,11 +48,11 @@ class ImagesController extends Controller
         $image = $this->getModule()->getImage($item, $alias);
 
         if($image->getExtension() != $dotParts[1]){
-            throw new \yii\web\HttpException(404, 'Image not found (extension)');
+            throw new \yii\web\HttpException(404, 'Image not found (extenstion)');
         }
 
         if($image){
-            header('Content-Type: ' . $image->getMimeType($size) );
+            header('Content-Type: image/jpg');
             echo $image->getContent($size);
         }else{
             throw new \yii\web\HttpException(404, 'There is no images');

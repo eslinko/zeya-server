@@ -51,7 +51,7 @@ class ImageBehaveTest extends DbTestCase
                 ]
             ],
             'modules' => [
-                'yii2images' => [
+                'ricoStore' => [
                     'class' => 'rico\yii2images\Module',
 
                 ],
@@ -78,7 +78,7 @@ class ImageBehaveTest extends DbTestCase
 
         vfsStream::setup('root');
         vfsStream::setup('root/Cache');
-        $module = Yii::$app->getModule('yii2images');
+        $module = Yii::$app->getModule('ricoStore');
         $module->imagesStorePath = vfsStream::url('root/Store');
         $module->imagesCachePath = vfsStream::url('root/Cache');
 
@@ -107,18 +107,18 @@ class ImageBehaveTest extends DbTestCase
 
     public function testAttachImage()
     {
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
 
 
         //Check if file dir exists
         $this->assertTrue(
-            file_exists(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))
+            file_exists(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))
             &&
-            is_dir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))
+            is_dir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))
         );
 
         //Check file exists
-        $file = scandir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))[2];
+        $file = scandir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))[2];
         $this->assertTrue(isset($file));
 
         //Check file extension
@@ -127,7 +127,7 @@ class ImageBehaveTest extends DbTestCase
 
         //Check db record
         $imageRecord = Image::find()->where([
-            'itemId' => $this->model->getPrimaryKey(),
+            'itemId' => $this->model->id,
             'modelName' => 'ActiveRecordImage'
         ])->one();
 
@@ -143,14 +143,14 @@ class ImageBehaveTest extends DbTestCase
     public function testGetImages()
     {
         //Check one image
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
         $images = $this->model->getImages();
         $this->assertTrue(count($images) == 1);
 
         //Check several images
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
 
         $images = $this->model->getImages();
         $this->assertTrue(count($images) == 4);
@@ -167,14 +167,14 @@ class ImageBehaveTest extends DbTestCase
     public function testGetImage()
     {
         //Check one image
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
         $image = $this->model->getImage();
         $this->assertTrue(get_class($image) == 'rico\yii2images\models\Image');
 
         //Check several images
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
 
         $image = $this->model->getImage();
         $this->assertTrue(get_class($image) == 'rico\yii2images\models\Image');
@@ -192,7 +192,7 @@ class ImageBehaveTest extends DbTestCase
     public function testRemoveImage()
     {
 
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
         $img = $this->model->getImage();
 
         //Make cache copy
@@ -215,7 +215,7 @@ class ImageBehaveTest extends DbTestCase
 
         //Check db record removed
         $imageRecord = Image::find()->where([
-            'itemId' => $this->model->getPrimaryKey(),
+            'itemId' => $this->model->id,
             'modelName' => 'ActiveRecordImage'
         ])->one();
 
@@ -237,29 +237,29 @@ class ImageBehaveTest extends DbTestCase
      */
     public function testSetMainImage()
     {
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
         $img = $this->model->getImage();
 
         $this->assertTrue($img->isMain == 1);
 
         //Remember main image id
-        $oldMainImageId = $img->getPrimaryKey();
+        $oldMainImageId = $img->id;
 
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $newMainImage = $this->model->attachImage(__DIR__ . '/data/testPicture.jpg', true);
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $newMainImage = $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg', true);
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
 
 
         $images = $this->model->getImages();
         foreach ($images as $i) {
             if ($i->isMain == 0) {
-                $this->assertTrue($i->getPrimaryKey() != $newMainImage->getPrimaryKey());
+                $this->assertTrue($i->id != $newMainImage->id);
             } else {
-                $this->assertTrue($i->getPrimaryKey() == $newMainImage->getPrimaryKey());
+                $this->assertTrue($i->id == $newMainImage->id);
             }
         }
 
-        $this->assertTrue($oldMainImageId != $newMainImage->getPrimaryKey());
+        $this->assertTrue($oldMainImageId != $newMainImage->id);
     }
 
 
@@ -269,9 +269,9 @@ class ImageBehaveTest extends DbTestCase
         $anotherModel->name = 'testName';
         $anotherModel->save();
 
-        $img = $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
-        $anotherImage =  $anotherModel->attachImage(__DIR__ . '/data/testPicture.jpg');
+        $img = $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $this->model->attachImage(__DIR__ . '/../data/testPicture.jpg');
+        $anotherImage =  $anotherModel->attachImage(__DIR__ . '/../data/testPicture.jpg');
 
         $this->assertTrue($anotherImage->modelName == 'ActiveRecordImage2');
         $this->assertTrue($img->modelName == 'ActiveRecordImage');
