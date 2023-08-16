@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+#syntax=docker/dockerfile:1.4
 
 FROM yiisoftware/yii2-php:8.1-apache
 
