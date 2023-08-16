@@ -11,7 +11,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_MEMORY_LIMIT -1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
-COPY --from=composer/composer:2-bin --link /composer /usr/bin/composer
+COPY --from=composer/composer:2-bin /composer /usr/bin/composer
 
 # prevent the reinstallation of vendors at every changes in the source code
 COPY composer.* ./
@@ -20,7 +20,7 @@ RUN set -eux; \
 	composer clear-cache
 
 # copy sources
-COPY --link . .
+COPY . .
 RUN rm -Rf .docker/
 
 RUN set -eux; \
@@ -28,4 +28,4 @@ RUN set -eux; \
     php ./init --env=Production --overwrite=a
 
 RUN mv "/usr/local/etc/php/php.ini-production" "/usr/local/etc/php/php.ini"
-COPY --link .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
+COPY .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
