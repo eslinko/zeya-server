@@ -207,6 +207,11 @@ $currentUrl = Yii::$app->request->pathInfo;
 //                'url' => ['settings/facebook'],
 //                'active' => strpos($currentUrl, 'settings/facebook') !== false,
 //              ],
+              [
+                'label' => 'Bot settings',
+                'icon' => 'fa-regular fa-gear',
+                'url' => ['/settings'],
+              ],
             ],
           ];
         }

@@ -112,6 +112,11 @@ return [
 				'teaching-transaction/<page:\d+>/' => 'teaching-transaction/index',
 				'teaching-transaction/' => 'teaching-transaction/index',
 
+                'settings/view/<id:\d+>' => 'settings/view',
+                'settings/update/<id:\d+>' => 'settings/update',
+                'settings/<page:\d+>/' => 'settings/index',
+                'settings/' => 'settings/index',
+
                 'invitation-codes/view/<id:\d+>' => 'invitation-codes/view',
 //                'invitation-codes/update/<id:\d+>' => 'invitation-codes/update',
                 'invitation-codes/<page:\d+>/' => 'invitation-codes/index',

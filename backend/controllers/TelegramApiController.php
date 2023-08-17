@@ -5,6 +5,7 @@ namespace backend\controllers;
 use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;
+use app\models\Settings;
 use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
@@ -604,8 +605,10 @@ class TelegramApiController extends AppController
             //PartnerRuleAction::createAction(2,$code_owner);
             PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
             //file_put_contents('log.txt',"1\n",FILE_APPEND);
-            $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
-            $result['code_owner_connections'] = $res;
+            if(Settings::GiveLovestarViaConnections()==true){
+                $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
+                $result['code_owner_connections'] = $res;
+            }
             //create connection
             if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
             //find owner user
