@@ -6,6 +6,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['tag', 'gcr.io/$PROJECT_ID/zeya-server:$SHORT_SHA', 'gcr.io/$PROJECT_ID/zeya-server:latest']
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['beta', 'run', 'deploy', '--region', 'europe-north1', '--image', 'gcr.io/$PROJECT_ID/zeya-server', '--platform', 'managed', 'zeya-server' ]
+    args: ['beta', 'run', 'deploy', '--region', 'europe-north1', '--image', 'gcr.io/$PROJECT_ID/zeya-server:$TAG_NAME', '--platform', 'managed', 'zeya-server' ]
 images:
   - 'gcr.io/$PROJECT_ID/zeya-server'
