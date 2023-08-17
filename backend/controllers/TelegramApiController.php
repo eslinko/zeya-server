@@ -863,6 +863,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = User::find()->where(['id' => $data['user_id']])->asArray()->one();
+        if ($data === NULL) return ['status' => 'error'];
         return ['status' => 'success', 'user' => $user];
 
     }
