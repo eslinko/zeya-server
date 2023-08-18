@@ -991,6 +991,6 @@ class TelegramApiController extends AppController
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
         //generate Lovecoin
         //return PartnerRuleAction::createAction(1,$user['id']);
-        return PartnerRuleAction::actionRegistrationLovestar($user['id']);
+        return PartnerRuleAction::actionRegistrationLovestar($user->id);
     }
 }
