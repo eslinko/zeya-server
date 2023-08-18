@@ -176,20 +176,24 @@ class UserController extends AppController
 //			}
 
             User2Teacher::deleteAll(['userId' => $model->id]);
-            foreach ($model->teacher as $teacherId) {
-                $user2Col = new User2Teacher();
-                $user2Col->userId = $model->id;
-                $user2Col->teacherId = $teacherId;
-                $user2Col->save();
+            if(is_array($model->teacher) || is_object($model->teacher)) {
+                foreach ($model->teacher as $teacherId) {
+                    $user2Col = new User2Teacher();
+                    $user2Col->userId = $model->id;
+                    $user2Col->teacherId = $teacherId;
+                    $user2Col->save();
+                }
             }
 	
 			User2Partner::deleteAll(['userId' => $model->id]);
-			foreach ($model->partners as $partnerId) {
-				$user2Partner = new User2Partner();
-				$user2Partner->userId = $model->id;
-				$user2Partner->partnerId = $partnerId;
-				$user2Partner->save();
-			}
+            if(is_array($model->partners) || is_object($model->partners)) {
+                foreach ($model->partners as $partnerId) {
+                    $user2Partner = new User2Partner();
+                    $user2Partner->userId = $model->id;
+                    $user2Partner->partnerId = $partnerId;
+                    $user2Partner->save();
+                }
+            }
 
             if($model->save(false)) {
                 Yii::$app->session->setFlash('success', "The user {$model->username} with the name {$model->full_name} was successfully changed.");
