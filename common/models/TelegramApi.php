@@ -4,11 +4,11 @@ namespace common\models;
 
 class TelegramApi {
     static function validateAction($getParams) {
-        if(empty($getParams)) return ['status' => 'error'];
+        if(empty($getParams)) return false;
 
         $user = User::find()->where(['telegram' => $getParams['telegram_id']])->one();
 
-        if(empty($user)) return ['status' => 'error'];
+        if(empty($user)) return false;
 
         return $user;
     }
