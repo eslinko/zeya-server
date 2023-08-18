@@ -19,7 +19,8 @@ COPY --from=composer/composer:2-bin /composer /usr/bin/composer
 # prevent the reinstallation of vendors at every changes in the source code
 COPY composer.* ./
 RUN set -eux; \
-	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+    if [ "$APP_INIT_ENV" = "Production" ]; then export ARGS="--no-dev"; fi \
+	composer install --prefer-dist --no-autoloader --no-scripts --no-progress ${ARGS}; \
 	composer clear-cache
 
 # copy sources
@@ -27,7 +28,8 @@ COPY . ./
 RUN rm -Rf .docker/
 
 RUN set -eux; \
-	composer dump-autoload --classmap-authoritative --no-dev; \
+    if [ "$APP_INIT_ENV" = "Production" ]; then export ARGS="--no-dev"; fi \
+	composer dump-autoload --classmap-authoritative ${ARGS}; \
     php ./init --env=${APP_INIT_ENV} --overwrite=a
 
 RUN mv "/usr/local/etc/php/php.ini-production" "/usr/local/etc/php/php.ini"
