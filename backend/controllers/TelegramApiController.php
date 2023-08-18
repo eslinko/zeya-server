@@ -502,7 +502,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+        if (!$user) return ['status' => 'error'];
 
         $events_url = explode("\n", $data['events_url']);
         $resultOfEvents = [];
@@ -545,7 +545,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+        if (!$user) return ['status' => 'error'];
 
         $events = Events::find()->where(['organizer_id' => $user->id])->all();
 
@@ -576,7 +576,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+        if (!$user) return ['status' => 'error'];
 
         return ['status' => 'success', 'user' => $user, 'languages' => Languages::find()->where(['status' => 'active'])->all()];
     }
@@ -588,7 +588,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error'];
+        if (!$user) return ['status' => 'error'];
 
         $message = str_replace('{userPublicAlias}', $user->publicAlias, $data['message']);
 
@@ -609,7 +609,7 @@ class TelegramApiController extends AppController
 
         if (empty($data['code'])) return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $result = InvitationCodes::useCodeForInvitation($data['code'], $user->id);
         if($result['status'] === 'success') {
@@ -637,7 +637,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'codes' => InvitationCodes::getUserInvitationCodes($user->id)];
     }
@@ -648,7 +648,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'codes' => InvitationCodes::getUserNotUsedInvitationCodes($user->id)];
     }
@@ -660,7 +660,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $interests_description = $data['entered_text'];
         $calculated_interests = ['en' => ChatGPT::getUserInterests($interests_description)];
@@ -687,7 +687,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $calculated_interests = unserialize($user->calculated_interests);
 
@@ -716,7 +716,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user && !empty($data['entered_text'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $calculated_interests = unserialize($user->calculated_interests);
 
@@ -746,7 +746,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['number_to_remove'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user && !empty($data['number_to_remove'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $calculated_interests = unserialize($user->calculated_interests);
         $key = ((int) $data['number_to_remove'] - 1);
@@ -773,7 +773,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' && !empty($data['entered_text']) && !empty($data['user_lang'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user && !empty($data['entered_text']) && !empty($data['user_lang'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         $calculated_interests = unserialize($user->calculated_interests);
         $key = ((int) $data['entered_text'] - 1);
@@ -790,7 +790,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') {
+        if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
@@ -805,7 +805,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'connections' => UserConnections::getUserConnections($user->id)];
     }
@@ -815,7 +815,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'connections' => UserConnections::getUserSentInvites($user->id)];
     }
@@ -825,7 +825,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'connections' => UserConnections::getUserRejectedInvites($user->id)];
     }
@@ -837,7 +837,7 @@ class TelegramApiController extends AppController
 
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         $users = User::find()->where(['publicAlias' => $data['alias']])->orWhere(['telegram_alias' => $data['alias']])->andWhere(['<>','id', $user->id])->asArray()->all();
         return $users;
     }
@@ -846,7 +846,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return UserConnections::setUserConnection($user->id,$data['user_id_2']);
     }
@@ -855,7 +855,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return UserConnections::DeleteUserConnection($data['connection_id']);
     }
     public function actionGetUserByUserId(){
@@ -872,7 +872,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return UserConnections::AcceptUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
     }
     public function actionDeclineUserConnectionRequest(){
@@ -880,7 +880,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return UserConnections::DeclineUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
     }
     public function actionCheckUserConnection(){
@@ -888,7 +888,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         return ['status' => 'success','connection' => UserConnections::CheckUserConnection($data['user_id_1'],$data['user_id_2'])];
     }
 
@@ -899,12 +899,12 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') {
+        if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
         $new_expression = new CreativeExpressions();
-        $new_expression->user_id = $user['id'];
+        $new_expression->user_id = $user->id;
         $new_expression->status = 'process_of_creation';
         $new_expression->save(false);
 
@@ -917,11 +917,11 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error') {
+        if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
-        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user['language'], 'id');
+        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user->language, 'id');
         return ['status' => 'success', 'creative_types' => $creative_types];
     }
 
@@ -931,7 +931,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['type_title'])) {
+        if (!$user || empty($data['type_title'])) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
@@ -947,7 +947,7 @@ class TelegramApiController extends AppController
         }
 
         $cur_expression = CreativeExpressions::find()
-            ->where(['user_id' => $user['id']])
+            ->where(['user_id' => $user->id])
             ->andWhere(['status' => 'process_of_creation'])
             ->one();
 
@@ -966,12 +966,12 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['desc'])) {
+        if (!$user || empty($data['desc'])) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
         $cur_expression = CreativeExpressions::find()
-            ->where(['user_id' => $user['id']])
+            ->where(['user_id' => $user->id])
             ->andWhere(['status' => 'process_of_creation'])
             ->one();
 
@@ -988,7 +988,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
-        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         //generate Lovecoin
         //return PartnerRuleAction::createAction(1,$user['id']);
         return PartnerRuleAction::actionRegistrationLovestar($user->id);
