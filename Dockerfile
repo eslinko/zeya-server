@@ -28,7 +28,7 @@ COPY . ./
 RUN rm -Rf .docker/
 
 RUN set -eux; \
-    if [ "$APP_INIT_ENV" = "Production" ]; then export ARGS="--no-dev"; fi; \
+    if [ "${APP_INIT_ENV}" = "Production" ]; then export ARGS="--no-dev"; fi; \
 	composer dump-autoload --classmap-authoritative ${ARGS}; \
     php ./init --env=${APP_INIT_ENV} --overwrite=a
 
