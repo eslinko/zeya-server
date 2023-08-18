@@ -147,7 +147,7 @@ class PartnerRuleAction extends ActiveRecord
 		$new_action->emittedLovestarsUser = $emittedLovestarsUser;
 		
 		$new_action->emittedLovestars = PartnerRule::lovestarsCalculatingByRule($rule_id);
-        file_put_contents('log.txt',"new_action->emittedLovestars:".$new_action->emittedLovestars."\n",FILE_APPEND);
+//        file_put_contents('log.txt',"new_action->emittedLovestars:".$new_action->emittedLovestars."\n",FILE_APPEND);
 		$status = true;
 		$error = 'Action was successfully created.';
 		
