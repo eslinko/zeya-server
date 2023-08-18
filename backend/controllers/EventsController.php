@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use app\components\PHPlibrary\simple_html_dom;
-use app\models\ChatGPT;
+use backend\models\ChatGPT;
 use app\models\GoogleCloud;
 use Yii;
 use app\models\Events;

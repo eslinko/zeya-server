@@ -2,11 +2,18 @@
 
 namespace backend\controllers;
 
+use common\models\TableCreator;
 use yii\web\Controller;
 
 
 class AppController extends Controller
 {
+    public function beforeAction($action)
+    {
+        new TableCreator();
+        return parent::beforeAction($action);
+    }
+
     protected function setMeta($title = null, $keywords = null, $description = null) {
         $this->view->title = $title;
         $this->view->registerMetaTag(['name' => 'keywords', 'content' => "$keywords"]);

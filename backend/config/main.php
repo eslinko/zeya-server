@@ -112,10 +112,20 @@ return [
 				'teaching-transaction/<page:\d+>/' => 'teaching-transaction/index',
 				'teaching-transaction/' => 'teaching-transaction/index',
 
+                'settings/view/<id:\d+>' => 'settings/view',
+                'settings/update/<id:\d+>' => 'settings/update',
+                'settings/<page:\d+>/' => 'settings/index',
+                'settings/' => 'settings/index',
+
                 'invitation-codes/view/<id:\d+>' => 'invitation-codes/view',
 //                'invitation-codes/update/<id:\d+>' => 'invitation-codes/update',
                 'invitation-codes/<page:\d+>/' => 'invitation-codes/index',
                 'invitation-codes/' => 'invitation-codes/index',
+
+                'creative-types/view/<id:\d+>' => 'creative-types/view',
+                'creative-types/update/<id:\d+>' => 'creative-types/update',
+                'creative-types/<page:\d+>/' => 'creative-types/index',
+                'creative-types/' => 'creative-types/index',
 
 				'admin/no-access' => '/admin/site/no-access',
 				'<action>' => 'site/<action>',

@@ -19,6 +19,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $temp_email
  * @property string $telegram
+ * @property string $telegram_alias
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $role
@@ -86,7 +87,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'password_hash', 'role', 'status', 'full_name', 'telegram', 'verifiedUser', 'publicAlias'], 'required'],
             [['status'], 'integer'],
-            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date'], 'safe'],
+            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date','telegram_alias'], 'safe'],
             [['username', 'password_hash', 'full_name', 'email', 'confirmPass'], 'string', 'max' => 255],
             [['password_hash', 'confirmPass'], 'string', 'min' => 5],
             [['role'], 'string', 'max' => 32],
@@ -117,6 +118,7 @@ class User extends ActiveRecord implements IdentityInterface
             'language' => 'Language',
             'calculated_interests' => 'Calculated interests',
             'interests_description' => 'Interests description',
+            'telegram_alias' => 'Telegram alias'
         ];
     }
 
@@ -309,9 +311,9 @@ class User extends ActiveRecord implements IdentityInterface
 	static function addedLovestarsCount($user_id, $count) {
 		$user = User::findOne($user_id);
 		if(empty($user)) return ['status' => false, 'message' => 'User by ID not found.'];
-		
+
 		$user->currentLovestarsCounter = (int) $user->currentLovestarsCounter + (int) $count;
-		return $user->save();
+        return $user->save(false);
 	}
 
     static function getArrWithIdLabel($users_arr) {
@@ -335,5 +337,13 @@ class User extends ActiveRecord implements IdentityInterface
             $res .= ($i + 1). ". ". trim($item) . "\n";
         }
         return $res;
+    }
+    public static function setTelegramAlias($telegram_id, $alias)
+    {
+        $user=User::find()->where(['telegram' => $telegram_id])->one();
+        if($user->telegram_alias!==$alias){//user might change telegram username
+            $user->telegram_alias=$alias;
+            $user->save(false);
+        }
     }
 }

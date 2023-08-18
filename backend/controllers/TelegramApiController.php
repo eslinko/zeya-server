@@ -2,20 +2,31 @@
 
 namespace backend\controllers;
 
-use app\models\ChatGPT;
+use app\models\CreativeExpressions;
+use app\models\CreativeTypes;
+use app\models\Partner;
+use app\models\PartnerRule;
+use app\models\PartnerRuleAction;
+use app\models\Settings;
+use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
 use app\models\Languages;
+use app\models\SendGridMailer;
 use app\models\Teacher;
 use app\models\HashTag;
-use app\models\TelegramApi;
+use backend\models\UsersWithSharedInterests;
+use common\models\TelegramApi;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
+use backend\models\UserConnections;
 use backend\models\EmailSendVerificationCode;
 use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
+use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 class TelegramApiController extends AppController
 {
@@ -81,11 +92,23 @@ class TelegramApiController extends AppController
                 $new_lang->status = 'untranslated';
                 $new_lang->save();
                 $telegram_id = is_array($user) ? $user['telegram'] : $user->telegram;
-                TelegramApi::sendNotificationToAdminTelegram("Alarm! New language detected during new user registration! Title: {$new_lang->title}, code: {$new_lang->code}, user telegram ID: $telegram_id");
+                $admins = User::find()->where(['role' => 'admin'])->all();
+                TelegramApi::sendNotificationToUsersTelegram("Alarm! New language detected during new user registration! Title: {$new_lang->title}, code: {$new_lang->code}, user telegram ID: $telegram_id", $admins);
             }
         }
 
         $result['user'] = $user;
+        if (is_array($user)) {
+            $user_id = $user['id'];
+        } else {
+            $user_id = $user->id;
+        }
+
+        $result['expressions_in_proccess'] = CreativeExpressions::find()
+            ->where(['user_id' => $user_id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->asArray()
+            ->one();
 
         return $result;
     }
@@ -114,6 +137,11 @@ class TelegramApiController extends AppController
             TelegramChatsLastMessage::createLastMessage($data['telegram_id'], $data['message']);
         } else {
             TelegramChatsLastMessage::updateLastMessage($data['telegram_id'], $data['message']);
+        }
+        $message=json_decode($data['message'],true);
+        if(isset($message['chat']['username'])){
+            //if user did not set up username, then username field is missing
+            User::setTelegramAlias($data['telegram_id'],$message['chat']['username']);
         }
 
         return ['status' => 'success', 'user' => User::find()->where(['telegram' => $data['telegram_id']])->one()];
@@ -437,6 +465,10 @@ class TelegramApiController extends AppController
         $model = new EmailSendVerificationCode();
         $model->sendEmail($user, $data['email']);
 
+//        $sendgrid = new SendGridMailer();
+//        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
+//        $sendgrid->sendEmail($data['email'], 'Verification From LovestarBot', 'test content');
+
         return ['status' => 'success'];
     }
 
@@ -560,7 +592,8 @@ class TelegramApiController extends AppController
 
         $message = str_replace('{userPublicAlias}', $user->publicAlias, $data['message']);
 
-        TelegramApi::sendNotificationToAdminTelegram($message);
+        $admins = User::find()->where(['role' => 'admin'])->all();
+        TelegramApi::sendNotificationToUsersTelegram($message, $admins);
 
         return ['status' => 'true', 'user' => $user];
     }
@@ -578,7 +611,23 @@ class TelegramApiController extends AppController
 
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        return InvitationCodes::useCodeForInvitation($data['code'], $user->id);
+        $result = InvitationCodes::useCodeForInvitation($data['code'], $user->id);
+        if($result['status'] === 'success') {
+            $code_owner = InvitationCodes::getInvitationCodeOwnerUserId($data['code']);
+            //give Lovestar
+            //PartnerRuleAction::createAction(2,$code_owner);
+            PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
+            //file_put_contents('log.txt',"1\n",FILE_APPEND);
+            if(Settings::GiveLovestarViaConnections()==true){
+                $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
+                $result['code_owner_connections'] = $res;
+            }
+            //create connection
+            if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
+            //find owner user
+            if(!isset($telegram_id['status'])) $result['owner_user'] = User::findOne($code_owner);
+        }
+        return $result;
     }
 
     public function actionGetMyInvitationCodes()
@@ -591,6 +640,17 @@ class TelegramApiController extends AppController
         if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
         return ['status' => 'success', 'codes' => InvitationCodes::getUserInvitationCodes($user->id)];
+    }
+    public function actionGetMyNotUsedInvitationCodes()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'codes' => InvitationCodes::getUserNotUsedInvitationCodes($user->id)];
     }
 
     public function actionSetUserInterests()
@@ -612,8 +672,10 @@ class TelegramApiController extends AppController
         }
 
         $user->calculated_interests = serialize($calculated_interests);
-        $user->interests_description = $interests_description;
+        $user->interests_description = json_decode($interests_description);
         $user->save(false);
+
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
 
         return ['status' => 'success', 'list_of_interests' => $list_of_interests];
     }
@@ -672,6 +734,8 @@ class TelegramApiController extends AppController
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
 
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
         return ['status' => 'success'];
     }
 
@@ -697,6 +761,9 @@ class TelegramApiController extends AppController
 
         $user->calculated_interests = serialize($calculated_interests);
         $user->save(false);
+
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
         return ['status' => 'success'];
     }
 
@@ -717,4 +784,213 @@ class TelegramApiController extends AppController
         return ['status' => 'success', 'choosed_interests' => $choosed_interests];
     }
 
+    public function actionClearAllInterests() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $user->calculated_interests = '';
+        $user->save(false);
+
+        return ['status' => 'success'];
+    }
+    public function actionGetUserConnections() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserConnections($user->id)];
+    }
+    public function actionGetUserSentInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserSentInvites($user->id)];
+    }
+    public function actionGetUserRejectedInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserRejectedInvites($user->id)];
+    }
+
+    public function actionGetUsersByAnyAlias() {
+        //find users which are not connected with current user
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $users = User::find()->where(['publicAlias' => $data['alias']])->orWhere(['telegram_alias' => $data['alias']])->andWhere(['<>','id', $user->id])->asArray()->all();
+        return $users;
+    }
+    public function actionSetUserConnection(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return UserConnections::setUserConnection($user->id,$data['user_id_2']);
+    }
+    public function actionDeleteUserConnection(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::DeleteUserConnection($data['connection_id']);
+    }
+    public function actionGetUserByUserId(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = User::find()->where(['id' => $data['user_id']])->asArray()->one();
+        if ($data === NULL) return ['status' => 'error'];
+        return ['status' => 'success', 'user' => $user];
+
+    }
+    public function actionAcceptUserConnectionRequest(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::AcceptUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
+    }
+    public function actionDeclineUserConnectionRequest(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::DeclineUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
+    }
+    public function actionCheckUserConnection(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return ['status' => 'success','connection' => UserConnections::CheckUserConnection($data['user_id_1'],$data['user_id_2'])];
+    }
+
+    /*expressions*/
+    public function actionStartCreatingExpressions() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $new_expression = new CreativeExpressions();
+        $new_expression->user_id = $user['id'];
+        $new_expression->status = 'process_of_creation';
+        $new_expression->save(false);
+
+        return ['status' => 'success'];
+    }
+
+    public function actionGetCreativeTypes() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error') {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user['language'], 'id');
+        return ['status' => 'success', 'creative_types' => $creative_types];
+    }
+
+    public function actionSetCreativeTypeToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['type_title'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $find_creative_type = CreativeTypes::find()
+            ->where(['type_en' => $data['type_title']])
+            ->orWhere(['type_ru' => $data['type_title']])
+            ->orWhere(['type_et' => $data['type_title']])
+            ->asArray()
+            ->one();
+
+        if(empty($find_creative_type)) {
+            return ['status' => 'error', 'text' => 'No such type was found! Try using a type from the suggested variants.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user['id']])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if(!empty($cur_expression)) {
+            $cur_expression->type = $find_creative_type['id'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success', 'finded_type' => $find_creative_type];
+    }
+
+    public function actionSetDescriptionToExpression()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!empty($user['status']) && $user['status'] === 'error' || empty($data['desc'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user['id']])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression)) {
+            $cur_expression->description = $data['desc'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
+
+    public function actionSetUserRegistrationLovecoins(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if (empty($data)) return ['status' => 'error'];
+        $user = TelegramApi::validateAction($data);
+        if (!empty($user['status']) && $user['status'] === 'error') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        //generate Lovecoin
+        //return PartnerRuleAction::createAction(1,$user['id']);
+        return PartnerRuleAction::actionRegistrationLovestar($user['id']);
+    }
 }

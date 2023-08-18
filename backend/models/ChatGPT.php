@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 class ChatGPT {
     static function sendChatGPTRequest($message) {
@@ -39,7 +39,7 @@ class ChatGPT {
     }
 
     static function getUserInterests($user_text) {
-        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in Englishm, even if this text consists of a single word. Make this list comma-separated and return without any another symbols and text: \n";
+        $message = "Take this text that comes from a community member describing himself/herself and extract a detailed list of interests and values, in English, even if this text consists of a single word. Make this list comma-separated and return without any another symbols and text. Create a list even if it's a question. List: \n";
         $message .= $user_text;
         $response = self::sendChatGPTRequest($message);
 
@@ -86,6 +86,19 @@ class ChatGPT {
     static function translateCalculatedInterest($calculated_interests, $lang = 'en') {
         $message = "Take this list, translate it into " . self::languageCompareForBot($lang) . " and return back: \n";
         $message .= $calculated_interests;
+        $response = self::sendChatGPTRequest($message);
+
+        return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
+    }
+
+    static function compareInterests($interest_1, $interest_2) {
+        $message = "Take this list of user (who is a community member) interests as a reference: \n
+        {$interest_1} \n
+        Then take this list of another user (who is a community member) interests: \n
+        {$interest_2} \n
+        Then compare them if there are common interests between the two users. And generate a json array containing common interests in English. Return only json array with format: {\"interests\": [\"interest\", \"interest\", \"interest\"]}";
+//        echo nl2br($message);
+//        echo '<br><br>-----------------------------------<br><br>';
         $response = self::sendChatGPTRequest($message);
 
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;

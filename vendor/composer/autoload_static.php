@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd31251adacea90688302e41f9546478d
+class ComposerStaticInit4308b34bf338d8407137342083ff5f4b
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -18,7 +18,9 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '79f66bc0a1900f77abe4a9a299057a0a' => __DIR__ . '/..' . '/starkbank/ecdsa/src/ellipticcurve.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
+        '180092cfc969a12e06f2132a203a3184' => __DIR__ . '/..' . '/codeception/verify/src/Codeception/function.php',
         '9a4d9b2dc09f1ad978b28fc9a8420755' => __DIR__ . '/..' . '/yiithings/yii2-dotenv/src/autoload.php',
     );
 
@@ -29,6 +31,9 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
             'yii\\swiftmailer\\' => 16,
             'yii\\jui\\' => 8,
             'yii\\imagine\\' => 12,
+            'yii\\gii\\' => 8,
+            'yii\\faker\\' => 10,
+            'yii\\debug\\' => 10,
             'yii\\composer\\' => 13,
             'yii\\bootstrap\\' => 14,
             'yii\\' => 4,
@@ -70,6 +75,12 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
             'Symfony\\Polyfill\\Iconv\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'SendGrid\\Stats\\' => 15,
+            'SendGrid\\Mail\\' => 14,
+            'SendGrid\\Helper\\' => 16,
+            'SendGrid\\EventWebhook\\' => 22,
+            'SendGrid\\Contacts\\' => 18,
+            'SendGrid\\' => 9,
         ),
         'R' => 
         array (
@@ -81,6 +92,7 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+            'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
@@ -129,6 +141,7 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+            'Faker\\' => 6,
         ),
         'E' => 
         array (
@@ -162,6 +175,18 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         'yii\\imagine\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-imagine/src',
+        ),
+        'yii\\gii\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-gii/src',
+        ),
+        'yii\\faker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-faker/src',
+        ),
+        'yii\\debug\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yiisoft/yii2-debug/src',
         ),
         'yii\\composer\\' => 
         array (
@@ -243,6 +268,30 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
+        'SendGrid\\Stats\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/stats',
+        ),
+        'SendGrid\\Mail\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/mail',
+        ),
+        'SendGrid\\Helper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/helper',
+        ),
+        'SendGrid\\EventWebhook\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/eventwebhook',
+        ),
+        'SendGrid\\Contacts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/contacts',
+        ),
+        'SendGrid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/php-http-client/lib',
+        ),
         'Rize\\' => 
         array (
             0 => __DIR__ . '/..' . '/rize/uri-template/src/Rize',
@@ -257,12 +306,16 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -408,6 +461,10 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
+        'Faker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
@@ -445,10 +502,18 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
         ),
+        'D' => 
+        array (
+            'Diff' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpspec/php-diff/lib',
+            ),
+        ),
     );
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'BaseSendGridClientInterface' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'GPBMetadata\\GrpcGcp' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/GPBMetadata/GrpcGcp.php',
         'Grpc\\Gcp\\AffinityConfig' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/Grpc/Gcp/AffinityConfig.php',
@@ -458,7 +523,9 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
         'Grpc\\Gcp\\MethodConfig' => __DIR__ . '/..' . '/google/grpc-gcp/src/generated/Grpc/Gcp/MethodConfig.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'SendGrid' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/SendGrid.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'TwilioEmail' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/TwilioEmail.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
@@ -466,10 +533,10 @@ class ComposerStaticInitd31251adacea90688302e41f9546478d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd31251adacea90688302e41f9546478d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd31251adacea90688302e41f9546478d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitd31251adacea90688302e41f9546478d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitd31251adacea90688302e41f9546478d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4308b34bf338d8407137342083ff5f4b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4308b34bf338d8407137342083ff5f4b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4308b34bf338d8407137342083ff5f4b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4308b34bf338d8407137342083ff5f4b::$classMap;
 
         }, null, ClassLoader::class);
     }

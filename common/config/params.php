@@ -1,7 +1,7 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'skoryk.realmart.com.ua@realmart.com.ua',
+    'supportEmail' => 'info@zeya888.com',
     'user.passwordResetTokenExpire' => 3600,
     'siteName' => 'LovestarBot',
 ];
