@@ -4,7 +4,7 @@ set -eo pipefail
 # Create mount directory for service.
 mkdir -p "$MNT_DIR"
 
-if [ "$1" = 'apache2' ]; then
+if [ "$1" = 'apache2-foreground' ]; then
 
   if [ "$IS_LOCAL" != "true" ]; then
     [[ -z "$FILE_STORE_IP_ADDRESS" ]] && { echo "Error: env FILE_STORE_IP_ADDRESS not found"; exit 1; }
