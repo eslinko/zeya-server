@@ -13,6 +13,7 @@ ENV DB_PORT 3306
 
 # Install system dependencies
 RUN apt-get update -y && apt-get install -y \
+    netcat-openbsd \
     nfs-common \
     && apt-get clean
 
