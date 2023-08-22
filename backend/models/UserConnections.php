@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  * @property string $status
  * @property string $created_at
  * @property string $updated_at
+ * @property string $attempts
  */
 class UserConnections extends ActiveRecord
 {
@@ -48,7 +49,8 @@ class UserConnections extends ActiveRecord
             'user_id_2' => 'Invited user',
             'status' => 'Status',
             'created_at' => 'Creation date',
-            'updated_at' => 'Updated at date'
+            'updated_at' => 'Updated at date',
+            'attempts' => 'Pending invites send attempts'
         ];
     }
 
@@ -132,6 +134,23 @@ class UserConnections extends ActiveRecord
         }
         return $result;
     }
+    static function getUserSentPendingInvites($user_id){
+        $connections =  UserConnections::find()->where(['user_id_1' => $user_id,'status'=>'pending'])->all();
+        $result = [];
+        foreach ($connections as $con) {
+            $user=User::findOne(['id' => $con->user_id_2]);
+            $result[] = [
+                'connection_id' => $con->connection_id,
+                'user_id' => $con->user_id_2,
+                'updated_at' => $con->updated_at,
+                'status' => $con->status,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias,
+                'attempts' => $con->attempts
+            ];
+        }
+        return $result;
+    }
 
     static function getUserRejectedInvites($user_id){
         $connections =  UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'declined'])->all();
@@ -184,14 +203,28 @@ class UserConnections extends ActiveRecord
         $new_connection->user_id_1 = $user_id_1;
         $new_connection->user_id_2 = $user_id_2;
         $new_connection->status = $status;
-        //$new_connection->save(false);
+        $new_connection->attempts = 1;
         if($new_connection->save(false)){
             return ['status' => 'success'];
         }
         else{
             return ['status' => 'error'];
         }
+    }
 
+    static function IncrementUserSentPendingInvitation($user_id_1, $user_id_2)
+    {
+        $connection = UserConnections::find()->where(['user_id_2' => $user_id_2,'user_id_1' => $user_id_1])->one();
+        if($connection===NULL) {
+            return ['status' => 'error'];
+        }
+        $connection->attempts = intval($connection->attempts)+1;
+        if($connection->save(false)){
+            return ['status' => 'success'];
+        }
+        else{
+            return ['status' => 'error'];
+        }
     }
     static function DeleteUserConnection($connection_id){
         $connection=UserConnections::findOne(['connection_id' => $connection_id]);
@@ -229,6 +262,14 @@ class UserConnections extends ActiveRecord
             $connection=UserConnections::findOne(['user_id_1' => $user_id_2,'user_id_2' => $user_id_1]);
         }
         return $connection;
+    }
+
+    static function GetUserSentPendingInvitation($user_id_1,$user_id_2){
+        $connection=UserConnections::find()->where(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2])->asArray()->one();
+        if($connection===NULL){
+            return ['status' => 'error'];
+        }
+        return ['status' => 'success', 'connection' => $connection];
     }
 
     static function getUserSecondaryUser($user_id) {
