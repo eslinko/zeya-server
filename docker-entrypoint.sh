@@ -11,7 +11,7 @@ if [ "$1" = 'apache2-foreground' ]; then
     [[ -z "$FILE_SHARE_NAME" ]] && { echo "Error: env FILE_SHARE_NAME not found"; exit 1; }
 
     echo "Mounting Cloud Filestore."
-    mount -o nolock "$FILE_STORE_IP_ADDRESS":"$FILE_SHARE_NAME" "$MNT_DIR"
+    mount -t nfs -o nolock --verbose "$FILE_STORE_IP_ADDRESS":"$FILE_SHARE_NAME" "$MNT_DIR"
     echo "Mounting completed."
   fi
 
