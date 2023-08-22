@@ -15,6 +15,8 @@ ENV DB_PORT 3306
 RUN apt-get update -y && apt-get install -y \
     netcat-openbsd \
     nfs-common \
+    netbase \
+    procps \
     && apt-get clean
 
 WORKDIR /app/web
