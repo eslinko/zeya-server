@@ -13,6 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\User;
+use yii\helpers\FileHelper;
 
 /**
  * EventsController implements the CRUD actions for Events model.
@@ -214,6 +215,11 @@ class EventsController extends AppController
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
             $target_dir = Yii::getAlias('@webroot').'/uploads/screenshots/';
+
+            if(!file_exists($target_dir)){
+                FileHelper::createDirectory($target_dir);
+            }
+
             $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
             $fileUploaded = move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
