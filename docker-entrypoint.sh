@@ -6,7 +6,7 @@ mkdir -p "$MNT_DIR"
 
 if [ "$1" = 'apache2-foreground' ]; then
 
-  if [ "$IS_LOCAL" != "true" ]; then
+  if [ -z "$IS_LOCAL" ]; then
     [[ -z "$FILE_STORE_IP_ADDRESS" ]] && { echo "Error: env FILE_STORE_IP_ADDRESS not found"; exit 1; }
     [[ -z "$FILE_SHARE_NAME" ]] && { echo "Error: env FILE_SHARE_NAME not found"; exit 1; }
 

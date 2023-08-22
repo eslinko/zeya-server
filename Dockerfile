@@ -54,3 +54,5 @@ COPY .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
 EXPOSE 8080
 
 ENTRYPOINT ["/app/web/docker-entrypoint.sh"]
+
+CMD ["apache2-foreground"]
