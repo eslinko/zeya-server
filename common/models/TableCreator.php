@@ -30,6 +30,7 @@ class TableCreator
     private function updateTables(): void
     {
         $this->userUpdate();
+        $this->connectionsUpdate();
         $this->UsersWithSharedInterestsUpdate();
     }
 
@@ -80,6 +81,13 @@ class TableCreator
         $table = $this->db->schema->getTableSchema('User');
         if (!isset($table->columns['telegram_alias'])) {
             $this->db->createCommand()->addColumn('User', 'telegram_alias', 'varchar(33) AFTER telegram')->execute();
+        }
+    }
+    private function connectionsUpdate(): void
+    {
+        $table = $this->db->schema->getTableSchema('UserConnections');
+        if (!isset($table->columns['attempts'])) {
+            $this->db->createCommand()->addColumn('UserConnections', 'attempts', 'SMALLINT DEFAULT 0')->execute();
         }
     }
     private function UsersWithSharedInterestsUpdate(): void

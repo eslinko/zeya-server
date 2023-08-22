@@ -819,6 +819,34 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success', 'connections' => UserConnections::getUserSentInvites($user->id)];
     }
+    public function actionGetUserSentPendingInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserSentPendingInvites($user->id)];
+    }
+    public function actionIncrementUserSentPendingInvitation() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::IncrementUserSentPendingInvitation($user->id, $data['user_id_2']);
+    }
+    public function actionGetUserSentPendingInvitation() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        return UserConnections::GetUserSentPendingInvitation($user->id, $data['user_id_2']);
+    }
     public function actionGetUserRejectedInvites() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
