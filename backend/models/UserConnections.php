@@ -160,6 +160,22 @@ class UserConnections extends ActiveRecord
         }
         return $result;
     }
+    static function getUserPendingInvites($user_id){
+        $connections =  UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'pending'])->all();
+        $result = [];
+        foreach ($connections as $con) {
+            $user=User::findOne(['id' => $con->user_id_1]);
+
+            $result[] = [
+                'connection_id' => $con->connection_id,
+                'user_id' => $con->user_id_1,
+                'updated_at' => $con->updated_at,
+                'public_alias' => $user->publicAlias,
+                'telegram_alias' => $user->telegram_alias
+            ];
+        }
+        return $result;
+    }
     static function setUserConnection($user_id_1,$user_id_2, $status = 'pending'){
         $new_connection = UserConnections::find()->where(['user_id_2' => $user_id_2,'user_id_1' => $user_id_1])->orWhere(['user_id_2' => $user_id_1,'user_id_1' => $user_id_2])->one();
         if($new_connection===NULL) {
@@ -179,6 +195,7 @@ class UserConnections extends ActiveRecord
     }
     static function DeleteUserConnection($connection_id){
         $connection=UserConnections::findOne(['connection_id' => $connection_id]);
+        if($connection===NULL) return ['status' => 'error'];
         if($connection->delete()===false)
             return ['status' => 'error'];
         else
@@ -186,6 +203,7 @@ class UserConnections extends ActiveRecord
     }
     static function AcceptUserConnectionRequest($user_id_1,$user_id_2){
         $connection=UserConnections::findOne(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2]);
+        if($connection===NULL) return ['status' => 'error'];
         $connection->status='accepted';
         if($connection->save(false)){
             return ['status' => 'success'];
@@ -196,6 +214,7 @@ class UserConnections extends ActiveRecord
     }
     static function DeclineUserConnectionRequest($user_id_1,$user_id_2){
         $connection=UserConnections::findOne(['user_id_1' => $user_id_1,'user_id_2' => $user_id_2]);
+        if($connection===NULL) return ['status' => 'error'];
         $connection->status='declined';
         if($connection->save(false)){
             return ['status' => 'success'];

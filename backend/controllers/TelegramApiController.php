@@ -829,6 +829,16 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success', 'connections' => UserConnections::getUserRejectedInvites($user->id)];
     }
+    public function actionGetUserPendingInvites() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'connections' => UserConnections::getUserPendingInvites($user->id)];
+    }
 
     public function actionGetUsersByAnyAlias() {
         //find users which are not connected with current user
