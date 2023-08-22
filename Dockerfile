@@ -8,6 +8,14 @@ ENV APP_INIT_ENV $APP_INIT_ENV
 ENV YII_DEBUG=false
 ENV YII_ENV=prod
 
+ENV MNT_DIR /app/web/backend/web/uploads
+ENV DB_PORT 3306
+
+# Install system dependencies
+RUN apt-get update -y && apt-get install -y \
+    nfs-common \
+    && apt-get clean
+
 WORKDIR /app/web
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -28,6 +36,8 @@ RUN set -eux; \
 
 # copy sources
 COPY . ./
+RUN chmod +x /app/web/docker-entrypoint.sh
+
 RUN rm -Rf .docker/
 
 RUN set -eux; \
@@ -41,3 +51,7 @@ COPY .docker/apache/ports.conf /etc/apache2/ports.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/user.ini
 
 EXPOSE 8080
+
+ENTRYPOINT ["/app/web/docker-entrypoint.sh"]
+
+CMD ["apache2", "-D", "FOREGROUND"]
