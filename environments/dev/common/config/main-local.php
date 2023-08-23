@@ -6,7 +6,7 @@ return [
             'dsn' => 'mysql:host=' . env('DB_HOST') . ';dbname=' . env('DB_NAME'),
             'username' => env('DB_USER'),
             'password' => env('DB_PASS'),
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
