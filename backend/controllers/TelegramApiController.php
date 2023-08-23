@@ -190,9 +190,10 @@ class TelegramApiController extends AppController
         $user->publicAlias = $data['publicAlias'];
         $user->full_name = $data['publicAlias'];
         $user->username = $data['publicAlias'];
-        $user->save(false);
-
-        return ['status' => 'success', 'user' => $user];
+        if($user->save(false))
+            return ['status' => 'success', 'user' => $user];
+        else
+            return ['status' => 'error', 'user' => $user];
     }
 
     public function actionSetUserPassword()
