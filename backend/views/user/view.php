@@ -65,6 +65,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'attribute' => 'role',
                         'value' => function($data) {
+                            if(empty($data->role)) return '<span class="not-set">(not set)</span>';
+                            if(!isset(\common\models\User::ROLES[$data->role])) return $data->role;
                             return \common\models\User::ROLES[$data->role];
                         },
                         'format' => 'html'
