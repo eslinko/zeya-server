@@ -30,7 +30,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'attribute' => 'user_id',
                         'value' => function ($data) {
-                            return empty($data->user_id) ? '<span class="not-set">(not set)</span>' : '<a href="' . Url::to(['user/view', 'id' => $data->user_id]) . '">' . User::getArrWithIdLabel([User::find()->where(['id' => $data->user_id])->asArray()->one()])[$data->user_id] . '</a>';
+                            if(empty($data->user_id))
+                                return '<span class="not-set">(not set)</span>';
+                            else {
+                                $res = User::find()->where(['id' => $data->user_id])->asArray()->one();
+                                if($res == NULL) return '<span class="not-set">(not set)</span>';
+                                if(isset(User::getArrWithIdLabel([$res])[$data->user_id]))
+                                    return '<a href="' . Url::to(['user/view', 'id' => $data->user_id]) . '">' . User::getArrWithIdLabel([$res])[$data->user_id] . '</a>';
+                            }
+                            //return empty($data->user_id) ? '<span class="not-set">(not set)</span>' : '<a href="' . Url::to(['user/view', 'id' => $data->user_id]) . '">' . User::getArrWithIdLabel([User::find()->where(['id' => $data->user_id])->asArray()->one()])[$data->user_id] . '</a>';
                         },
                         'format' => 'html',
                     ],
