@@ -86,7 +86,7 @@ class Daemon {
                     continue;
                 }
 
-                $calculated_interests = unserialize($secondary_user->calculated_interests);
+                $calculated_interests = !empty($secondary_user->calculated_interests) ? unserialize($secondary_user->calculated_interests) : [];
                 if(empty($calculated_interests)) {
                     continue;
                 }
