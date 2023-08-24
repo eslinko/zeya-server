@@ -32,11 +32,11 @@ class CurlHelper {
         curl_close($ch);
 
         if ($result === false) {
-            echo "<pre>";
-            var_dump(curl_error($ch));
-            var_dump(curl_errno($ch));
-            echo "</pre>";
-            exit;
+//            echo "<pre>";
+//            var_dump(curl_error($ch));
+//            var_dump(curl_errno($ch));
+//            echo "</pre>";
+//            exit;
         }
 
         return $result;
