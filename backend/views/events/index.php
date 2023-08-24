@@ -153,7 +153,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'attribute' => 'organizer_id',
                         'value' => function ($data) {
-                            return empty($data->organizer_id) ? '<span class="not-set">(not set)</span>' : '<a href="' . Url::to(['user/view', 'id' => $data->organizer_id]) . '">' . User::getArrWithIdLabel([User::find()->where(['id' => $data->organizer_id])->asArray()->one()])[$data->organizer_id] . '</a>';
+                            $organizer = User::findOne($data->organizer_id);
+                            if(!empty($data->organizer_id) && empty($organizer)){
+                                $data->organizer_id = null;
+                                $data->save(false);
+                            }
+                            return empty($organizer) ? '<span class="not-set">(not set)</span>' : '<a href="' . Url::to(['user/view', 'id' => $organizer->id]) . '">' . User::getArrWithIdLabel([User::find()->where(['id' => $organizer->id])->asArray()->one()])[$organizer->id] . '</a>';
                         },
                         'format' => 'html',
                     ],
