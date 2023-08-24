@@ -14,9 +14,10 @@ class TelegramApi {
     }
 
     static function sendNotificationToUsersTelegram($notification_text, $users) {
+        $notification_text_url = urlencode($notification_text);
         foreach ($users as $user) {
             if(empty($user->telegram)) continue;
-            $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage?chat_id={$user->telegram}&text={$notification_text}";
+            $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage?chat_id={$user->telegram}&text={$notification_text_url}";
 //            echo $url . ' ';
             CurlHelper::curl($url);
         }

@@ -13,7 +13,7 @@ class CurlHelper {
             CURLOPT_SSL_VERIFYPEER => false,
         ];
 
-        if ($method === 'GET') {
+        if ($method === 'GET' && !empty($data)) {
             $url .= (strpos($url, '?') === false) ? '?' : '&';
             $url .= http_build_query($data);
         }
