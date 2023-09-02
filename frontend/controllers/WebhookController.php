@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace frontend\controllers;
+
+use common\models\Daemon;
+use yii\web\Controller;
+
+class WebhookController extends Controller
+{
+    /**
+     *
+     * Route for /webhook/send-ecosystem-growth-notification
+     *
+     * @return string
+     */
+    public function actionSendEcosystemGrowthNotification() {
+        try {
+            Daemon::sendEcosystemGrowthNotification();
+        } catch (\Throwable $t) {
+            return sprintf('Error: (%d) %s', $t->getCode(), $t->getMessage());
+        }
+
+        return 'OK';
+    }
+
+    /**
+     * Route for /webhook/match-users-by-interest
+     *
+     * @return string
+     */
+    public function actionMatchUsersByInterest() {
+        try {
+            Daemon::matchUsersByInterest();
+        } catch (\Throwable $t) {
+            return sprintf('Error: (%d) %s', $t->getCode(), $t->getMessage());
+        }
+
+        return 'OK';
+    }
+}

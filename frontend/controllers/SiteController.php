@@ -61,6 +61,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect(Yii::$app->urlManagerBackend->createUrl(''));
+        return $this->redirect(Yii::$app->urlManagerBackend->createUrl('/'));
     }
 }

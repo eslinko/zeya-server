@@ -49,7 +49,9 @@ return [
 ////                'hash-tag/' => 'hash-tag/index',
 //
 //
-                '<action>'=>'site/<action>',
+                '<action>' => 'site/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'defaultRoute' => '/site/index',
             ],
         ],
         'urlManagerBackend' => [
