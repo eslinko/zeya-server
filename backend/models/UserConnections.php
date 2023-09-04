@@ -62,7 +62,10 @@ class UserConnections extends ActiveRecord
 
             $username = '';
             if(!empty($user)) {
-                $username = $user->publicAlias;
+                $username = false;
+                if(!empty($user->publicAlias)) {
+                    $username = $user->publicAlias;
+                }
                 if(empty($username)){
                     $username=$user->full_name;
                     if(empty($username)){
@@ -85,7 +88,10 @@ class UserConnections extends ActiveRecord
             $user=User::findOne(['id' => $con->user_id_1]);
             $username = '';
             if(!empty($user)) {
-                $username = $user->publicAlias;
+                $username = false;
+                if(!empty($user->publicAlias)) {
+                    $username = $user->publicAlias;
+                }
                 if(empty($username)){
                     $username=$user->full_name;
                     if(empty($username)){
@@ -114,7 +120,10 @@ class UserConnections extends ActiveRecord
 
             $username = '';
             if(!empty($user)) {
-                $username = $user->publicAlias;
+                $username = false;
+                if(!empty($user->publicAlias)) {
+                    $username = $user->publicAlias;
+                }
                 if(empty($username)){
                     $username=$user->full_name;
                     if(empty($username)){
@@ -160,7 +169,10 @@ class UserConnections extends ActiveRecord
 
             $username = '';
             if(!empty($user)) {
-                $username = $user->publicAlias;
+                $username = false;
+                if(!empty($user->publicAlias)) {
+                    $username = $user->publicAlias;
+                }
                 if(empty($username)){
                     $username=$user->full_name;
                     if(empty($username)){
