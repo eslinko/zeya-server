@@ -298,7 +298,7 @@ class UserConnections extends ActiveRecord
                 $result[] = [
                     'user_id' => $secondary_user['user_id'],
                     'connection_id' => $secondary_user['connection_id'],
-                    'created_at_timestamp' => strtotime($secondary_user['created_on']),
+                    'created_at_timestamp' => strtotime($secondary_user['created_on'] ?? ''),
                 ];
             }
         }

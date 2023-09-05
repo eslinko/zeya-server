@@ -76,7 +76,7 @@ class UsersWithSharedInterests extends ActiveRecord
                 'user_id' => $id,
                 'username' => $username,
                 'created_at' => $userWithInterests->created_at,
-                'created_at_timestamp' => strtotime($userWithInterests->created_at)
+                'created_at_timestamp' => strtotime($userWithInterests->created_at ?? '')
             ];
         }
         return $result;
