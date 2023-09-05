@@ -19,7 +19,7 @@ class WebhookController extends Controller
         try {
             Daemon::sendEcosystemGrowthNotification();
         } catch (\Throwable $t) {
-            return sprintf('Error: (%d) %s', $t->getCode(), $t->getMessage());
+            return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
         }
 
         return 'OK';
@@ -34,7 +34,7 @@ class WebhookController extends Controller
         try {
             Daemon::matchUsersByInterest();
         } catch (\Throwable $t) {
-            return sprintf('Error: (%d) %s', $t->getCode(), $t->getMessage());
+            return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
         }
 
         return 'OK';
