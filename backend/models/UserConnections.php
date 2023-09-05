@@ -80,7 +80,7 @@ class UserConnections extends ActiveRecord
                 'created_on' => $con->updated_at,
                 'username' => $username,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
             ];
         }
         $connections = UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'accepted'])->all();
@@ -106,7 +106,7 @@ class UserConnections extends ActiveRecord
                 'created_on' => $con->updated_at,
                 'username' => $username,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
             ];
         }
         return $result;
@@ -138,7 +138,7 @@ class UserConnections extends ActiveRecord
                 'username' => $username,
                 'status' => $con->status,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
             ];
         }
         return $result;
@@ -154,7 +154,7 @@ class UserConnections extends ActiveRecord
                 'updated_at' => $con->updated_at,
                 'status' => $con->status,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias,
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : '',
                 'attempts' => $con->attempts
             ];
         }
@@ -186,7 +186,7 @@ class UserConnections extends ActiveRecord
                 'updated_at' => $con->updated_at,
                 'username' => $username,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
             ];
         }
         return $result;
@@ -202,7 +202,7 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_1,
                 'updated_at' => $con->updated_at,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => $user->telegram_alias
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
             ];
         }
         return $result;
