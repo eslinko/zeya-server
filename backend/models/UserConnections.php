@@ -79,7 +79,7 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_2,
                 'created_on' => $con->updated_at,
                 'username' => $username,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias
             ];
         }
@@ -105,7 +105,7 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_1,
                 'created_on' => $con->updated_at,
                 'username' => $username,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias
             ];
         }
@@ -137,7 +137,7 @@ class UserConnections extends ActiveRecord
                 'updated_at' => $con->updated_at,
                 'username' => $username,
                 'status' => $con->status,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias
             ];
         }
@@ -153,7 +153,7 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_2,
                 'updated_at' => $con->updated_at,
                 'status' => $con->status,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias,
                 'attempts' => $con->attempts
             ];
@@ -185,7 +185,7 @@ class UserConnections extends ActiveRecord
                 'user_id' => $con->user_id_1,
                 'updated_at' => $con->updated_at,
                 'username' => $username,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias
             ];
         }
@@ -201,7 +201,7 @@ class UserConnections extends ActiveRecord
                 'connection_id' => $con->connection_id,
                 'user_id' => $con->user_id_1,
                 'updated_at' => $con->updated_at,
-                'public_alias' => $user->publicAlias,
+                'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
                 'telegram_alias' => $user->telegram_alias
             ];
         }
