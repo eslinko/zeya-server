@@ -1,4 +1,9 @@
 <?php
+// telegram bot id
+defined('TelegramBotId') or define('TelegramBotId', env('TELEGRAM_BOT_ID'));
+// chat gpt api key
+defined('ChatGPTApiKey') or define('ChatGPTApiKey', env('CHAT_GPT_API_KEY'));
+
 return [
     'components' => [
         'db' => [
