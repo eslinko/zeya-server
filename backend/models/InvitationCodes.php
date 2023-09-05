@@ -114,7 +114,7 @@ class InvitationCodes extends ActiveRecord
         $user->invitation_code_id = $code->id;
         $user->save(false);
 
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 8; $i++) {
             self::createNewCode($user->id);
         }
 
