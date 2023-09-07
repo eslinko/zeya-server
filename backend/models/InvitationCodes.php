@@ -83,6 +83,12 @@ class InvitationCodes extends ActiveRecord
         $code->save();
     }
 
+    static function generateCodes($owner_id, $amount) {
+        for ($i = 1; $i <= $amount; $i++) {
+            self::createNewCode($owner_id);
+        }
+        return ['status' => 'success'];
+    }
     static function useCodeForInvitation($string_code, $user_id) {
         $code = InvitationCodes::findOne([
             'code' => $string_code,

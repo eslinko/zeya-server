@@ -602,7 +602,24 @@ class TelegramApiController extends AppController
 
         return ['status' => 'true', 'user' => $user];
     }
+    public function actionGenerateCodes()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+
+        if (empty($data)) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        if (empty($data['amount']) OR is_numeric($data['amount']) == false) return ['status' => 'error', 'text' => 'This amount is not valid'];
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        if($user['role'] !== 'admin') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $owner_user = User::find()->where(['publicAlias' => $data['alias']])->asArray()->one();
+        if($owner_user === NULL) return ['status' => 'error', 'text' => 'User not found'];
+        InvitationCodes::generateCodes($owner_user['id'], intval($data['amount']));
+        return ['status' => 'success', 'owner_user' => $owner_user];
+    }
     public function actionSetInvitationCode()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -906,7 +923,7 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
         if (empty($data)) return ['status' => 'error'];
         $user = User::find()->where(['id' => $data['user_id']])->asArray()->one();
-        if ($data === NULL) return ['status' => 'error'];
+        if ($user === NULL) return ['status' => 'error'];
         return ['status' => 'success', 'user' => $user];
 
     }
