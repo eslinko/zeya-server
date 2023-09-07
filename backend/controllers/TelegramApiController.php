@@ -591,7 +591,11 @@ class TelegramApiController extends AppController
 
         if (!$user) return ['status' => 'error'];
 
-        $message = str_replace('{userPublicAlias}', $user->publicAlias, $data['message']);
+        if(empty($user->telegram_alias))
+            $user_name = $user->publicAlias;
+        else
+            $user_name = $user->publicAlias.' (@'.$user->telegram_alias.')';
+        $message = str_replace('{userPublicAlias}', $user_name , $data['message']);
 
         $admins = User::find()->where(['role' => 'admin'])->all();
         TelegramApi::sendNotificationToUsersTelegram($message, $admins);
