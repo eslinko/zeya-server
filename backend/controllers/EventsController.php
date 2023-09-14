@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use app\components\PHPlibrary\simple_html_dom;
+use app\models\CreativeExpressions;
 use backend\models\ChatGPT;
 use app\models\GoogleCloud;
 use Yii;
@@ -63,6 +64,11 @@ class EventsController extends AppController
      */
     public function actionIndex()
     {
+//        CreativeExpressions::setMockupData(1);
+//        echo "<pre>";
+//        var_dump(CreativeExpressions::getCreativeExpressionsByUser(2));
+//        echo "</pre>";
+//        exit;
       $query = Events::find();
 
       $getData = Yii::$app->request->get();

@@ -15,9 +15,9 @@ class TableCreator
         $this->db = Yii::$app->db;
         $this->createTables();
         $this->updateTables();
-        if(!empty($_GET['test'])){
-            Daemon::matchUsersByInterest();
-        }
+//        if(!empty($_GET['test'])){
+//            Daemon::matchUsersByInterest();
+//        }
     }
 
     private function createTables(): void
@@ -32,6 +32,7 @@ class TableCreator
         $this->userUpdate();
         $this->connectionsUpdate();
         $this->UsersWithSharedInterestsUpdate();
+        $this->creativeExpressionsUpdate();
     }
 
     // create table methods
@@ -96,6 +97,11 @@ class TableCreator
         if (!isset($table->columns['need_update'])) {
             $this->db->createCommand()->addColumn('UsersWithSharedInterests', 'need_update', 'int(1) DEFAULT NULL AFTER updated_at')->execute();
         }
+    }
+
+    private function creativeExpressionsUpdate(): void
+    {
+        $this->db->createCommand('ALTER TABLE `CreativeExpressions` CHANGE `upload_date` `upload_date` INT NULL DEFAULT NULL')->execute();
     }
 
 }
