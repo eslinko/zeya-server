@@ -64,7 +64,7 @@ class EventsController extends AppController
      */
     public function actionIndex()
     {
-//        CreativeExpressions::setMockupData(1);
+//        CreativeExpressions::setMockupData(1, true);
 //        echo "<pre>";
 //        var_dump(CreativeExpressions::getCreativeExpressionsByUser(2));
 //        echo "</pre>";

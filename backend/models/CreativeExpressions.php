@@ -91,6 +91,21 @@ class CreativeExpressions extends ActiveRecord
             $creativeExpression->save(false);
         }
 
+        $urls = ['https://www.w3schools.com/html/pic_trulli.jpg', 'https://example.com/'];
+
+        foreach ($urls as $url){
+            $creativeExpression = new CreativeExpressions();
+            $creativeExpression->user_id = $user_id;
+            $creativeExpression->type = rand(0, $creativeTypesCountKeys);
+            $creativeExpression->content = $url;
+            $creativeExpression->description = 'Test description 2222 - ' . rand(0, $creativeTypesCountKeys);
+            $creativeExpression->tags = 'Tag 3, 55, 612';
+            $creativeExpression->active_period = time() + 3600 * 24;
+            $creativeExpression->upload_date = time();
+            $creativeExpression->status = 'active';
+            $creativeExpression->save(false);
+        }
+
         return true;
     }
 
