@@ -104,11 +104,20 @@ class TelegramApiController extends AppController
             $user_id = $user->id;
         }
 
-        $result['expressions_in_proccess'] = CreativeExpressions::find()
+        $creative_expression = CreativeExpressions::find()
             ->where(['user_id' => $user_id])
             ->andWhere(['status' => 'process_of_creation'])
             ->asArray()
             ->one();
+
+        if(!empty($creative_expression['type'])) {
+            $creative_expression['type_names'] = CreativeTypes::find($creative_expression['type'])
+                ->where(['id' => $creative_expression['type']])
+                ->asArray()
+                ->one();
+        }
+
+        $result['expressions_in_proccess'] = $creative_expression;
 
         return $result;
     }
@@ -1039,6 +1048,95 @@ class TelegramApiController extends AppController
             $cur_expression->description = $data['desc'];
             $cur_expression->save(false);
         }
+
+        return ['status' => 'success'];
+    }
+
+    public function actionSetTagsToExpression()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['tags'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression)) {
+            $cur_expression->tags = $data['tags'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
+
+    public function actionSetUrlContentToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['url'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression)) {
+            $cur_expression->content = $data['url'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
+
+    public function actionCancelExpressionCreation() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        CreativeExpressions::deleteAll(['user_id' => $user->id, 'status' => 'process_of_creation']);
+
+        return ['status' => 'success'];
+    }
+
+    public function actionExpressionFinishedCreation() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (empty($cur_expression)) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression->active_period = time() + 3600 * 24;
+        $cur_expression->upload_date = time();
+        $cur_expression->status = 'active';
+        $cur_expression->save(false);
 
         return ['status' => 'success'];
     }
