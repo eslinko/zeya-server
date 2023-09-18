@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use common\models\CurlHelper;
 use yii\db\ActiveRecord;
+use yii\debug\components\search\matchers\SameAs;
 use \yii\helpers\FileHelper;
 use Yii;
 
@@ -131,5 +133,59 @@ class CreativeExpressions extends ActiveRecord
     public static function removeAllExpressionsByUser($user_id){
         FileHelper::removeDirectory(Yii::getAlias('@webroot') . '/uploads/creative_expressions/' . $user_id . '/');
         return CreativeExpressions::deleteAll(['user_id' => $user_id]);
+    }
+
+    public static function uploadFileFromTelegram($user_id, $file_id) {
+        $target_dir = Yii::getAlias('@webroot').'/uploads/creative_expressions/' . $user_id . '/';
+
+        if(!file_exists($target_dir)){
+            FileHelper::createDirectory($target_dir);
+        }
+
+        // get file path
+        $url = "https://api.telegram.org/bot".TelegramBotId."/getFile?file_id={$file_id}";
+        $result = json_decode(CurlHelper::curl($url));
+
+        if(!$result->ok) {
+            return '';
+        }
+
+        $file_path = $result->result->file_path;
+
+        if(empty($file_path)) {
+            return '';
+        }
+
+        //get file
+        $url = "https://api.telegram.org/file/bot".TelegramBotId."/{$file_path}";
+        $file = file_get_contents($url);
+
+        if(!$file) {
+            return '';
+        }
+
+        $new_file_name = uniqid() . '_' . basename($url);
+
+        $target_file = $target_dir . $new_file_name;
+
+        if (file_put_contents($target_file, $file) !== false) {
+            return '/uploads/creative_expressions/' . $user_id . '/' . $new_file_name;
+        } else {
+            return '';
+        }
+    }
+
+    public static function removeFileFromExpression($expression_id) {
+        $cur_expression = CreativeExpressions::findOne($expression_id);
+
+        if(empty($cur_expression->content)) return true;
+
+        $file = Yii::getAlias('@webroot') . $cur_expression->content;
+
+        if(file_exists($file)){
+            return FileHelper::unlink($file);
+        }
+
+        return true;
     }
 }
