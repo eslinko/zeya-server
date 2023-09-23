@@ -1111,6 +1111,29 @@ class TelegramApiController extends AppController
         return ['status' => 'success'];
     }
 
+    public function actionSetFileContentToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['file_id'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression)) {
+            $cur_expression->content = CreativeExpressions::uploadFileFromTelegram($user->id, $data['file_id']);
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
+
     public function actionCancelExpressionCreation() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
@@ -1119,6 +1142,15 @@ class TelegramApiController extends AppController
 
         if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression) && !empty($cur_expression->content)) {
+            CreativeExpressions::removeFileFromExpression($cur_expression->id);
         }
 
         CreativeExpressions::deleteAll(['user_id' => $user->id, 'status' => 'process_of_creation']);
