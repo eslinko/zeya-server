@@ -25,6 +25,8 @@ class TableCreator
         $this->userConnections();
         $this->usersWithSharedInterests();
         $this->BotSettings();
+        $this->MatchAction();
+        $this->Matches();
     }
 
     private function updateTables(): void
@@ -102,6 +104,35 @@ class TableCreator
     private function creativeExpressionsUpdate(): void
     {
         $this->db->createCommand('ALTER TABLE `CreativeExpressions` CHANGE `upload_date` `upload_date` INT NULL DEFAULT NULL')->execute();
+    }
+
+    private function MatchAction(): void
+    {
+        $query = "
+                CREATE TABLE IF NOT EXISTS MatchAction (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    action_user_id INT NOT NULL,
+                    expression_id INT NOT NULL,
+                    expression_user_id INT NOT NULL,
+                    action_result TINYINT(1) NOT NULL,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            ";
+        $this->db->createCommand($query)->execute();
+    }
+    private function Matches(): void
+    {
+        $query = "
+                CREATE TABLE IF NOT EXISTS Matches (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    user_1_id INT NOT NULL,
+                    user_2_id INT NOT NULL,
+                    user_1_telegram BIGINT NOT NULL,
+                    user_2_telegram BIGINT NOT NULL,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )
+            ";
+        $this->db->createCommand($query)->execute();
     }
 
 }

@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use app\models\CreativeExpressions;
 use app\models\CreativeTypes;
+use app\models\MatchAction;
+use app\models\Matches;
 use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;
@@ -840,6 +842,16 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success', 'connections' => UserConnections::getUserConnections($user->id)];
     }
+    public function actionGetUserMatches() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        return ['status' => 'success', 'matches' => Matches::getUserMatches($user->id)];
+    }
     public function actionGetUserSentInvites() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
@@ -1150,5 +1162,90 @@ class TelegramApiController extends AppController
         //generate Lovecoin
         //return PartnerRuleAction::createAction(1,$user['id']);
         return PartnerRuleAction::actionRegistrationLovestar($user->id);
+    }
+    public function actionGetSwipesQueue(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if($res['status'] == false){
+            if(isset($res['message']))return ['error' => 'Error! '.$res['message']];
+            return ['error' => 'Error! Try again later.'];
+        }
+
+        $user = $res['user'];
+
+        $users_with_shared_interests = UsersWithSharedInterests::getUserWithSharedInterests($user['id']);
+        $creative_expressions = array();
+        foreach ($users_with_shared_interests as $us) {
+            CreativeExpressions::setMockupData($us['id'],true);
+            $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['id']);
+            foreach ($expr_list as $expr){
+                if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
+                    $creative_expressions[] = $expr;
+                }
+            }
+        }
+        usort($creative_expressions, function($a, $b){
+            if(strtotime($a['active_period'])>strtotime($b['active_period']))
+                return 1;
+            elseif(strtotime($a['active_period'])>strtotime($b['active_period']))
+                return -1;
+            else
+                return 0;
+        });
+        return $creative_expressions;
+    }
+    public function actionMatchAction()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if ($res['status'] == false) {
+            return ['error' => 'Error! Try again later.'];
+        }
+
+        $user = $res['user'];
+        $match = false;
+        if(intval($data['action_result']) == 1){//like
+            $res = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
+            if($res == true){
+                //match
+                $match = true;
+                Matches::addMatch(intval($data['expression_user_id']), $user['id']);
+            }
+        }
+
+        $res = MatchAction::addAction($user['id'], intval($data['expression_id']), intval($data['expression_user_id']), intval($data['action_result']));
+        if ($res['status'] == false) return ['error' => 'Error! Try again later.'];
+        return ['match' =>  $match];
+
+    }
+    public function actionWebAppValidate(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $initDataArray = explode('&', rawurldecode($data['initData']));
+        $needle        = 'hash=';
+        $hash          = '';
+        parse_str($data['initData'], $output);
+        $ob = json_decode($output['user'],true);
+        return ['user8'=>$ob['id']];
+        foreach ($initDataArray as &$dataq) {
+            if (substr($dataq, 0, \strlen($needle)) === $needle) {
+                $hash = substr_replace($dataq, '', 0, \strlen($needle));
+                $dataq = null;
+            }
+        }
+        $initDataArray = array_filter($initDataArray);
+        sort($initDataArray);
+        $data_check_string = implode("\n", $initDataArray);
+        $secret_key = hash_hmac('sha256', '6305419498:AAHk-ry3097lLYnR_1AcUQE-MkS0a-1n85I','WebAppData', true);
+        $local_hash = bin2hex(hash_hmac('sha256', $data_check_string, $secret_key, true));
+        if($local_hash === $hash)
+            return 'Cool! ';
+        else
+            return 'Who are you?';
     }
 }

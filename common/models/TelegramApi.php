@@ -13,6 +13,38 @@ class TelegramApi {
         return $user;
     }
 
+    static function validateWebAppRequest($url) {
+        //get user_id
+        parse_str($url, $url_arr);
+        $user_arr = json_decode($url_arr['user'],true);
+        $telegram_id = $user_arr['id'];
+
+        //validation
+        $initDataArray = explode('&', rawurldecode($url));
+        $needle        = 'hash=';
+        $hash          = '';
+
+        foreach ($initDataArray as &$dataq) {
+            if (substr($dataq, 0, \strlen($needle)) === $needle) {
+                $hash = substr_replace($dataq, '', 0, \strlen($needle));
+                $dataq = null;
+            }
+        }
+        $initDataArray = array_filter($initDataArray);
+        sort($initDataArray);
+        $data_check_string = implode("\n", $initDataArray);
+        $secret_key = hash_hmac('sha256', '6305419498:AAHk-ry3097lLYnR_1AcUQE-MkS0a-1n85I','WebAppData', true);
+        $local_hash = bin2hex(hash_hmac('sha256', $data_check_string, $secret_key, true));
+        if($local_hash !== $hash)
+            return ['status' => false];
+
+        $user = User::find()->where(['telegram' => $telegram_id])->one();
+
+        if(empty($user)) return ['status' => false, 'message' => 'User not found'];
+
+        return ['status' => true, 'user' => $user];
+    }
+
     static function sendNotificationToUsersTelegram($notification_text, $users) {
         $notification_text_url = urlencode($notification_text);
         foreach ($users as $user) {

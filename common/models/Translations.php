@@ -6,7 +6,7 @@ class Translations {
     private static $tralsnates = [
         'ecosystemGrowthNotification' => [
             'en' => 'Good morning!
-This is your personalised update on the growth of Zeya-community.
+This is your personalised update on the growth of Zeya4eve-community.
 
 During the latest 24h:
 
@@ -16,7 +16,7 @@ During the latest 24h:
 
 3. New signups brought you {newSecondaryUsersWithSharedInterests} connections candidates. Soon you will have access to the creative expressions of {secondaryUsersWithSharedInterests} users. Among those, you will be validating your emotional resonance and get new connections!',
             'ru' => 'Доброе утро!
-Это Ваш персональный отчет о росте Zeya-сообщества.
+Это Ваш персональный отчет о росте Zeya4eve-сообщества.
 
 За последние 24 часа:
 
@@ -26,7 +26,7 @@ During the latest 24h:
 
 3. Новые регистрации принесли вам {newSecondaryUsersWithSharedInterests} кандидатов на подключение. Вскоре вы получите доступ к творческим проявлениям пользователей {secondaryUsersWithSharedInterests}. Среди них вы сможете подтвердить свой эмоциональный резонанс и получить новые связи!',
             'et' => 'Tere hommikust!
-See on teie personaalne värskendus Zeya-kogukonna kasvu kohta.
+See on teie personaalne värskendus Zeya4eve-kogukonna kasvu kohta.
 
 Viimase 24h jooksul:
 
