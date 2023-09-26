@@ -3,4 +3,8 @@
 !js
 !site.js
 !images
+!images/creative-expressions-mockup
 !*.png
+!*.jpg
+!*.mp4
+!*.avif
