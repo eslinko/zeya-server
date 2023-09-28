@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $description
  * @property string $billingVATNumber
  * @property string $billingDetails
+ * @property string $authHash
  */
 class Partner extends ActiveRecord
 {
@@ -32,6 +33,7 @@ class Partner extends ActiveRecord
         return [
           [['legalName', 'billingVATNumber', 'billingDetails'], 'required'],
           [['description'], 'string'],
+          [['autoHash'], 'safe'],
         ];
     }
 
@@ -84,5 +86,34 @@ class Partner extends ActiveRecord
         else{
             return NULL;
         }
+    }
+
+    static public function createVHPartner(){
+        $new_partner = Partner::find()->where(['id' => 2])->one();
+
+        if($new_partner===NULL) {
+            $new_partner = new Partner();
+            $new_partner->id = 2;
+        }
+
+        $new_partner->legalName = 'Viral Help';
+        $new_partner->description = 'VH+Zeya4Eve.';
+        $new_partner->authHash = password_hash(ViralHelpPartnerPassword, PASSWORD_DEFAULT);
+        if($new_partner->save(false)){
+            return $new_partner;
+        }
+        else {
+            return NULL;
+        }
+    }
+
+    static public function partnerPasswordVerify($partner_id, $password){
+        $partner = Partner::findOne($partner_id);
+
+        if(empty($partner)) {
+            return false;
+        }
+
+        return password_verify($password, $partner->authHash);
     }
 }

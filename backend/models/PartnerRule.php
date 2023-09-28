@@ -73,9 +73,14 @@ class PartnerRule extends ActiveRecord
 		return $query;
 	}
 	
-	static function lovestarsCalculatingByRule($rule_id){
+	static function lovestarsCalculatingByRule($rule_id, $base_value = 0){
 		$rule = PartnerRule::findOne($rule_id);
 		if(empty($rule)) return ['status' => false, 'message' => 'Rule by ID not found.'];
+
+        // rule for viral help
+        if($rule_id === 4) {
+            return ceil($rule->emissionCalculationBaseValue * (int) $base_value);
+        }
 
 		return ceil($rule->emissionCalculationBaseValue * $rule->emissionCalculationPercentage);
 	}
@@ -127,6 +132,26 @@ class PartnerRule extends ActiveRecord
         $new_rule->partnerId = 1;
         $new_rule->title = 'Registration gives 1 Lovestar to code owner conections';
         $new_rule->triggerName = 'Registration gives 1 lovestar to code owner connections';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
+
+    static function createRuleRegistrationForViralHelp(){
+        $new_rule = PartnerRule::find()->where(['id' => 4])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 4;
+        }
+
+        $new_rule->partnerId = 2;
+        $new_rule->title = 'ViralHelp4Zeya4Eve';
+        $new_rule->triggerName = 'DirectMapping';
         $new_rule->emissionCalculationBaseValue = 1;
         $new_rule->emissionCalculationPercentage = 1;
         if($new_rule->save(false)){
