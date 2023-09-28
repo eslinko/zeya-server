@@ -73,9 +73,14 @@ class PartnerRule extends ActiveRecord
 		return $query;
 	}
 	
-	static function lovestarsCalculatingByRule($rule_id){
+	static function lovestarsCalculatingByRule($rule_id, $base_value = 0){
 		$rule = PartnerRule::findOne($rule_id);
 		if(empty($rule)) return ['status' => false, 'message' => 'Rule by ID not found.'];
+
+        // rule for viral help
+        if($rule_id === 4) {
+            return ceil($rule->emissionCalculationBaseValue * (int) $base_value);
+        }
 
 		return ceil($rule->emissionCalculationBaseValue * $rule->emissionCalculationPercentage);
 	}

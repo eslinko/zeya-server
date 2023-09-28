@@ -113,7 +113,7 @@ class PartnerRuleAction extends ActiveRecord
 
         return PartnerRuleAction::createAction(1, $user_id);
     }
-	static function createAction($rule_id, $emittedLovestarsUser) {
+	static function createAction($rule_id, $emittedLovestarsUser, $base_value = 0) {
 /*        if($rule_id === 1 OR $rule_id === 2) {//built-in rule, create at first use
             //create BotPartner at first use
             $bot_partner = Partner::findOne(['id'=>1]);
@@ -146,7 +146,7 @@ class PartnerRuleAction extends ActiveRecord
 		$new_action->emissionCalculationPercentage = $rule->emissionCalculationPercentage;
 		$new_action->emittedLovestarsUser = $emittedLovestarsUser;
 		
-		$new_action->emittedLovestars = PartnerRule::lovestarsCalculatingByRule($rule_id);
+		$new_action->emittedLovestars = PartnerRule::lovestarsCalculatingByRule($rule_id, $base_value);
 //        file_put_contents('log.txt',"new_action->emittedLovestars:".$new_action->emittedLovestars."\n",FILE_APPEND);
 		$status = true;
 		$error = 'Action was successfully created.';
