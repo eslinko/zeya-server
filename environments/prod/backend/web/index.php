@@ -17,6 +17,8 @@ defined('TelegramBotId') or define('TelegramBotId', env('TELEGRAM_BOT_ID'));
 defined('ChatGPTApiKey') or define('ChatGPTApiKey', env('CHAT_GPT_API_KEY'));
 // sendgrid api key
 defined('SendGridApiKey') or define('SendGridApiKey', env('SENDGRID_API_KEY'));
+// VH password
+defined('ViralHelpPartnerPassword') or define('ViralHelpPartnerPassword', env('VH_PARTNER_PWD'));
 
 
 $config = yii\helpers\ArrayHelper::merge(

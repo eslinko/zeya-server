@@ -12,6 +12,8 @@ defined('TelegramBotId') or define('TelegramBotId', 'example');
 defined('ChatGPTApiKey') or define('ChatGPTApiKey', 'your_api_key');
 // sendgrid api key
 defined('SendGridApiKey') or define('SendGridApiKey', 'api_key');
+// VH password
+defined('ViralHelpPartnerPassword') or define('ViralHelpPartnerPassword', 'partner_pwd');
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';

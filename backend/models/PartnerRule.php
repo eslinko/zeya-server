@@ -136,4 +136,24 @@ class PartnerRule extends ActiveRecord
             return NULL;
         }
     }
+
+    static function createRuleRegistrationForViralHelp(){
+        $new_rule = PartnerRule::find()->where(['id' => 4])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 4;
+        }
+
+        $new_rule->partnerId = 2;
+        $new_rule->title = 'ViralHelp4Zeya4Eve';
+        $new_rule->triggerName = 'DirectMapping';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
 }

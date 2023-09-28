@@ -1,8 +1,11 @@
 <?php
 
 namespace common\models;
+use app\models\PartnerRuleAction;
 use backend\models\UserConnections;
 use backend\models\UsersWithSharedInterests;
+use app\models\Partner;
+use app\models\PartnerRule;
 use Yii;
 
 
@@ -18,6 +21,11 @@ class TableCreator
 //        if(!empty($_GET['test'])){
 //            Daemon::matchUsersByInterest();
 //        }
+        // create partners
+        if(!empty($_GET['create-partner'])) {
+            Partner::createVHPartner();
+            PartnerRule::createRuleRegistrationForViralHelp();
+        }
     }
 
     private function createTables(): void
@@ -32,6 +40,7 @@ class TableCreator
     private function updateTables(): void
     {
         $this->userUpdate();
+        $this->partnerUpdate();
         $this->connectionsUpdate();
         $this->UsersWithSharedInterestsUpdate();
         $this->creativeExpressionsUpdate();
@@ -84,6 +93,13 @@ class TableCreator
         $table = $this->db->schema->getTableSchema('User');
         if (!isset($table->columns['telegram_alias'])) {
             $this->db->createCommand()->addColumn('User', 'telegram_alias', 'varchar(33) AFTER telegram')->execute();
+        }
+    }
+    private function partnerUpdate(): void
+    {
+        $table = $this->db->schema->getTableSchema('Partner');
+        if (!isset($table->columns['authHash'])) {
+            $this->db->createCommand()->addColumn('Partner', 'authHash', 'varchar(255) AFTER billingDetails')->execute();
         }
     }
     private function connectionsUpdate(): void
