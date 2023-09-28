@@ -2,7 +2,6 @@
 
 namespace backend\controllers;
 
-use app\models\PartnerRuleAction;
 use Yii;
 use app\models\Partner;
 use yii\data\ActiveDataProvider;
