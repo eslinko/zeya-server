@@ -41,9 +41,12 @@ class TableCreator
     {
         $this->userUpdate();
         $this->partnerUpdate();
+        $this->partnerRuleActionUpdate();
         $this->connectionsUpdate();
         $this->UsersWithSharedInterestsUpdate();
         $this->creativeExpressionsUpdate();
+        $this->invitationCodesUpdate();
+        $this->lovestarUpdate();
     }
 
     // create table methods
@@ -102,6 +105,14 @@ class TableCreator
             $this->db->createCommand()->addColumn('Partner', 'authHash', 'varchar(255) AFTER billingDetails')->execute();
         }
     }
+    private function partnerRuleActionUpdate(): void
+    {
+        $this->db->createCommand('ALTER TABLE `PartnerRuleAction` CHANGE `emittedLovestarsUser` `emittedLovestarsUser` INT NULL DEFAULT NULL')->execute();
+    }
+    private function lovestarUpdate(): void
+    {
+        $this->db->createCommand('ALTER TABLE `Lovestar` CHANGE `currentOwner` `currentOwner` INT NULL DEFAULT NULL')->execute();
+    }
     private function connectionsUpdate(): void
     {
         $table = $this->db->schema->getTableSchema('UserConnections');
@@ -114,6 +125,14 @@ class TableCreator
         $table = $this->db->schema->getTableSchema('UsersWithSharedInterests');
         if (!isset($table->columns['need_update'])) {
             $this->db->createCommand()->addColumn('UsersWithSharedInterests', 'need_update', 'int(1) DEFAULT NULL AFTER updated_at')->execute();
+        }
+    }
+
+    private function invitationCodesUpdate(): void
+    {
+        $table = $this->db->schema->getTableSchema('InvitationCodes');
+        if (!isset($table->columns['ruleActionId'])) {
+            $this->db->createCommand()->addColumn('InvitationCodes', 'ruleActionId', 'int(1) DEFAULT NULL AFTER registered_user_id')->execute();
         }
     }
 
