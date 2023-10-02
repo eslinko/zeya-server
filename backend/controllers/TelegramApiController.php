@@ -648,17 +648,19 @@ class TelegramApiController extends AppController
         if($result['status'] === 'success') {
             $code_owner = InvitationCodes::getInvitationCodeOwnerUserId($data['code']);
             //give Lovestar
-            //PartnerRuleAction::createAction(2,$code_owner);
-            PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
-            //file_put_contents('log.txt',"1\n",FILE_APPEND);
-            if(Settings::GiveLovestarViaConnections()==true){
-                $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
-                $result['code_owner_connections'] = $res;
+            if(!empty($code_owner)) {
+                //PartnerRuleAction::createAction(2,$code_owner);
+                PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
+                //file_put_contents('log.txt',"1\n",FILE_APPEND);
+                if(Settings::GiveLovestarViaConnections()==true){
+                    $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
+                    $result['code_owner_connections'] = $res;
+                }
+                //create connection
+                if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
+                //find owner user
+                if(!isset($telegram_id['status'])) $result['owner_user'] = User::findOne($code_owner);
             }
-            //create connection
-            if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
-            //find owner user
-            if(!isset($telegram_id['status'])) $result['owner_user'] = User::findOne($code_owner);
         }
         return $result;
     }

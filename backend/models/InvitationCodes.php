@@ -120,6 +120,27 @@ class InvitationCodes extends ActiveRecord
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
+        $result = ['register_with_lovestars' => false];
+
+        if(!empty($code->ruleActionId)) {
+            $rule_action = PartnerRuleAction::findOne($code->ruleActionId);
+            if(!empty($rule_action)) {
+                $rule_action->emittedLovestarsUser = $user_id;
+                $rule_action->save();
+
+                $lovestars = Lovestar::find()->where(['issuingAction' => $code->ruleActionId])->all();
+                foreach ($lovestars as $lovestar) {
+                    $lovestar->currentOwner = $user_id;
+                    $lovestar->save();
+                }
+
+                User::addedLovestarsCount($user_id, (int) $rule_action->emittedLovestars);
+
+                $result['register_with_lovestars'] = true;
+                $result['current_lovestars'] = (int) $rule_action->emittedLovestars + 1;
+            }
+        }
+
         $user->invitation_code_id = $code->id;
         $user->save(false);
 
@@ -127,7 +148,8 @@ class InvitationCodes extends ActiveRecord
             self::createNewCode($user->id);
         }
 
-        return ['status' => 'success'];
+        $result['status'] = 'success';
+        return $result;
     }
 
     static function getUserInvitationCodes($user_id) {
