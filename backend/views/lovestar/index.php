@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute' => 'issuingAction',
                     'value' => function($data) {
                       $action = PartnerRuleAction::findOne($data->issuingAction);
-                      return !empty($action) ? Html::a($action->ruleTitle, ['user/view', 'id' => $action->id]) : '<span class="not-set">(not set)</span>';
+                      return !empty($action) ? Html::a($action->ruleTitle, ['partner-rule-action/view', 'id' => $action->id]) : '<span class="not-set">(not set)</span>';
                     },
                     'format' => 'html'
                   ],

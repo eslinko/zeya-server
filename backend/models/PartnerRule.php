@@ -78,8 +78,19 @@ class PartnerRule extends ActiveRecord
 		if(empty($rule)) return ['status' => false, 'message' => 'Rule by ID not found.'];
 
         // rule for viral help
-        if($rule_id === 4) {
-            return ceil($rule->emissionCalculationBaseValue * (int) $base_value);
+        if((int) $rule_id === 4) {
+            $baseValueFromRule = $rule->emissionCalculationBaseValue;
+            $percentage = $rule->emissionCalculationPercentage;
+
+            if ($baseValueFromRule == 0) {
+                $emittedLovestars = (int) $base_value;
+            } elseif ($percentage > 1) {
+                $emittedLovestars = ceil((int) $base_value + ((int) $base_value * ($percentage / 100)));
+            } else {
+                $emittedLovestars = $baseValueFromRule;
+            }
+
+            return $emittedLovestars;
         }
 
 		return ceil($rule->emissionCalculationBaseValue * $rule->emissionCalculationPercentage);
@@ -152,8 +163,8 @@ class PartnerRule extends ActiveRecord
         $new_rule->partnerId = 2;
         $new_rule->title = 'ViralHelp4Zeya4Eve';
         $new_rule->triggerName = 'DirectMapping';
-        $new_rule->emissionCalculationBaseValue = 1;
-        $new_rule->emissionCalculationPercentage = 1;
+        $new_rule->emissionCalculationBaseValue = 0;
+        $new_rule->emissionCalculationPercentage = 0;
         if($new_rule->save(false)){
             return $new_rule;
         }

@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $user_id
  * @property string $code
  * @property string $registered_user_id
+ * @property string $ruleActionId
  * @property string $signup_date
  */
 class InvitationCodes extends ActiveRecord
@@ -31,9 +32,8 @@ class InvitationCodes extends ActiveRecord
     public function rules()
     {
         return [
-          [['user_id'], 'required'],
           [['code'], 'unique'],
-          [['registered_user_id', 'signup_date'], 'safe'],
+          [['registered_user_id', 'signup_date', 'ruleActionId', 'user_id'], 'safe'],
         ];
     }
 
@@ -48,6 +48,7 @@ class InvitationCodes extends ActiveRecord
             'registered_user_id' => 'Invited person',
             'code' => 'Code',
             'signup_date' => 'Signup date',
+            'ruleActionId' => 'ruleActionId',
         ];
     }
 
@@ -76,11 +77,13 @@ class InvitationCodes extends ActiveRecord
         ]);
     }
 
-    static function createNewCode($owner_id) {
+    static function createNewCode($owner_id = NULL, $ruleActionId = NULL) {
         $code = new InvitationCodes();
         $code->user_id = $owner_id;
+        $code->ruleActionId = $ruleActionId;
         $code->code = self::generateInvitationCode();
         $code->save();
+        return $code->code;
     }
 
     static function generateCodes($owner_id, $amount) {

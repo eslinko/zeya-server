@@ -30,7 +30,8 @@ class Lovestar extends ActiveRecord
     public function rules()
     {
         return [
-          [['issuingAction', 'currentOwner', 'birthTimestamp'], 'required']
+          [['issuingAction', 'birthTimestamp'], 'required'],
+          [['currentOwner'], 'safe']
         ];
     }
 

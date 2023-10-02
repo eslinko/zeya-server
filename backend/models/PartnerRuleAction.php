@@ -38,10 +38,10 @@ class PartnerRuleAction extends ActiveRecord
     public function rules()
     {
         return [
-          	[['ruleId', 'timestamp', 'ruleTitle', 'emissionCalculationBaseValue', 'emissionCalculationPercentage', 'triggerName', 'emittedLovestars', 'emittedLovestarsUser'], 'required'],
+          	[['ruleId', 'timestamp', 'ruleTitle', 'emissionCalculationBaseValue', 'emissionCalculationPercentage', 'triggerName', 'emittedLovestars',], 'required'],
 			[['emissionCalculationBaseValue'], 'integer'],
 			[['emissionCalculationPercentage'], 'number'],
-			[['approvalQRCode', 'approvalStatus'], 'safe']
+			[['approvalQRCode', 'approvalStatus', 'emittedLovestarsUser'], 'safe']
         ];
     }
 
@@ -113,7 +113,7 @@ class PartnerRuleAction extends ActiveRecord
 
         return PartnerRuleAction::createAction(1, $user_id);
     }
-	static function createAction($rule_id, $emittedLovestarsUser, $base_value = 0) {
+	static function createAction($rule_id, $emittedLovestarsUser = 0, $base_value = 0, $triggerName = '') {
 /*        if($rule_id === 1 OR $rule_id === 2) {//built-in rule, create at first use
             //create BotPartner at first use
             $bot_partner = Partner::findOne(['id'=>1]);
@@ -133,15 +133,18 @@ class PartnerRuleAction extends ActiveRecord
 
 		$rule = PartnerRule::findOne($rule_id);
 		$user = User::findOne($emittedLovestarsUser);
+
 		if(empty($rule)) return ['status' => false, 'message' => 'Rule by ID not found.'];
-		
-		if(empty($user)) return ['status' => false, 'message' => 'User by ID not found.'];
+
+        if(empty($user) && $emittedLovestarsUser !== 0) return ['status' => false, 'message' => 'User by ID not found.'];
+
+        if($emittedLovestarsUser === 0) $emittedLovestarsUser = NULL;
 		
 		$new_action = new PartnerRuleAction();
 		$new_action->ruleId = $rule->id;
 		$new_action->timestamp = time();
 		$new_action->ruleTitle = $rule->title;
-		$new_action->triggerName = $rule->triggerName;
+		$new_action->triggerName = !empty($triggerName) ? $triggerName : $rule->triggerName;
 		$new_action->emissionCalculationBaseValue = $rule->emissionCalculationBaseValue;
 		$new_action->emissionCalculationPercentage = $rule->emissionCalculationPercentage;
 		$new_action->emittedLovestarsUser = $emittedLovestarsUser;
@@ -163,7 +166,7 @@ class PartnerRuleAction extends ActiveRecord
 		
 		Lovestar::createLovestars($new_action->id, $emittedLovestarsUser, $new_action->emittedLovestars );
 		
-		return ['status' => $status, 'message' => $error, 'action_id' => $new_action->id];
+		return ['status' => $status, 'message' => $error, 'action_id' => $new_action->id, 'emittedLovestars' => $new_action->emittedLovestars];
 	}
     static function actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner){
         //create BotPartner at first use
