@@ -94,11 +94,11 @@ class Partner extends ActiveRecord
         if($new_partner===NULL) {
             $new_partner = new Partner();
             $new_partner->id = 2;
+            $new_partner->authHash = password_hash(ViralHelpPartnerPassword, PASSWORD_DEFAULT);
         }
 
         $new_partner->legalName = 'Viral Help';
         $new_partner->description = 'VH+Zeya4Eve.';
-        $new_partner->authHash = password_hash(ViralHelpPartnerPassword, PASSWORD_DEFAULT);
         if($new_partner->save(false)){
             return $new_partner;
         }
