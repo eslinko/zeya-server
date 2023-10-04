@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use app\models\CreativeExpressions;
 use app\models\CreativeTypes;
+use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
 use app\models\Partner;
@@ -1281,5 +1282,41 @@ class TelegramApiController extends AppController
             return 'Cool! ';
         else
             return 'Who are you?';
+    }
+
+    public function actionClaimMyLovestars() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['code'])) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        $code = InvitationCodes::find()
+            ->where(['code' => $data['code']])
+            ->andWhere(['not', ['ruleActionId' => null]])
+            ->andWhere(['registered_user_id' => null])
+            ->one();
+        if(empty($code)) {
+            return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
+        }
+
+        $lovestars = Lovestar::find()->where(['issuingAction' => $code->ruleActionId])->all();
+
+        if(empty($lovestars)) {
+            return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
+        }
+
+        $code->registered_user_id = $user->id;
+        $code->save(false);
+
+        foreach ($lovestars as $lovestar) {
+            $lovestar->currentOwner = $user->id;
+            $lovestar->save(false);
+        }
+
+        User::addedLovestarsCount($user->id, count($lovestars));
+
+        return ['status' => 'success', 'emitted_lovestars' => count($lovestars)];
     }
 }
