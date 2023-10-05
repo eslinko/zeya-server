@@ -96,7 +96,8 @@ class InvitationCodes extends ActiveRecord
         $code = InvitationCodes::findOne([
             'code' => $string_code,
         ]);
-
+        //file_put_contents('test.txt',$string_code."\nresult:\n".json_encode($code));
+        InvitationCodesLogs::addToLog($user_id, $string_code, 'my_out:'.$string_code." result: ".json_encode($code));
         $user = User::findOne([
             'id' => $user_id
         ]);
