@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #board {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: rgb(245, 247, 250);
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 1%;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+            background-color: #efefef;
+		    background-size: cover;
+		    background-repeat: no-repeat;
+		    background-position: center;
+			transition: transform 600ms ease-in;
+            transform: translateX(-50%) translateY(-50%) scale(0.95);
+			background-image: url(card_background_vert_hard.png);
+
+        }
+.content
+	{
+	width: 100%;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    position: relative;
+	}
+.card_bottom
+{
+background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 40%, rgba(255,255,255,0) 100%);
+bottom: 0;
+width: 100%;
+position: absolute;
+height:110px;
+}
+.card_description
+{
+top:0;
+width:100%;
+position:relative;
+height:50px;
+color: #fff;
+margin:0;
+}
+/*#bottom_bar
+{
+background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 30%, rgba(255,255,255,0) 100%);
+pointer-events: none;
+position: absolute;
+bottom: 0;
+width: 100%;
+}*/
+#buttons_bar_table
+{
+position: absolute;
+bottom: 0;
+width: 100%;
+//padding-top: 100px;
+//background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 30%, rgba(255,255,255,0) 100%);
+pointer-events: none;
+}
+/*.like_buttons
+{
+height: 16vw;
+}*/
+td
+{
+text-align: center;
+}
+
+.button-primary-s-heart
+{
+background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);
+//border: 4px solid #FFFFFF;
+border: none;
+border-radius: 32px;
+width: 40px;
+height: 40px;
+position: relative;
+pointer-events: all;
+}
+.button-primary-s-heart:after
+{
+content:url(button-primary-s-heart.png);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+padding-top: 3px;
+}
+.button-primary-s-nope
+{
+background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);
+//border: 4px solid #FFFFFF;
+border: none;
+border-radius: 32px;
+width: 40px;
+height: 40px;
+position: relative;
+pointer-events: all;
+}
+.button-primary-s-nope:after
+{
+content:url(xmark-solid.svg);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+height: 25px;
+  width: 18px;
+}
+.hide
+{
+display:none;
+}
+
+.about_info
+{
+    position: absolute;
+    top: 0;
+background-color: #fff;
+}
+.about_content
+{
+width: 100%;
+}
+
+#match_popup
+{
+position: absolute;
+width: 90%;
+height: 30px;
+top: -31px;
+transition: transform 900ms ease-in-out;
+background-color: red;
+}
+
+.liking:after {
+  font-size: 25vw;
+  content: "Like";
+  padding: 6px 26px 16px;
+  color: #73c998;
+  border: #73c998 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+.noping:after {
+  font-size: 25vw;
+  content: "Nope";
+  padding: 6px 26px 16px;
+  color: #ed7571;
+  border: #ed7571 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+.matched:after {
+  font-size: 25vw;
+  content: "It's a match!";
+  padding: 6px 26px 16px;
+  color: #ed7571;
+  border: #ed7571 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+@keyframes resultAnim {
+  0% {
+    transform: scale(3) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1) rotate(-7deg);
+    opacity: 1;
+  }
+}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="hammer.min.js"></script>
+
+</head>
+<body>
+  <div id="board">
+	<div id='log'></div>
+	<div id="result"></div><div id="result_match"></div>
+  </div>
+  <div id='about_info' class='hide'>
+	<div id='about_media_container'></div>
+	<p id='about_category'></p>
+	<p id='about_uploaded'></p>
+	<p id='about_expiration'></p>
+	<p id='about_tags'></p>
+	<p id='about_description'></p>
+  </div>
+  <div id='bottom_bar'>	
+	  <div id='description_block'>
+		<p id='title'></p>
+		<p id='description'></p>
+	  </div>
+		<table id='buttons_bar_table'>
+	  		<tr>
+	    		<td><button class='button-primary-s-nope' id="nope_button"></button></td><td><button class='button-primary-s-heart' id="like_button"></button></td>
+			</tr>
+		</table>
+  </div>
+	<div id='match_popup'>not matched</div>
+
+<script>
+var expression_queue, carousel;
+window.Telegram.WebApp.expand();
+window.Telegram.WebApp.MainButton.show();
+//window.Telegram.WebApp.MainButton.setText('кнопочка');
+window.Telegram.WebApp.MainButton.color = '#000000';
+window.Telegram.WebApp.MainButton.onClick(function ()
+{
+ window.Telegram.WebApp.close(); 
+});
+//window.Telegram.WebApp.MainButton.showProgress(true);
+window.Telegram.WebApp.BackButton.show();
+window.Telegram.WebApp.BackButton.onClick(function()
+{
+window.Telegram.WebApp.showPopup({title:'ой-ёй', message: 'космический бургер',buttons:[{type:'default',text:':o)'}]});
+ window.Telegram.WebApp.close(); 
+});
+Telegram.WebApp.onEvent('viewportChanged', function (object){
+	if (!this.isExpanded){this.expand()}
+});
+/*console.log(window.Telegram.WebApp.initData);
+//get user id
+let initDataURLSP = new URLSearchParams(window.Telegram.WebApp.initData);
+let init_data_obj = Object.fromEntries(initDataURLSP);
+let user_field_obj = Object.fromEntries(new URLSearchParams(initDataURLSP.get('user')));
+
+//let user_id = user_field.id;//{"id":779660449,"first_name":"ilya","last_name":"","username":"salvajito","language_code":"en","allows_write_to_pm":true}
+console.log(init_data_obj);
+console.log(JSON.stringify(init_data_obj));
+console.log(init_data_obj.user);
+console.log(user_field_obj.id);*/
+//verification
+
+
+let URL_str1 = new URL('https://api.siberianlegend.ru/admin/telegram-api/web-app-validate');
+URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
+
+fetch(URL_str1).then((response) => {
+	response.json().then(data => {
+	
+	console.log ('validation: '+JSON.stringify(data));
+	
+});
+
+    //return response.json();
+  }, error => {      
+      alert("Our errorr: " + error); 
+    });
+
+  /*  var i = 0, text='',message = 'кнопочка';
+    var interval = setInterval(function(){
+        text += message.charAt(i);
+        i++;
+		window.Telegram.WebApp.MainButton.setText(text);
+        if (i > message.length){
+            //clearInterval(interval);
+			text='';
+			i=0;
+        }
+    }, 500);*/
+
+
+
+//tinder code
+class Carousel {
+	current_expr = null;
+	next_expr = null;
+	constructor(element) {
+
+	this.board = element
+
+	// add first two cards programmatically
+	this.push()
+	this.push()
+
+	// handle gestures
+	this.handle()
+
+	}
+
+
+	handle() {
+
+		// list all cards
+		this.cards = this.board.querySelectorAll('.card')
+	
+		// get top card
+		this.topCard = this.cards[this.cards.length - 1];
+		var top_video = this.topCard.getElementsByTagName('video')[0];
+		if(top_video != undefined)
+			{
+			top_video.autoplay = true;
+			top_video.play();
+			}
+		
+		// get next card
+		this.nextCard = this.cards[this.cards.length - 2]
+		
+		// if at least one card is present
+		if (this.cards.length > 0) {
+	
+			// set default top card position and scale
+			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+		
+			// destroy previous Hammer instance, if present
+			if (this.hammer) this.hammer.destroy()
+		
+			// listen for tap and pan gestures on top card
+			this.hammer = new Hammer(this.topCard)
+			this.hammer.add(new Hammer.Tap())
+			this.hammer.add(new Hammer.Pan({
+				position: Hammer.position_ALL,
+				threshold: 0
+			}))
+		
+			// pass events data to custom callbacks
+			this.hammer.on('tap', (e) => {
+				this.onTap(e)
+				})
+			this.hammer.on('pan', (e) => {
+				this.onPan(e)
+				})
+	
+		}
+
+    }
+
+	onTap(e) {
+
+		// get finger position on top card
+		let propX = (e.center.x - e.target.getBoundingClientRect().left) / e.target.clientWidth
+
+		// get rotation degrees around Y axis (+/- 15) based on finger position
+		let rotateY = 15 * (propX < 0.05 ? -1 : 1)
+
+		// enable transform transition
+		console.log('short transition');
+		this.topCard.style.transition = 'transform 100ms ease-out'
+
+		// apply rotation around Y axis
+		this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(' + rotateY + 'deg) scale(1)'
+
+		// wait for transition end
+		setTimeout(() => {
+			// reset transform properties
+			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+            }, 100)
+
+        }
+
+	onPan(e) {
+
+		if (!this.isPanning) {
+
+			this.isPanning = true
+	
+			// remove transition properties
+			console.log('transition removed');
+			this.topCard.style.transition = null
+			if (this.nextCard) this.nextCard.style.transition = null
+	
+			// get top card coordinates in pixels
+			let style = window.getComputedStyle(this.topCard)
+			let mx = style.transform.match(/^matrix\((.+)\)$/)
+			this.startPosX = mx ? parseFloat(mx[1].split(', ')[4]) : 0
+			this.startPosY = mx ? parseFloat(mx[1].split(', ')[5]) : 0
+	
+			// get top card bounds
+			let bounds = this.topCard.getBoundingClientRect()
+	
+			// get finger position on top card, top (1) or bottom (-1)
+			this.isDraggingFrom = (e.center.y - bounds.top) > this.topCard.clientHeight / 2 ? -1 : 1
+	
+			}
+
+		// get new coordinates
+		let posX = e.deltaX + this.startPosX
+		let posY = e.deltaY + this.startPosY
+
+		// get ratio between swiped pixels and the axes
+		let propX = e.deltaX / this.board.clientWidth
+		let propY = e.deltaY / this.board.clientHeight
+
+		// get swipe direction, left (-1) or right (1)
+		let dirX = e.deltaX < 0 ? -1 : 1
+
+		// get degrees of rotation, between 0 and +/- 45
+		let deg = this.isDraggingFrom * dirX * Math.abs(propX) * 45
+
+		// get scale ratio, between .95 and 1
+		let scale = (95 + (5 * Math.abs(propX))) / 100
+
+		// move and rotate top card
+		this.topCard.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg) rotateY(0deg) scale(1)'
+
+		// scale up next card
+		if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(' + scale + ')'
+
+		if (e.isFinal) {
+
+			this.isPanning = false
+
+			let successful = false
+
+			// set back transition properties
+			console.log('transition');
+			this.topCard.style.transition = 'transform 600ms ease-out'
+			if (this.nextCard) this.nextCard.style.transition = 'transform 100ms linear'
+
+			// check threshold and movement direction
+		if (propX > 0.25 && e.direction == Hammer.DIRECTION_RIGHT) {
+
+			successful = true
+			// get right border position
+			posX = this.board.clientWidth
+			document.getElementById("result").classList.add("liking");
+			this.actionOnSwipe(1);
+
+		} else if (propX < -0.25 && e.direction == Hammer.DIRECTION_LEFT) {
+
+			successful = true
+			// get left border position
+			posX = -(this.board.clientWidth + this.topCard.clientWidth)
+			document.getElementById("result").classList.add("noping");
+			this.actionOnSwipe(0);
+
+		} else if (propY < -0.25 && e.direction == Hammer.DIRECTION_UP) {
+
+			//successful = true
+			// get top border position
+			posY = -(this.board.clientHeight + this.topCard.clientHeight)
+			this.showAboutInfo();
+
+		}
+
+		if (successful) {
+
+			// throw card in the chosen direction
+			this.topCard.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg)'
+			
+			// wait transition end
+			setTimeout(() => {
+				// remove swiped card
+				this.board.removeChild(this.topCard)
+				// add new card
+				this.push()
+				// handle gestures on new top card
+				this.handle()
+
+				document.getElementById("result").className = '';
+				}, 800)
+			if (window.hasOwnProperty('Telegram') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no Telegram'; 
+			if (window.Telegram.hasOwnProperty('WebApp') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no WebApp'; 
+			if (window.Telegram.WebApp.hasOwnProperty('HapticFeedback') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no HapticFeedback'; 
+
+			window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+			document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe '; 
+	
+
+			} else {
+
+				// reset cards position and size
+				this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+				if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(0.95)'
+
+				}
+
+       		}
+
+     }
+
+	push() {
+			this.current_expr = this.next_expr;
+			this.next_expr = expression_queue.shift();
+			var card = document.createElement('div')
+
+			card.classList.add('card')
+			if(this.current_expr != undefined)
+				{
+				let images = ["jpg", "gif", "png"]
+				let videos = ["mp4", "3gp", "ogg"]
+
+				let url = new URL(this.current_expr.content)
+				let split_arr = url.pathname.split(".");
+				let ext = split_arr[split_arr.length-1];
+
+				if (images.includes(ext)) 
+					{
+					let img = document.createElement('img');
+					img.setAttribute("src", url);
+					img.classList.add('content');
+					card.appendChild(img);		
+
+					//bottom gradient
+					let div_bottom = document.createElement('div');
+					div_bottom.classList.add('card_bottom');
+					
+					let p_descr = document.createElement('p');	
+					p_descr.classList.add('card_description');
+					p_descr.innerHTML = this.current_expr.description;
+
+					div_bottom.appendChild(p_descr);
+					card.appendChild(div_bottom);	
+					} 
+				else if (videos.includes(ext)) 
+					{
+					let vd = document.createElement('video');
+					vd.setAttribute("src", url);
+					//vd.setAttribute("id", 'html5_video');
+					//vd.autoplay = true;
+					vd.loop = true;
+					//vd.playsinline = true;
+					//vd.webkit-playsinline = true;
+					vd.classList.add('content');
+					vd.setAttribute('playsinline','');
+					card.appendChild(vd);
+					//video.play();
+
+					//bottom gradient
+					let div_bottom = document.createElement('div');
+					div_bottom.classList.add('card_bottom');
+					
+					let p_descr = document.createElement('p');	
+					p_descr.classList.add('card_description');
+					p_descr.innerHTML = this.current_expr.description;
+
+					div_bottom.appendChild(p_descr);
+					card.appendChild(div_bottom);	
+					}
+				else
+					{
+					let div = document.createElement('div');
+					div.innerHTML = "unsupported format: " + url;
+					div.classList.add('content');
+					card.appendChild(div);		
+
+					//bottom gradient
+					let div_bottom = document.createElement('div');
+					div_bottom.classList.add('card_bottom');
+					
+					let p_descr = document.createElement('p');	
+					p_descr.classList.add('card_description');
+					p_descr.innerHTML = this.current_expr.description;
+
+					div_bottom.appendChild(p_descr);
+					card.appendChild(div_bottom);				
+					} 
+				this.board.insertBefore(card, this.board.firstChild);
+				//card.style.backgroundImage = 'url('+this.current_expr.content+')';//"url(1.jpg)"
+				}
+//<video loop muted autoplay poster="/images/poster.jpg" src="/Siberian_Legend_[360p].mp4" id="video_transiberiano"></video>
+				
+			else
+				{
+				card.style.backgroundImage = "url(1.jpg)";
+									//bottom gradient
+					let div_bottom = document.createElement('div');
+					div_bottom.classList.add('card_bottom');
+					
+					let p_descr = document.createElement('p');	
+					p_descr.classList.add('card_description');
+					//p_descr.innerHTML = this.current_expr.description;
+
+					div_bottom.appendChild(p_descr);
+					card.appendChild(div_bottom);
+				}
+                    //"url('/"+(Math.floor(Math.random() * (3 – 1 + 1)) + 1)+".jpg')"
+
+			this.board.insertBefore(card, this.board.firstChild)
+
+            }
+	actionOnSwipe(action) 
+			{
+			if(this.current_expr != undefined)
+				{
+				let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/match-action');
+				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+				URL_str.searchParams.set('expression_id', this.current_expr.id);
+				URL_str.searchParams.set('expression_user_id', this.current_expr.user_id);
+				URL_str.searchParams.set('action_result', action);
+				fetch(URL_str).then((response) => 
+					{
+					response.json().then(data => 
+						{					
+						console.log(data);
+						if(data.hasOwnProperty('error'))
+							{
+							window.Telegram.WebApp.showAlert('Error: '+data.error);
+							}
+						else
+							{
+							if(data.match == true)
+								{
+								//animate match
+								document.getElementById("result").className = '';
+								document.getElementById("result_match").classList.add("matched");
+								// wait transition end
+								setTimeout(() => {			
+									document.getElementById("result_match").className = '';
+									}, 800)
+								}
+							else
+								{
+								/*document.getElementById("match_popup").style.transform = 'translateY(31px)';
+								setTimeout(() => {			
+									document.getElementById("match_popup").style.transform = 'translateY(-31px)';
+									}, 1900);*/
+								
+								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches'}]});
+								}
+	
+							}
+						});
+					})
+				}
+
+        	}
+	
+
+	likeButtonAction() {
+		console.log('click');
+
+		let about = document.getElementById('about_info');
+		about.className = '';
+		about.classList.add("hide");
+		// throw card in the chosen direction
+		carousel.topCard.style.transform = 'translate(' + carousel.board.clientWidth + 'px, -400px) rotate(-' + 20 + 'deg)'
+				
+		// wait transition end
+		setTimeout(() => {
+			// remove swiped card
+			carousel.board.removeChild(carousel.topCard)
+			// add new card
+			carousel.push()
+			// handle gestures on new top card
+			carousel.handle()
+	
+			document.getElementById("result").className = '';
+			}, 800)
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+		carousel.actionOnSwipe(1);
+		document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe '; 
+	}
+	nopeButtonAction() {
+		let about = document.getElementById('about_info');
+		about.className = '';
+		about.classList.add("hide");
+		console.log('click');
+		// throw card in the chosen direction
+		carousel.topCard.style.transform = 'translate(-' + carousel.board.clientWidth + 'px, -400px) rotate(' + 20 + 'deg)'
+				
+		// wait transition end
+		setTimeout(() => {
+			// remove swiped card
+			carousel.board.removeChild(carousel.topCard)
+			// add new card
+			carousel.push()
+			// handle gestures on new top card
+			carousel.handle()
+	
+			document.getElementById("result").className = '';
+			}, 800)
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+		carousel.actionOnSwipe(0);
+		document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe '; 
+	}
+	showAboutInfo()
+		{
+		let about = document.getElementById('about_info');
+		about.className = '';
+		about.classList.add("about_info");
+
+		if(this.current_expr != undefined)
+			{
+			let images = ["jpg", "gif", "png"]
+			let videos = ["mp4", "3gp", "ogg"]
+
+			let url = new URL(this.current_expr.content)
+			let split_arr = url.pathname.split(".");
+			let ext = split_arr[split_arr.length-1];
+
+			if (images.includes(ext)) 
+				{
+				let img = document.createElement('img');
+				img.setAttribute("src", url);
+				img.classList.add('about_content');
+				document.getElementById('about_media_container').replaceChildren(img);
+				//document.getElementById('about_media_container').appendChild(img);		
+
+				document.getElementById('about_category').innerHTML = 'Comic Art';
+
+				let upload_date= new Date(this.current_expr.upload_date);
+				document.getElementById('about_uploaded').innerHTML = upload_date.getHours() + ":" + upload_date.getMinutes() + ", "+ upload_date.toDateString();;
+
+				let time_left = Math.round((this.current_expr.active_period - this.current_expr.upload_date)/3600);//hours
+				document.getElementById('about_expiration').innerHTML = 'Hours left: '+time_left;
+				document.getElementById('about_tags').innerHTML = 'Tags: '+this.current_expr.tags;
+				document.getElementById('about_description').innerHTML = this.current_expr.description;
+				} 
+			else if (videos.includes(ext)) 
+				{
+				let vd = document.createElement('video');
+				vd.setAttribute("src", url);
+					//vd.setAttribute("id", 'html5_video');
+					//vd.autoplay = true;
+				vd.loop = true;
+					//vd.playsinline = true;
+					//vd.webkit-playsinline = true;
+				vd.classList.add('about_content');
+				vd.setAttribute('playsinline','');
+				document.getElementById('about_media_container').replaceChildren(vd);
+				//document.getElementById('about_media_container').appendChild(vd);
+					//video.play();
+
+				document.getElementById('about_category').innerHTML = 'Comic Art';
+				let upload_date= new Date(this.current_expr.upload_date);
+				document.getElementById('about_uploaded').innerHTML = upload_date.getHours() + ":" + upload_date.getMinutes() + ", "+ upload_date.toDateString();;
+
+
+				let time_left = Math.round((this.current_expr.active_period - this.current_expr.upload_date)/3600);//hours
+				document.getElementById('about_expiration').innerHTML = 'Hours left: '+time_left;
+				document.getElementById('about_tags').innerHTML = 'Tags: '+this.current_expr.tags;
+				document.getElementById('about_description').innerHTML = this.current_expr.description;	
+					}
+			else
+				{
+					let div = document.createElement('div');
+					div.innerHTML = "unsupported format: " + url;
+					div.classList.add('about_content');
+				document.getElementById('about_media_container').replaceChildren(div);
+					//document.getElementById('about_media_container').appendChild(div);		
+
+				document.getElementById('about_category').innerHTML = 'Comic Art';
+				let upload_date= new Date(this.current_expr.upload_date);
+				document.getElementById('about_uploaded').innerHTML = upload_date.getHours() + ":" + upload_date.getMinutes() + ", "+ upload_date.toDateString();;
+
+
+				let time_left = Math.round((this.current_expr.active_period - this.current_expr.upload_date)/3600);//hours
+				document.getElementById('about_expiration').innerHTML = 'Hours left: '+time_left;
+				document.getElementById('about_tags').innerHTML = 'Tags: '+this.current_expr.tags;
+				document.getElementById('about_description').innerHTML = this.current_expr.description;			
+				} 
+
+			}
+		}
+}
+
+//load queue
+let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/get-swipes-queue');
+URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+fetch(URL_str).then((response) => 
+	{
+	response.json().then(data => 
+		{
+		expression_queue = data;
+		console.log (JSON.stringify(expression_queue));
+		if(data.hasOwnProperty('error'))
+			{
+			window.Telegram.WebApp.showAlert('Error: '+data.error);
+			//window.Telegram.WebApp.close();
+			}
+		else
+			{
+			let board = document.querySelector('#board')
+			carousel = new Carousel(board)
+			document.getElementById("like_button").addEventListener("click", carousel.likeButtonAction);
+			document.getElementById("nope_button").addEventListener("click", carousel.nopeButtonAction);
+			}
+		});
+
+    //return response.json();
+	}, error => 
+	{      
+    alert("Our errorr: " + error); 
+    });
+
+
+       
+</script>
+</body>
+</html>
