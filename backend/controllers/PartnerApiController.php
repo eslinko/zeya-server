@@ -38,7 +38,13 @@ class PartnerApiController extends AppController
             return ['status' => 'error', 'message' => 'Unauthorized'];
         }
 
-        $ruleAction = PartnerRuleAction::createAction($data['partnerRuleId'], 0, (int) $data['inputValue'], $data['triggerName']);
+        $inputValue = round((float) $data['inputValue']);
+
+        if($inputValue < 1) {
+            return ['status' => 'error', 'message' => 'inputValue must be bigger then 0'];
+        }
+
+        $ruleAction = PartnerRuleAction::createAction($data['partnerRuleId'], 0, $inputValue, $data['triggerName']);
 
         if(!$ruleAction['status']) {
             return ['status' => 'error', 'message' => $ruleAction['message']];
