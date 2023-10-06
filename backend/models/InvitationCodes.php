@@ -96,9 +96,7 @@ class InvitationCodes extends ActiveRecord
         $code = InvitationCodes::findOne([
             'code' => $string_code,
         ]);
-        //file_put_contents('test.txt',$string_code."\nresult:\n".json_encode($code));
-        InvitationCodesLogs::addToLog($user_id, $string_code, 'my_out:'.$string_code." result: ".json_encode($code));
-        $user = User::findOne([
+         $user = User::findOne([
             'id' => $user_id
         ]);
 
@@ -106,10 +104,10 @@ class InvitationCodes extends ActiveRecord
 
         if(empty($code) || !empty($code->registered_user_id)) {
             if(empty($code)) {
-                InvitationCodesLogs::addToLog($user_id, $string_code, 'There is no such code');
+                InvitationCodesLogs::addToLog($user_id, substr($string_code,0,250), 'There is no such code');
             }
             if(!empty($code->registered_user_id)) {
-                InvitationCodesLogs::addToLog($user_id, $string_code, 'This code has already been redeemed');
+                InvitationCodesLogs::addToLog($user_id, substr($string_code,0,250), 'This code has already been redeemed');
             }
             return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
         }

@@ -47,6 +47,7 @@ class TableCreator
         $this->creativeExpressionsUpdate();
         $this->invitationCodesUpdate();
         $this->lovestarUpdate();
+        $this->InvitationCodesLogsUpdate();
     }
 
     // create table methods
@@ -140,7 +141,12 @@ class TableCreator
     {
         $this->db->createCommand('ALTER TABLE `CreativeExpressions` CHANGE `upload_date` `upload_date` INT NULL DEFAULT NULL')->execute();
     }
-
+    private function InvitationCodesLogsUpdate(): void
+    {
+        $type=$this->db->schema->getTableSchema('InvitationCodesLogs')->columns['inserted_code']->dbType;
+        if(strcasecmp($type,'tinytext') != 0)
+            $this->db->createCommand()->alterColumn('InvitationCodesLogs','inserted_code','TINYTEXT DEFAULT NULL')->execute();
+    }
     private function MatchAction(): void
     {
         $query = "
