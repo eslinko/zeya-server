@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use app\models\CreativeExpressions;
 use app\models\CreativeTypes;
+use app\models\InvitationCodesLogs;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
@@ -1295,9 +1296,16 @@ class TelegramApiController extends AppController
         $code = InvitationCodes::find()
             ->where(['code' => $data['code']])
             ->andWhere(['not', ['ruleActionId' => null]])
-            ->andWhere(['registered_user_id' => null])
+//            ->andWhere(['registered_user_id' => null])
             ->one();
+
         if(empty($code)) {
+            InvitationCodesLogs::addToLog($user->id, $data['code'], 'Action: Claim My Lovestars. Error: There is no such code.');
+            return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
+        }
+
+        if(!empty($code->registered_user_id)) {
+            InvitationCodesLogs::addToLog($user->id, $data['code'], 'Action: Claim My Lovestars. Error:This code has already been redeemed');
             return ['status' => 'error', 'text' => 'This code is not valid or has already been redeemed'];
         }
 
