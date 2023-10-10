@@ -17,6 +17,11 @@ class PartnerApiController extends AppController
     private $createRuleActionParams = [
         'authKey', 'partnerRuleId', 'triggerName', 'inputValue'
     ];
+
+    private $availableApiKeys = [
+        '863311f4-715c-44f5-9783-95db70580032',
+    ];
+
     public function actionCreateRuleAction()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -53,5 +58,20 @@ class PartnerApiController extends AppController
         $code = InvitationCodes::createNewCode(NULL, $ruleAction['action_id']);
 
         return ['status' => 'success', 'message' => 'Success!', 'ruleActionId' => $ruleAction['action_id'], 'emittedLovestars' => $ruleAction['emittedLovestars'], 'invitationCode' => $code];
+    }
+
+    public function actionGetAuthKey() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        if(empty($data['apiKey'])) {
+            return ['status' => 'error', 'message' => 'You must provide apiKey'];
+        }
+
+        if(!in_array($data['apiKey'], $this->availableApiKeys)) {
+            return ['status' => 'error', 'message' => 'Unauthorized'];
+        }
+
+        return ['status' => 'success', 'authKey' => ViralHelpPartnerPassword];
     }
 }
