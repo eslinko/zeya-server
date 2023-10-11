@@ -77,13 +77,13 @@ class Matches extends ActiveRecord
     }
 
     static function getUserMatches($user_id) {
-        $matches = Matches::find()->where(['user_id_1' => $user_id])->orWhere(['user_id_2' => $user_id])->all();
+        $matches = Matches::find()->where(['user_1_id' => $user_id])->orWhere(['user_2_id' => $user_id])->all();
         $result = [];
         foreach ($matches as $mat) {
-            if($user_id == $mat->user_id_2)
-                $user=User::findOne(['id' => $mat->user_id_1]);
+            if($user_id == $mat->user_2_id)
+                $user=User::findOne(['id' => $mat->user_1_id]);
             else
-                $user=User::findOne(['id' => $mat->user_id_2]);
+                $user=User::findOne(['id' => $mat->user_2_id]);
             if($user === NULL) continue;
 
             $result[] = [
