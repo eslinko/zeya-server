@@ -1217,6 +1217,7 @@ class TelegramApiController extends AppController
             //CreativeExpressions::setMockupData($us['id'],true);
             $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
             foreach ($expr_list as $expr){
+                if(empty($expr['content']))continue;
                 if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
                     if($expr['active_period'] == NULL)$expr['active_period'] = time()+24*60*60;
                     $creative_expressions[] = $expr;
@@ -1228,6 +1229,7 @@ class TelegramApiController extends AppController
         foreach ($user_friends as $us) {
             $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
             foreach ($expr_list as $expr){
+                if(empty($expr['content']))continue;
                 if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
                     if($expr['active_period'] == NULL)$expr['active_period'] = time()+24*60*60;
                     $creative_expressions[] = $expr;
