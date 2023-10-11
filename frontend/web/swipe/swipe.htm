@@ -428,7 +428,7 @@ Telegram.WebApp.onEvent('viewportChanged', function (object){
 //verification
 
 
-let URL_str1 = new URL('https://staging-server.zeya888.com/admin/telegram-api/web-app-validate');
+let URL_str1 = new URL('/admin/telegram-api/web-app-validate');
 URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 
 fetch(URL_str1).then((response) => {
@@ -898,7 +898,7 @@ class Carousel {
 		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
 			{
 
-				let URL_str = new URL('https://staging-server.zeya888.com/admin/telegram-api/match-action');
+				let URL_str = new URL('/admin/telegram-api/match-action');
 				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
 				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
@@ -1107,7 +1107,7 @@ class Carousel {
 }
 
 //load queue
-let URL_str = new URL('https://staging-server.zeya888.com/admin/telegram-api/get-swipes-queue');
+let URL_str = new URL('/admin/telegram-api/get-swipes-queue');
 URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str).then((response) => 
 	{
