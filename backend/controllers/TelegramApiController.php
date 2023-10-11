@@ -1237,9 +1237,9 @@ class TelegramApiController extends AppController
             }
         }
         usort($creative_expressions, function($a, $b){
-            if(strtotime($a['active_period'])>strtotime($b['active_period']))
+            if(intval($a['active_period'])>intval($b['active_period']))
                 return 1;
-            elseif(strtotime($a['active_period'])>strtotime($b['active_period']))
+            elseif(intval($a['active_period'])>intval($b['active_period']))
                 return -1;
             else
                 return 0;
