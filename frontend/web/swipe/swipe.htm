@@ -428,7 +428,7 @@ Telegram.WebApp.onEvent('viewportChanged', function (object){
 //verification
 
 
-let URL_str1 = new URL('https://api.siberianlegend.ru/admin/telegram-api/web-app-validate');
+let URL_str1 = new URL('https://staging-server.zeya888.com/admin/telegram-api/web-app-validate');
 URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 
 fetch(URL_str1).then((response) => {
@@ -905,6 +905,7 @@ class Carousel {
 					{
 					response.json().then(data => 
 						{					
+						console.log(data);
 						console.log(data);
 						if(data.hasOwnProperty('error'))
 							{
