@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<style>
+@font-face {
+  font-family: "Montserrat";
+  src: url(Montserrat.woff2);
+}
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Montserrat, sans-serif;
+}
+
+#board {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+	background-color: rgb(245, 247, 250);
+}
+
+.card {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-radius: 1%;
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+	background-color: #efefef;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	/*transition: transform 600ms ease-in;*/
+	transform: translateX(-50%) translateY(-50%) scale(0.95);
+	background-image: url(background_dark.png);
+	text-align: center;
+	color: #FFF;
+}
+.content_descr_closed
+{
+width: 100%;
+transform: translateX(-50%) translateY(-50%);
+top: 50%;
+left: 50%;
+position: relative;
+background: black;
+}
+.content_descr_opened
+{
+max-width: 100%;
+max-height:70%;
+position: relative;
+background: black;
+}
+.img_fix {pointer-events: none;}
+.card_bottom_descr_closed
+{
+/*background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 40%, rgba(255,255,255,0) 100%);*/
+bottom: 0;
+width: 100%;
+position: absolute;
+height:136px;
+}
+.card_bottom_descr_opened
+{
+/*background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 40%, rgba(255,255,255,0) 100%);*/
+background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.76) 32.08%, #272043 100%, #151124 100%);
+width: 100%;
+position: relative;
+min-height:100%;
+}
+.card_gradient
+{
+background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.76) 32.08%, #272043 100%, #151124 100%);
+bottom: 0;
+width: 100%;
+position: absolute;
+height:136px;
+}
+.descr_container_descr_closed
+{
+height: 50px;
+padding: 6px 16px 0px 16px;
+}
+.descr_container_descr_opened
+{
+padding: 6px 16px 0px 16px;
+}
+
+.descr_title
+{
+height: 24px;
+color: #FFF;
+overflow: hidden;
+margin: 0;
+
+font-family: Montserrat;
+font-size: 14px;
+font-weight: 700;
+line-height: 24px;
+letter-spacing: 0.44px;
+text-align: left;
+}
+.descr_title:before
+{
+content:url(image-symbol.png);
+margin-right: 2px;
+
+}
+.descr_text
+{
+color: #FFF;
+overflow: hidden;
+margin: 0;
+
+font-family: Montserrat;
+font-size: 12px;
+font-weight: 400;
+line-height: 14px;
+letter-spacing: 0.01em;
+text-align: left;
+
+}
+.descr_text_open
+{
+
+}
+.descr_text_close
+{
+height: 14px;
+}
+
+.descr_available
+{
+font-family: Montserrat;
+font-size: 10px;
+font-weight: 500;
+line-height: 14px;
+letter-spacing: 0.03em;
+text-align: right;
+}
+
+.line
+{
+border: 1px solid rgba(90, 83, 118, 1);
+    margin-top: 8px;
+}
+
+.descr_date
+{
+font-family: Montserrat;
+font-size: 10px;
+font-weight: 500;
+line-height: 14px;
+letter-spacing: 0.03em;
+text-align: right;
+white-space:nowrap;
+}
+.descr_tag_title
+{
+font-family: Montserrat;
+font-size: 16px;
+font-weight: 700;
+line-height: 24px;
+letter-spacing: 0.44px;
+text-align: left;
+margin: 2px;
+}
+
+.descr_tag
+{
+height: 16px;
+padding: 2px 6px 2px 6px;
+border-radius: 16px;
+gap: 10px;
+font-family: Montserrat;
+font-size: 10px;
+font-weight: 700;
+line-height: 14px;
+letter-spacing: 0.03em;
+text-align: left;
+background: rgba(88, 68, 166, 1);
+margin-right: 6px;
+}
+
+.descr_after_text_descr_closed
+{
+display:none;
+}
+.descr_after_text_descr_opened
+{
+display:initial;
+}
+
+
+#bottom_bar
+{
+background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.76) 32.08%, #272043 100%, #151124 100%);
+}
+#description_block
+{
+padding: 8px 16px 0px 16px;
+gap: 8px;
+}
+#buttons_bar_table
+{
+position: fixed;
+bottom: 0;
+width: 100%;
+    height: 64px;
+/*padding-top: 100px;
+background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 30%, rgba(255,255,255,0) 100%);*/
+padding: 8px 16px 8px 16px;
+pointer-events: none;
+}
+.description_more_arrow_closed
+{
+background: rgba(245, 233, 255, 1);
+box-shadow: 0px 10px 30px -2px rgba(81, 0, 131, 0.24);
+
+border: none;
+border-radius: 32px;
+width: 32px;
+height: 32px;
+position: relative;
+pointer-events: all;
+}
+.description_more_arrow_closed:after
+{
+content:url(arrow-up.png);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+td
+{
+text-align: center;
+}
+.button-skip
+{
+font-size: 18px;
+font-weight: 700;
+line-height: 18px;
+letter-spacing: 0.08em;
+color: #FFF;
+}
+.button-primary-s-heart
+{
+/*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
+background: linear-gradient(93.79deg, #8D6AF1 -12.63%, #606EF1 47.13%, #3CC6E5 108.24%),linear-gradient(0deg, #FFFFFF, #FFFFFF),radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+
+border: 4px solid rgba(255, 255, 255, 1);
+border-radius: 24px;
+width: 48px;
+height: 48px;
+position: relative;
+pointer-events: all;
+}
+.button-primary-s-heart:after
+{
+content:url(like_button8.png);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+height: 22px;
+}
+.button-primary-s-nope
+{
+/*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
+background: rgba(98, 92, 123, 1);
+border: 4px solid rgba(198, 194, 216, 1);
+border-radius: 24px;
+width: 48px;
+height: 48px;
+position: relative;
+pointer-events: all;
+}
+.button-primary-s-nope:after
+{
+content: url(nope_button.png);
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+height: 20px;
+width: 20px;
+}
+.hide
+{
+display:none;
+}
+
+.about_info
+{
+position: absolute;
+top: 0;
+background-color: #fff;
+width: 100%;
+padding-bottom: 500px;
+}
+.about_content
+{
+width: 100%;
+background: black;
+}
+
+#match_popup
+{
+position: absolute;
+width: 90%;
+height: 30px;
+top: -31px;
+/*transition: transform 900ms ease-in-out;*/
+background-color: red;
+}
+
+.liking:after {
+  font-size: 25vw;
+  content: "Like";
+  padding: 6px 26px 16px;
+  color: #73c998;
+  border: #73c998 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+.noping:after {
+  font-size: 25vw;
+  content: "Nope";
+  padding: 6px 26px 16px;
+  color: #ed7571;
+  border: #ed7571 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+.matched:after {
+  font-size: 25vw;
+  content: "It's a match!";
+  padding: 6px 26px 16px;
+  color: #ed7571;
+  border: #ed7571 2vw solid;
+  margin-top: 100px;
+  z-index: 9999;
+  display: inline-flex;
+  position: absolute;
+  border-radius: 30px;
+  text-shadow: 0px 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
+  opacity: 1;
+  transform: scale(1) rotate(-7deg);
+  animation: resultAnim .6s ease-in-out;
+}
+@keyframes resultAnim {
+  0% {
+    transform: scale(3) rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1) rotate(-7deg);
+    opacity: 1;
+  }
+}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="hammer.min.js"></script>
+
+</head>
+<body>
+  <div id="board"></div>	
+	<div id='bottom_bar'>
+		
+		<table id='buttons_bar_table'>
+	  		<tr>
+	    		<td style='text-align: left;'><button class='button-primary-s-nope' id="nope_button"></button></td>
+				<td style='text-align: center; pointer-events: all;'><span class='button-skip' id="skip_button">SKIP</span></td>
+				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
+			</tr>
+		</table>
+	</div>
+<script>
+var carousel;//expression_queue, 
+window.Telegram.WebApp.expand();
+/*window.Telegram.WebApp.MainButton.show();
+//window.Telegram.WebApp.MainButton.setText('кнопочка');
+window.Telegram.WebApp.MainButton.color = '#000000';
+window.Telegram.WebApp.MainButton.onClick(function ()
+{
+ window.Telegram.WebApp.close(); 
+});
+//window.Telegram.WebApp.MainButton.showProgress(true);
+window.Telegram.WebApp.BackButton.show();
+window.Telegram.WebApp.BackButton.onClick(function()
+{
+window.Telegram.WebApp.showPopup({title:'ой-ёй', message: 'космический бургер',buttons:[{type:'default',text:':o)'}]});
+ window.Telegram.WebApp.close(); 
+});*/
+Telegram.WebApp.onEvent('viewportChanged', function (object){
+	if (!this.isExpanded){this.expand()}
+});
+
+//verification
+
+
+let URL_str1 = new URL('https://api.siberianlegend.ru/admin/telegram-api/web-app-validate');
+URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
+
+fetch(URL_str1).then((response) => {
+	response.json().then(data => {
+	
+	console.log ('validation: '+JSON.stringify(data));
+	
+});
+
+    //return response.json();
+  }, error => {      
+      alert("Our errorr: " + error); 
+    });
+
+
+//tinder code
+class Carousel {
+	//current_expr = null;
+	images_ext = ["jpg", "gif", "png"]
+	videos_ext = ["mp4", "3gp", "ogg"];
+	audios_ext = ['mp3']
+	constructor(element, expr) {
+		this.expression_queue = expr;
+		this.top_card_i = 0;
+		this.expr_queue_counter = 0;
+		this.description_opened = false;
+		this.board = element
+	
+		// add first two cards programmatically
+		this.push()
+		this.push()
+		// handle gestures
+		this.handle()
+	
+		}
+
+
+	handle() 
+		{
+
+		// list all cards
+		this.cards = this.board.querySelectorAll('.card')
+	
+		// get top card
+		this.topCard = this.cards[this.cards.length - 1];
+		var top_video = this.topCard.getElementsByTagName('video')[0];
+		if(top_video != undefined)
+			{
+			top_video.autoplay = true;
+			top_video.play();
+			}
+		
+		// get next card
+		this.nextCard = this.cards[this.cards.length - 2]
+		
+		// if at least one card is present
+		if (this.cards.length > 0) {
+	
+			// set default top card position and scale
+			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+		
+			// destroy previous Hammer instance, if present
+			if (this.hammer) this.hammer.destroy()
+		
+			// listen for tap and pan gestures on top card
+			/*this.hammer = new Hammer(this.topCard)
+			this.hammer.add(new Hammer.Tap())
+			this.hammer.add(new Hammer.Pan({
+				position: Hammer.position_ALL,
+				threshold: 0
+			}))*/
+			this.hammer = new Hammer(this.topCard, { recognizers: [[Hammer.Pan],[Hammer.Tap]]});
+		
+			// pass events data to custom callbacks
+			this.hammer.on('tap', (e) => {
+				this.onTap(e)
+				})
+			this.hammer.on('pan', (e) => {
+				this.onPan(e)
+				})
+	
+		}
+
+    }
+
+	onTap(e) {
+
+		// get finger position on top card
+		let propX = (e.center.x - e.target.getBoundingClientRect().left) / e.target.clientWidth
+
+		// get rotation degrees around Y axis (+/- 15) based on finger position
+		let rotateY = 15 * (propX < 0.05 ? -1 : 1)
+
+		// enable transform transition
+		console.log('short transition');
+//		this.topCard.style.transition = 'transform 100ms ease-out'
+
+		// apply rotation around Y axis
+		this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(' + rotateY + 'deg) scale(1)'
+
+		// wait for transition end
+		setTimeout(() => {
+			// reset transform properties
+			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+            }, 100)
+
+        }
+
+	onPan(e) {
+
+		if (!this.isPanning) {
+
+			this.isPanning = true
+	
+	
+			// get top card coordinates in pixels
+			let style = window.getComputedStyle(this.topCard)
+			let mx = style.transform.match(/^matrix\((.+)\)$/)
+			this.startPosX = mx ? parseFloat(mx[1].split(', ')[4]) : 0
+			this.startPosY = mx ? parseFloat(mx[1].split(', ')[5]) : 0
+	
+			// get top card bounds
+			let bounds = this.topCard.getBoundingClientRect()
+	
+			// get finger position on top card, top (1) or bottom (-1)
+			this.isDraggingFrom = (e.center.y - bounds.top) > this.topCard.clientHeight / 2 ? -1 : 1
+	
+			}
+
+		// get new coordinates
+		let posX = e.deltaX + this.startPosX
+		let posY = e.deltaY + this.startPosY
+
+		// get ratio between swiped pixels and the axes
+		let propX = e.deltaX / this.board.clientWidth
+		let propY = e.deltaY / this.board.clientHeight
+
+		// get swipe direction, left (-1) or right (1)
+		let dirX = e.deltaX < 0 ? -1 : 1
+
+		// get degrees of rotation, between 0 and +/- 45
+		let deg = this.isDraggingFrom * dirX * Math.abs(propX) * 45
+
+		// get scale ratio, between .95 and 1
+		let scale = (95 + (5 * Math.abs(propX))) / 100
+
+		// move and rotate top card
+		this.topCard.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg) rotateY(0deg) scale(1)'
+
+		// scale up next card
+		if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(' + scale + ')'
+
+		if (e.isFinal) {
+
+			this.isPanning = false
+
+			let successful = false
+
+			// set back transition properties
+			console.log('transition');
+			this.topCard.style.transition = 'transform 600ms ease-out';
+			setTimeout(() => {
+				// remove swiped card
+				this.topCard.style.transition = '';
+				}, 800);
+//			if (this.nextCard) this.nextCard.style.transition = 'transform 100ms linear'
+
+			// check threshold and movement direction
+		if (propX > 0.25 && e.direction == Hammer.DIRECTION_RIGHT) {
+
+			successful = true
+			// get right border position
+			posX = this.board.clientWidth
+			document.getElementById("result").classList.add("liking");
+			this.actionOnSwipe(1);
+
+		} else if (propX < -0.25 && e.direction == Hammer.DIRECTION_LEFT) {
+
+			successful = true
+			// get left border position
+			posX = -(this.board.clientWidth + this.topCard.clientWidth)
+			document.getElementById("result").classList.add("noping");
+			this.actionOnSwipe(0);
+
+		}/* else if (propY < -0.25 && e.direction == Hammer.DIRECTION_UP) {
+
+			//successful = true
+			// get top border position
+			console.log('DIRECTION_UP');
+			posY = -(this.board.clientHeight + this.topCard.clientHeight)
+			this.showAboutInfo();
+		
+		}*/
+
+		if (successful) {
+
+			// throw card in the chosen direction
+			this.topCard.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg)'
+			
+			// wait transition end
+			setTimeout(() => {
+				// remove swiped card
+				this.board.removeChild(this.topCard)
+				// add new card
+				this.push()
+				// handle gestures on new top card
+				this.handle()
+
+				document.getElementById("result").className = '';
+				}, 800)
+			if (window.hasOwnProperty('Telegram') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no Telegram'; 
+			if (window.Telegram.hasOwnProperty('WebApp') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no WebApp'; 
+			if (window.Telegram.WebApp.hasOwnProperty('HapticFeedback') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no HapticFeedback'; 
+
+			window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+			document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe '; 
+	
+
+			} else {
+
+				// reset cards position and size
+				this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+				if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(0.95)'
+
+				}
+
+       		}
+
+     }
+
+	push() 
+		{
+
+		let card = document.createElement('div')			
+		card.classList.add('card')
+
+		if(this.expression_queue.length > this.expr_queue_counter)
+			{
+			let current_expr = this.expression_queue[this.expr_queue_counter];
+			this.expr_queue_counter++;
+
+
+			let url = new URL(current_expr.content)
+			let split_arr = url.pathname.split(".");
+			let ext = split_arr[split_arr.length-1];
+
+			let time_left = Math.round((current_expr.active_period - current_expr.upload_date)/3600);//hours
+			let tag_str='';
+			if(Array.isArray(current_expr.tags))
+			current_expr.tags.forEach((tag) => {tag_str=tag_str+"<span class='descr_tag'>"+tag+"</span>"});	
+
+			let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+			let upload_date= new Date(current_expr.upload_date);
+				
+			if (this.images_ext.includes(ext)) 
+				{//<div style='position:relative; width:100%; height: 100%;'>
+				card.innerHTML = "<img src='"+url+"' class='content content_descr_closed img_fix'>"+
+				"<div class='card_gradient'></div>"+
+				"<div class='card_bottom card_bottom_descr_closed'>"+
+					"<div class='descr_container descr_container_descr_closed'><tr>"+
+						"<table><td>"+
+							"<p class='descr_title'>"+current_expr.description+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<button class='description_more_arrow_closed' id='button_descr' onclick='carousel.toggle_descr()'></button>"+
+						"</td></tr></table>"+
+
+						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
+						"<div class='descr_after_text descr_after_text_descr_closed'>"+
+							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
+							"<div class='line'></div>"+
+							"<p class='descr_tag_title'>Tags</p>"+
+							tag_str+
+							"<div class='line'></div>"+
+						"</div>"+
+					"</div>"+
+				"</div>";//</div>
+				//document.getElementById("button_descr").addEventListener("click", carousel.toggle_descr);
+				/*let img = document.createElement('img');
+				img.setAttribute("src", url);
+				img.classList.add('content');
+				img.classList.add('img_fix');
+				card.appendChild(img);		
+
+				//bottom gradient
+				let div_bottom = document.createElement('div');
+				div_bottom.classList.add('card_bottom');
+					
+				let div_cont = document.createElement('div');	
+				//div_cont.classList.add('card_description');
+				//p_descr.innerHTML = current_expr.description;
+				div_bottom.appendChild(p_descr);
+
+				let p_descr = document.createElement('p');	
+				p_descr.classList.add('card_description');
+				p_descr.innerHTML = current_expr.description;
+				div_bottom.appendChild(p_descr);*/
+
+				//card.appendChild(div_bottom);	
+
+				} 
+			else if (this.videos_ext.includes(ext)) 
+				{
+				/*let vd = document.createElement('video');
+				vd.setAttribute("src", url);
+
+				vd.autoplay = true;
+				vd.loop = true;
+
+				vd.classList.add('content');
+				vd.setAttribute('playsinline','');
+				vd.setAttribute('muted','');
+				vd.setAttribute('controls','');
+				card.appendChild(vd);
+
+				//bottom gradient
+				let div_bottom = document.createElement('div');
+				div_bottom.classList.add('card_bottom');
+					
+				let p_descr = document.createElement('p');	
+				p_descr.classList.add('card_description');
+				p_descr.innerHTML = current_expr.description;
+
+				div_bottom.appendChild(p_descr);
+				card.appendChild(div_bottom);	*/
+
+				card.innerHTML = "<video src='"+url+"' class='content content_descr_closed' autoplay loop playsinline muted controls></video>"+
+				"<div class='card_gradient'></div>"+
+				"<div class='card_bottom card_bottom_descr_closed'>"+
+					"<div class='descr_container descr_container_descr_closed'><tr>"+
+						"<table><td>"+
+							"<p class='descr_title'>"+current_expr.description+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<button class='description_more_arrow_closed' id='button_descr' onclick='carousel.toggle_descr()'></button>"+
+						"</td></tr></table>"+
+
+						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
+						"<div class='descr_after_text descr_after_text_descr_closed'>"+
+							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
+							"<div class='line'></div>"+
+							"<p class='descr_tag_title'>Tags</p>"+
+							tag_str+
+							"<div class='line'></div>"+
+						"</div>"+
+					"</div>"+
+				"</div>";
+				}
+			else if (this.audios_ext.includes(ext)) 
+				{
+				/*let audio = document.createElement('audio');
+				audio.setAttribute("src", url);
+
+				audio.classList.add('content');
+				audio.setAttribute('controls','');
+				card.appendChild(audio);
+
+				//bottom gradient
+				let div_bottom = document.createElement('div');
+				div_bottom.classList.add('card_bottom');
+					
+				let p_descr = document.createElement('p');	
+				p_descr.classList.add('card_description');
+				p_descr.innerHTML = current_expr.description;
+
+				div_bottom.appendChild(p_descr);
+				card.appendChild(div_bottom);*/
+
+				card.innerHTML = "<audio src='"+url+"' class='content content_descr_closed' controls></audio>"+
+				"<div class='card_gradient'></div>"+
+				"<div class='card_bottom card_bottom_descr_closed'>"+
+					"<div class='descr_container descr_container_descr_closed'><tr>"+
+						"<table><td>"+
+							"<p class='descr_title'>"+current_expr.description+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<button class='description_more_arrow_closed' id='button_descr' onclick='carousel.toggle_descr()'></button>"+
+						"</td></tr></table>"+
+
+						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
+						"<div class='descr_after_text descr_after_text_descr_closed'>"+
+							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
+							"<div class='line'></div>"+
+							"<p class='descr_tag_title'>Tags</p>"+
+							tag_str+
+							"<div class='line'></div>"+
+						"</div>"+
+					"</div>"+
+				"</div>";
+				}
+			else
+				{
+				/*let div = document.createElement('div');
+				div.innerHTML = "unsupported format: " + url;
+				div.classList.add('content');
+				card.appendChild(div);		
+
+				//bottom gradient
+				let div_bottom = document.createElement('div');
+				div_bottom.classList.add('card_bottom');
+					
+				let p_descr = document.createElement('p');	
+				p_descr.classList.add('card_description');
+				p_descr.innerHTML = current_expr.description;
+
+				div_bottom.appendChild(p_descr);
+				card.appendChild(div_bottom);	*/
+
+				card.innerHTML = "<p>unsupported format</p>"+
+				"<div class='card_gradient'></div>"+
+				"<div class='card_bottom card_bottom_descr_closed'>"+
+					"<div class='descr_container descr_container_descr_closed'><tr>"+
+						"<table><td>"+
+							"<p class='descr_title'>"+current_expr.description+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
+						"</td>"+
+						"<td>"+
+							"<button class='description_more_arrow_closed' id='button_descr' onclick='carousel.toggle_descr()'></button>"+
+						"</td></tr></table>"+
+
+						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
+						"<div class='descr_after_text descr_after_text_descr_closed'>"+
+							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
+							"<div class='line'></div>"+
+							"<p class='descr_tag_title'>Tags</p>"+
+							tag_str+
+							"<div class='line'></div>"+
+						"</div>"+
+					"</div>"+
+				"</div>";			
+				} 
+			//this.board.insertBefore(card, this.board.firstChild);
+			
+			}
+		else//queue is done
+			{
+			card.style.backgroundImage = "url(1.jpg)";
+			//bottom gradient
+			let div_bottom = document.createElement('div');
+			div_bottom.classList.add('card_bottom');
+					
+			let p_descr = document.createElement('p');	
+			p_descr.classList.add('card_description');
+			p_descr.innerHTML = 'no more expressions to show';
+
+			div_bottom.appendChild(p_descr);
+			card.appendChild(div_bottom);
+			}
+		this.board.insertBefore(card, this.board.firstChild)
+
+        }
+	actionOnSwipe(action) 
+		{
+		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
+			{
+
+				let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/match-action');
+				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
+				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
+				URL_str.searchParams.set('action_result', action);
+				fetch(URL_str).then((response) => 
+					{
+					response.json().then(data => 
+						{					
+						console.log(data);
+						if(data.hasOwnProperty('error'))
+							{
+							window.Telegram.WebApp.showAlert('Error: '+data.error);
+							}
+						else
+							{
+							if(data.match == true)
+								{
+								//animate match
+								window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches'}]});
+								
+								}
+							else
+								{
+								/*document.getElementById("match_popup").style.transform = 'translateY(31px)';
+								setTimeout(() => {			
+									document.getElementById("match_popup").style.transform = 'translateY(-31px)';
+									}, 1900);*/
+								
+								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches'}]});
+								}
+	
+							}
+						});
+					})
+				//we swiped already, top card is next card
+				this.top_card_i++;
+				
+
+				}
+
+        	}
+	
+
+	likeButtonAction() {
+		console.log('click');
+
+		// throw card in the chosen direction
+		carousel.topCard.style.transition = 'transform 600ms ease-out';
+		carousel.topCard.style.transform = 'translate(' + carousel.board.clientWidth + 'px, -400px) rotate(-' + 20 + 'deg)'
+				
+		// wait transition end
+		setTimeout(() => {
+			// remove swiped card
+			carousel.board.removeChild(carousel.topCard)
+			// add new card
+			carousel.push()
+			// handle gestures on new top card
+			carousel.handle()
+	
+			
+			}, 800)
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+		carousel.actionOnSwipe(1);
+		
+	}
+	nopeButtonAction() {
+
+		console.log('click');
+		// throw card in the chosen direction
+		carousel.topCard.style.transition = 'transform 600ms ease-out';
+		carousel.topCard.style.transform = 'translate(-' + carousel.board.clientWidth + 'px, -400px) rotate(' + 20 + 'deg)'
+				
+		// wait transition end
+		setTimeout(() => {
+			// remove swiped card
+			carousel.board.removeChild(carousel.topCard)
+			// add new card
+			carousel.push()
+			// handle gestures on new top card
+			carousel.handle()
+	
+			
+			}, 800)
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+		carousel.actionOnSwipe(0);
+		
+	}
+	skipButtonAction() {
+
+		console.log('click');
+		// throw card in the chosen direction
+		carousel.topCard.style.transition = 'transform 600ms ease-out';
+		carousel.topCard.style.transform = 'translateY(-800px)'
+				
+		// wait transition end
+		setTimeout(() => {
+			// remove swiped card
+			carousel.board.removeChild(carousel.topCard)
+			// add new card
+			carousel.push()
+			// handle gestures on new top card
+			carousel.handle()
+	
+			
+			}, 800)
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+		//carousel.actionOnSwipe(0);
+		
+	}
+	toggle_descr()
+		{
+
+		if(this.description_opened == false)
+			{
+			if (this.hammer) this.hammer.destroy();
+			this.description_opened = true;
+			}
+		else
+			{
+			this.hammer = new Hammer(this.topCard, { recognizers: [[Hammer.Pan],[Hammer.Tap]]});		
+			// pass events data to custom callbacks
+			this.hammer.on('tap', (e) => {
+				this.onTap(e)
+				})
+			this.hammer.on('pan', (e) => {
+				this.onPan(e)
+				})
+			this.description_opened = false;
+			}
+		//descr
+		let element = this.topCard.querySelector('.descr_text');
+		
+
+		if(element.classList.contains('descr_text_close'))
+			{
+			element.classList.remove('descr_text_close');
+			element.classList.add('descr_text_open');
+			}
+		else
+			{
+			element.classList.remove('descr_text_open');
+			element.classList.add('descr_text_close');
+			}
+		//content
+		element = this.topCard.querySelector('.content');
+		
+
+		if(element.classList.contains('content_descr_closed'))
+			{
+			element.classList.remove('content_descr_closed');
+			element.classList.add('content_descr_opened');
+			}
+		else
+			{
+			element.classList.remove('content_descr_opened');
+			element.classList.add('content_descr_closed');
+			}
+
+		//card bottom
+		element = this.topCard.querySelector('.card_bottom');
+		
+
+		if(element.classList.contains('card_bottom_descr_closed'))
+			{
+			element.classList.remove('card_bottom_descr_closed');
+			element.classList.add('card_bottom_descr_opened');
+			}
+		else
+			{
+			element.classList.remove('card_bottom_descr_opened');
+			element.classList.add('card_bottom_descr_closed');
+			}
+		//descr_container
+		element = this.topCard.querySelector('.descr_container');
+		
+
+		if(element.classList.contains('descr_container_descr_closed'))
+			{
+			element.classList.remove('descr_container_descr_closed');
+			element.classList.add('descr_container_descr_opened');
+			}
+		else
+			{
+			element.classList.remove('descr_container_descr_opened');
+			element.classList.add('descr_container_descr_closed');
+			}
+
+
+		//descr_after text
+		element = this.topCard.querySelector('.descr_after_text');		
+
+		if(element.classList.contains('descr_after_text_descr_closed'))
+			{
+			element.classList.remove('descr_after_text_descr_closed');
+			element.classList.add('descr_after_text_descr_opened');
+			}
+		else
+			{
+			element.classList.remove('descr_after_text_descr_opened');
+			element.classList.add('descr_after_text_descr_closed');
+			}
+
+		}
+
+}
+
+//load queue
+let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/get-swipes-queue');
+URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+fetch(URL_str).then((response) => 
+	{
+	response.json().then(data => 
+		{
+		expr_queue = data;
+		console.log (JSON.stringify(expr_queue));
+		if(data.hasOwnProperty('error'))
+			{
+			window.Telegram.WebApp.showAlert('Error: '+data.error);
+			//window.Telegram.WebApp.close();
+			}
+		else
+			{
+			let board = document.querySelector('#board')
+			carousel = new Carousel(board, expr_queue)
+			document.getElementById("like_button").addEventListener("click", carousel.likeButtonAction);
+			document.getElementById("nope_button").addEventListener("click", carousel.nopeButtonAction);
+			document.getElementById("skip_button").addEventListener("click", carousel.skipButtonAction);
+			}
+		});
+
+    //return response.json();
+	}, error => 
+	{      
+    alert("Our errorr: " + error); 
+    });
+
+/*let expr = [
+    {
+        "id": 1359,
+        "user_id": 177,
+        "type": "1",
+        "content": "https://api.siberianlegend.ru/swipe/kr.jpg",
+        "description": "Premium: Set a default chat folder or enable tools to auto-archive and hide new chats.\nPremium: Subscribers have a badge next to their name, showing they help support Telegram.\nPremium: Show off your profile video that will be animated for everyone in chats and the chat list.\nPremium: Sponsored Messages that are sometimes shown in public channels will no longer appear.\nEnable join requests for your public groups – no invite links required.\nUsers who open the group will see an Apply to Join Group button.\nOnce approved by an admin, users will be able to participate in the chat",
+        "tags": ['cool', 'verycool'],
+        "active_period": 1695823022,
+        "status": "active",
+        "upload_date": 1695736622
+    },
+    {
+        "id": 1360,
+        "user_id": 177,
+        "type": "4",
+        "content": "https://siberianlegend.ru/images/transsib_summer/thumbnails/tobol2_ed.jpg",
+        "description": "Desayuno en el hotel, check-out, traslado a Tyumen, city tour en Tyumen\nAlmuerzo\nTraslado a la estación, cena a bordo\n~48 horas a bordo",
+        "tags": ['Tyumen', 'tobolsk'],
+        "active_period": 1695823089,
+        "status": "active",
+        "upload_date": 1695736689
+    },
+    {
+        "id": 23,
+        "user_id": 177,
+        "type": "4",
+        "content": "https://api.siberianlegend.ru/swipe/audio.mp3",
+        "description": "om wifi",
+        "tags": ['soma'],
+        "active_period": 1695823089,
+        "status": "active",
+        "upload_date": 1695736689
+    },
+    {
+        "id": 1361,
+        "user_id": 177,
+        "type": "1",
+        "content": "http://api.siberianlegend.ru/swipe/1.jpg",
+        "description": "just photo",
+        "tags": ['photo', 'street'],
+        "active_period": 1695823947,
+        "status": "active",
+        "upload_date": 1695737547
+    },
+    {
+        "id": 1362,
+        "user_id": 177,
+        "type": "2",
+        "content": "https://api.siberianlegend.ru/swipe/vd.mp4",
+        "description": "pet",
+        "tags": ['bdsm', 'submission', 'obey'],
+        "active_period": 1695909002,
+        "status": "active",
+        "upload_date": 1695822602
+    },
+    {
+        "id": 1363,
+        "user_id": 177,
+        "type": "2",
+        "content": "https://api.siberianlegend.ru/swipe/vd2.mp4",
+        "description": "ssssssssss",
+        "tags": ['sss', 'ss'],
+        "active_period": 1695911407,
+        "status": "active",
+        "upload_date": 1695825007
+    }
+];
+			let board = document.querySelector('#board')
+			carousel = new Carousel(board, expr)
+			document.getElementById("like_button").addEventListener("click", carousel.likeButtonAction);
+			document.getElementById("nope_button").addEventListener("click", carousel.nopeButtonAction);
+*/			
+       
+</script>
+</body>
+</html>

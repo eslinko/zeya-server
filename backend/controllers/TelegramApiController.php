@@ -1210,12 +1210,22 @@ class TelegramApiController extends AppController
         }
 
         $user = $res['user'];
-
+        //new users 2nd round
         $users_with_shared_interests = UsersWithSharedInterests::getUserWithSharedInterests($user['id']);
         $creative_expressions = array();
         foreach ($users_with_shared_interests as $us) {
-            CreativeExpressions::setMockupData($us['id'],true);
-            $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['id']);
+            //CreativeExpressions::setMockupData($us['id'],true);
+            $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
+            foreach ($expr_list as $expr){
+                if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
+                    $creative_expressions[] = $expr;
+                }
+            }
+        }
+        //my connections, 1st round
+        $user_friends = UserConnections::getUserConnections($user['id']);
+        foreach ($user_friends as $us) {
+            $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
             foreach ($expr_list as $expr){
                 if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
                     $creative_expressions[] = $expr;
