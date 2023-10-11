@@ -896,7 +896,7 @@ class Carousel {
 		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
 			{
 
-				let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/match-action');
+				let URL_str = new URL('https://staging-server.zeya888.com/admin/telegram-api/match-action');
 				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
 				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
@@ -1104,7 +1104,7 @@ class Carousel {
 }
 
 //load queue
-let URL_str = new URL('https://api.siberianlegend.ru/admin/telegram-api/get-swipes-queue');
+let URL_str = new URL('https://staging-server.zeya888.com/admin/telegram-api/get-swipes-queue');
 URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str).then((response) => 
 	{
