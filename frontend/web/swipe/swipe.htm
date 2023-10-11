@@ -674,7 +674,7 @@ class Carousel {
 /*			let url = new URL(current_expr.content)
 			let split_arr = url.pathname.split(".");
 			let ext = split_arr[split_arr.length-1];*/
-				let url = current_expr.content;
+				let url = '/backend/web'.current_expr.content;
 				let ext = current_expr.content.split('.').pop();
 
 			let time_left = Math.round((current_expr.active_period - current_expr.upload_date)/3600);//hours
