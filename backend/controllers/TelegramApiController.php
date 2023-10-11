@@ -1292,7 +1292,7 @@ class TelegramApiController extends AppController
         if($local_hash === $hash)
             return true;
         else
-            return [$local_hash, $hash, $data['initData']];//false;
+            return false;//[$local_hash, $hash, $data['initData']];
     }
 
     public function actionClaimMyLovestars() {
