@@ -56,7 +56,7 @@ class Matches extends ActiveRecord
     static function addMatch($user_1_id, $user_2_id){
         $new_match = Matches::find()->where(['user_1_id' => $user_1_id,'user_2_id' => $user_2_id])->orWhere(['user_1_id' => $user_2_id,'user_2_id' => $user_1_id])->one();
         if($new_match === NULL) {
-            $new_match = new MatchAction();
+            $new_match = new Matches();
         } else {
             return ['status' => true];
         }
