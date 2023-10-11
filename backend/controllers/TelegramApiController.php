@@ -1275,9 +1275,9 @@ class TelegramApiController extends AppController
         $initDataArray = explode('&', rawurldecode($data['initData']));
         $needle        = 'hash=';
         $hash          = '';
-        parse_str($data['initData'], $output);
-        $ob = json_decode($output['user'],true);
-        return ['user8'=>$ob['id']];
+        //parse_str($data['initData'], $output);
+        //$ob = json_decode($output['user'],true);
+        //return ['user8'=>$ob['id']];
         foreach ($initDataArray as &$dataq) {
             if (substr($dataq, 0, \strlen($needle)) === $needle) {
                 $hash = substr_replace($dataq, '', 0, \strlen($needle));
@@ -1290,9 +1290,9 @@ class TelegramApiController extends AppController
         $secret_key = hash_hmac('sha256', '6305419498:AAHk-ry3097lLYnR_1AcUQE-MkS0a-1n85I','WebAppData', true);
         $local_hash = bin2hex(hash_hmac('sha256', $data_check_string, $secret_key, true));
         if($local_hash === $hash)
-            return 'Cool! ';
+            return true;
         else
-            return 'Who are you?';
+            return false;
     }
 
     public function actionClaimMyLovestars() {

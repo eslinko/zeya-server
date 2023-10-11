@@ -435,12 +435,12 @@ fetch(URL_str1).then((response) => {
 	response.json().then(data => {
 	
 	console.log ('validation: '+JSON.stringify(data));
-	
+	if (data == false) throw new Error('User validation error');
 });
 
     //return response.json();
   }, error => {      
-      alert("Our errorr: " + error); 
+      alert("Error: " + error);
     });
 
 
