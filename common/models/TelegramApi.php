@@ -33,7 +33,7 @@ class TelegramApi {
         $initDataArray = array_filter($initDataArray);
         sort($initDataArray);
         $data_check_string = implode("\n", $initDataArray);
-        $secret_key = hash_hmac('sha256', '6487907411:AAEDbA2UZcuxK4omzjUNtOHEYLIxlXTmXtc','WebAppData', true);
+        $secret_key = hash_hmac('sha256', TelegramBotId,'WebAppData', true);
         $local_hash = bin2hex(hash_hmac('sha256', $data_check_string, $secret_key, true));
         if($local_hash !== $hash)
             return ['status' => false];
