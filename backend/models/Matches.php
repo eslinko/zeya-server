@@ -77,7 +77,7 @@ class Matches extends ActiveRecord
     }
 
     static function getUserMatches($user_id) {
-        $matches = Matches::find()->where(['user_1_id' => $user_id])->orWhere(['user_2_id' => $user_id])->all();
+        $matches = Matches::find()->where(['user_1_id' => $user_id])->orWhere(['user_2_id' => $user_id])->orderBy(['timestamp' => SORT_DESC])->all();
         $result = [];
         foreach ($matches as $mat) {
             if($user_id == $mat->user_2_id)
