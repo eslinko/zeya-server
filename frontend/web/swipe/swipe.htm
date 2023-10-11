@@ -677,8 +677,8 @@ class Carousel {
 
 			let time_left = Math.round((current_expr.active_period - current_expr.upload_date)/3600);//hours
 			let tag_str='';
-			if(Array.isArray(current_expr.tags))
-			current_expr.tags.forEach((tag) => {tag_str=tag_str+"<span class='descr_tag'>"+tag+"</span>"});	
+			//if(Array.isArray(current_expr.tags))
+			current_expr.tags.split(',').forEach((tag) => {tag_str=tag_str+"<span class='descr_tag'>"+tag+"</span>"});
 
 			let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 			let upload_date= new Date(current_expr.upload_date);
