@@ -37,6 +37,9 @@ class TelegramApiController extends AppController
     /**
      * @inheritdoc
      */
+    public function init() {
+        $this->enableCsrfValidation = false;//enable incoming POST requests
+    }
 //    public function behaviors()
 //    {
 //        return [
