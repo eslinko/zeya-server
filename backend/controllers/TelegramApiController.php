@@ -37,10 +37,15 @@ class TelegramApiController extends AppController
     /**
      * @inheritdoc
      */
-    public function init() {
-        $this->enableCsrfValidation = false;//enable incoming POST requests
+/*    public function init() {
+        //$this->enableCsrfValidation = false;//enable incoming POST requests
+    }*/
+    public function beforeAction($action) { //enable incoming POST requests
+        if($action->id === 'get-user-matches') {
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
     }
-
 //    public function behaviors()
 //    {
 //        return [
