@@ -1267,11 +1267,13 @@ class TelegramApiController extends AppController
 
         $user = $res['user'];
         $match = false;
+        $CE = NULL;
         if(intval($data['action_result']) == 1){//like
-            $CE = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
-            if($CE !== NULL){//return CE on success or NULL
+            $rs = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
+            if($rs !== NULL){//return CE on success or NULL
                 //match
                 $match = true;
+                $CE = CreativeExpressions::find()->where(['id' => $rs->expression_id])->one();
                 Matches::addMatch(intval($data['expression_user_id']), $user['id']);
             }
         }
