@@ -1268,8 +1268,8 @@ class TelegramApiController extends AppController
         $user = $res['user'];
         $match = false;
         if(intval($data['action_result']) == 1){//like
-            $res = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
-            if($res == true){
+            $CE = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
+            if($CE !== NULL){//return CE on success or NULL
                 //match
                 $match = true;
                 Matches::addMatch(intval($data['expression_user_id']), $user['id']);
@@ -1278,7 +1278,7 @@ class TelegramApiController extends AppController
 
         $res = MatchAction::addAction($user['id'], intval($data['expression_id']), intval($data['expression_user_id']), intval($data['action_result']));
         if ($res['status'] == false) return ['error' => 'Error! Try again later.'];
-        return ['match' =>  $match];
+        return ['match' =>  $match,'CE' => $CE];
 
     }
     public function actionWebAppValidate(){
