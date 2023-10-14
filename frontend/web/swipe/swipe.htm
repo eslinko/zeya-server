@@ -325,6 +325,126 @@ top: -31px;
 /*transition: transform 900ms ease-in-out;*/
 background-color: red;
 }
+.match_hidden_small
+{
+	display:none;
+	top:50%;
+	left:50%;
+	width: 0;
+	height: 0;
+	position: absolute;
+	transition: transform 900ms ease-in-out;
+
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url(background_dark.png);
+}
+.match_display_big
+{
+	display: block;
+	left:0;
+	bottom:0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	transition: transform 900ms ease-in-out;
+	/*animation: match_anim .6s ease-in-out;*/
+
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url(background_dark.png);
+}
+.match_austronauts
+{
+	width: 100%;
+}
+.match_dome_container
+{
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-image: url(dome.png);
+
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 60%;
+	text-align: center;
+}
+#match_resonated_text
+{
+	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	letter-spacing: 0.1px;
+	text-align: center;
+}
+.match_expr_text
+{
+	font-family: Montserrat;
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 12px;
+	letter-spacing: 0.01em;
+	text-align: center;
+}
+.match_buttons
+{
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+}
+#keep_flying
+{
+	width: 90%;
+	height: 56px;
+	padding: 14px 20px 14px 24px;
+	border-radius: 32px;
+	border: 2px;
+	gap: 8px;
+	font-family: Montserrat;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 18px;
+	letter-spacing: 0.08em;
+	text-align: center;
+
+	background: linear-gradient(96.52deg, #CF91FF -1.2%, #35FAEE 58.92%, #FFE999 94.38%);
+	border: 2px solid;
+	border-image-source: linear-gradient(96.52deg, #CF91FF -1.2%, #35FAEE 58.92%, #FFE999 94.38%);
+}
+#open_match
+{
+	width: 90%;
+	height: 56px;
+	padding: 14px 24px 14px 24px;
+	border-radius: 32px;
+
+	gap: 8px;
+	font-family: Montserrat;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 18px;
+	letter-spacing: 0.08em;
+	text-align: center;
+
+	background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
+
+
+}
+@keyframes match_anim {
+	0% {
+		transform: scale(0) rotate(0deg);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1) rotate(0deg);
+		opacity: 1;
+	}
+}
 
 .liking:after {
   font-size: 25vw;
@@ -394,7 +514,7 @@ background-color: red;
 </head>
 <body>
   <div id="board"></div>	
-	<div id='bottom_bar'>
+  <div id='bottom_bar'>
 		
 		<table id='buttons_bar_table'>
 	  		<tr>
@@ -403,7 +523,30 @@ background-color: red;
 				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
 			</tr>
 		</table>
-	</div>
+  </div>
+  <div id='match' class="match_hidden_small">
+	  <img src="austronauts.png" class="match_austronauts">
+	  <div class="match_dome_container">
+		  <img src="frequency_match_text.png">
+		  <p id="match_resonated_text">You and Jenny resonated to each other’s expressions</p>
+		  //html table with 3 columns
+		  <table><tr>
+			  <td>
+				  <img src="sample_round.png">
+				  <p class="match_expr_text">title</p>
+			  </td>
+			  <td><img src="love_big.png"></td>
+			  <td>
+				  <img src="sample_round.png">
+				  <p class="match_expr_text">title</p>
+			  </td>
+		  </tr></table>
+		  <div class="match_buttons">
+			  <button id="keep_flying">KEEP FLYING</button>
+			  <button id="open_match">REVEAL DETAILS</button>
+		  </div>
+	  </div>
+  </div>
 <script>
 var carousel;//expression_queue, 
 window.Telegram.WebApp.expand();
@@ -918,8 +1061,8 @@ class Carousel {
 							if(data.match == true)
 								{
 								//animate match
-								window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches'}]});
-								
+								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches',id:'open_matches'}]});
+								this.show_match();
 								}
 							else
 								{
@@ -941,6 +1084,7 @@ class Carousel {
 				}
 
         	}
+
 	
 
 	likeButtonAction() {
@@ -1103,6 +1247,12 @@ class Carousel {
 			}
 
 		}
+	show_match()
+	{
+		let element = document.getElementById("match");
+		element.classList.remove('match_hidden_small');
+		element.classList.add('match_display_big');
+	}
 
 }
 
