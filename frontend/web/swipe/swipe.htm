@@ -364,14 +364,15 @@ background-color: red;
 {
 	background-size: cover;
 	background-repeat: no-repeat;
-	background-position: center;
+	background-position: center top;
 	background-image: url(dome.png);
 
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 60%;
+	/*height: 60%;*/
 	text-align: center;
+	color: #FFF;
 }
 #match_resonated_text
 {
@@ -381,6 +382,8 @@ background-color: red;
 	line-height: 16px;
 	letter-spacing: 0.1px;
 	text-align: center;
+	width: 70%;
+	margin: auto;
 }
 .match_expr_text
 {
@@ -390,10 +393,13 @@ background-color: red;
 	line-height: 12px;
 	letter-spacing: 0.01em;
 	text-align: center;
+	margin: auto;
+	width: 50px;
+	overflow: hidden;
 }
 .match_buttons
 {
-	position: absolute;
+	/*position: absolute;*/
 	width: 100%;
 	bottom: 0;
 }
@@ -411,7 +417,7 @@ background-color: red;
 	line-height: 18px;
 	letter-spacing: 0.08em;
 	text-align: center;
-
+	margin: 9px;
 	background: linear-gradient(96.52deg, #CF91FF -1.2%, #35FAEE 58.92%, #FFE999 94.38%);
 	border: 2px solid;
 	border-image-source: linear-gradient(96.52deg, #CF91FF -1.2%, #35FAEE 58.92%, #FFE999 94.38%);
@@ -430,10 +436,27 @@ background-color: red;
 	line-height: 18px;
 	letter-spacing: 0.08em;
 	text-align: center;
-
+	margin: 9px;
 	background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
 
 
+}
+.frequency_match_text
+{
+	margin-top: 30px;
+	max-width: 80%;
+}
+.match_CE_icons
+{
+	width: 100%;
+	margin-top: 9px;
+}
+.user_CE
+{
+	background-size: cover;
+	width: 50px;
+	height: 50px;
+	border-radius: 25px;
 }
 @keyframes match_anim {
 	0% {
@@ -527,18 +550,18 @@ background-color: red;
   <div id='match' class="match_hidden_small">
 	  <img src="austronauts.png" class="match_austronauts">
 	  <div class="match_dome_container">
-		  <img src="frequency_match_text.png">
+		  <img class='frequency_match_text' src="frequency_match_text.png">
 		  <p id="match_resonated_text">You and Jenny resonated to each other’s expressions</p>
-		  //html table with 3 columns
-		  <table><tr>
+
+		  <table class="match_CE_icons"><tr>
 			  <td>
-				  <img src="sample_round.png">
-				  <p class="match_expr_text">title</p>
+				  <div id='user_1_CE' class="user_CE"><img class='CE_type_icon' src="image-symbol.png"></div>
+				  <p id='user_1_CE_title' class="match_expr_text">title</p>
 			  </td>
 			  <td><img src="love_big.png"></td>
 			  <td>
-				  <img src="sample_round.png">
-				  <p class="match_expr_text">title</p>
+				  <div id='user_2_CE' class="user_CE"><img class='CE_type_icon' src="image-symbol.png"></div>
+				  <p  id='user_2_CE_title' class="match_expr_text">title</p>
 			  </td>
 		  </tr></table>
 		  <div class="match_buttons">
@@ -595,9 +618,9 @@ class Carousel {
 	audios_ext = ['mp3']
 	constructor(element, expr) {
 		this.expression_queue = expr;
-		this.top_card_i = 0;
-		this.expr_queue_counter = 0;
-		this.description_opened = false;
+		this.top_card_i = 0;//top card
+		this.expr_queue_counter = 0;//loaded cards pointer (background card)
+ 		this.description_opened = false;
 		this.board = element
 	
 		// add first two cards programmatically
@@ -1062,7 +1085,7 @@ class Carousel {
 								{
 								//animate match
 								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches',id:'open_matches'}]});
-								this.show_match();
+								this.show_match(data.CE, this.expression_queue[this.top_card_i]);
 								}
 							else
 								{
@@ -1247,11 +1270,15 @@ class Carousel {
 			}
 
 		}
-	show_match()
+	show_match(CE_user1, CE_user2)
 	{
 		let element = document.getElementById("match");
 		element.classList.remove('match_hidden_small');
 		element.classList.add('match_display_big');
+		document.getElementById('user_1_CE').style.backgroundImage = 'url(/backend/web' + CE_user1.content+')';
+		document.getElementById('user_2_CE').style.backgroundImage = 'url(/backend/web' + CE_user2.content+')';
+		document.getElementById('user_1_CE_title').innerText = CE_user1.description;
+		document.getElementById('user_2_CE_title').innerText = CE_user2.description;
 	}
 
 }

@@ -77,9 +77,10 @@ class MatchAction extends ActiveRecord
     static function didUserLikedAnyOfOursExpression($user_id_1, $user_id_2){
         //did user user_id_2 liked any expression of user_id_1?
         $res = MatchAction::find()->where(['action_user_id' => $user_id_2, 'expression_user_id' => $user_id_1])->one();
-        if($res === NULL)
+        /*if($res === NULL)
             return false;
         else
-            return true;
+            return true;*/
+        return $res;
     }
 }
