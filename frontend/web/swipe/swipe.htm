@@ -339,6 +339,7 @@ background-color: red;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-image: url(background_dark.png);
+	animation: match_anim_hide .6s ease-in-out;
 }
 .match_display_big
 {
@@ -355,6 +356,26 @@ background-color: red;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-image: url(background_dark.png);
+}
+@keyframes match_anim {
+	0% {
+		transform: scale(0) rotate(0deg);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1) rotate(0deg);
+		opacity: 1;
+	}
+}
+@keyframes match_anim_hide {
+	100% {
+		transform: scale(0) rotate(0deg);
+		opacity: 0;
+	}
+	0% {
+		transform: scale(1) rotate(0deg);
+		opacity: 1;
+	}
 }
 .match_austronauts
 {
@@ -442,34 +463,22 @@ background-color: red;
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 21px;
+	width: 23px;
 	border-right: none;
-	border-radius: 30px 0 0 30px;
 }
 #keep_flying:before
 {
-
-	position: absolute;
-	z-index: -1;
-
-	width: 21px;
-	border: 2px solid #CF91FF;
+	border: 3px solid #CF91FF;
 	border-right: none;
 	border-radius: 30px 0 0 30px;
-
 }
 #keep_flying:after
 {
-	content: '';
-	position: absolute;
-	z-index: -1;
 	right: 0;
-	width: 21px;
 	border-right: none;
-	border: 2px solid #FFE999;
+	border: 3px solid #FFE999;
 	border-left: none;
 	left: auto;
-	right: 0;
 	border-radius: 0 30px 30px 0;
 }
 #open_match
@@ -488,7 +497,8 @@ background-color: red;
 	text-align: center;
 	margin: 9px;
 	background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
-
+	border: none;
+	color: #FFF;
 
 }
 .frequency_match_text
@@ -517,16 +527,7 @@ background-color: red;
 	position: absolute;
 	left: 0;
 }
-@keyframes match_anim {
-	0% {
-		transform: scale(0) rotate(0deg);
-		opacity: 0;
-	}
-	100% {
-		transform: scale(1) rotate(0deg);
-		opacity: 1;
-	}
-}
+
 
 .liking:after {
   font-size: 25vw;
@@ -1340,7 +1341,20 @@ class Carousel {
 		document.getElementById('user_1_CE_title').innerText = CE_user1.description;
 		document.getElementById('user_2_CE_title').innerText = CE_user2.description;
 	}
-
+	keepFlyingButtonAction()
+	{
+		let element = document.getElementById("match");
+		element.classList.remove('match_display_big');
+		element.classList.add('match_hidden_small');
+	}
+	openMatchButtonAction()
+	{
+		let URL_str = new URL(window.location.origin + '/admin/telegram-api/open-matches');
+		URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+		fetch(URL_str);
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+		window.Telegram.WebApp.close();
+	}
 }
 
 //load queue
@@ -1364,6 +1378,9 @@ fetch(URL_str).then((response) =>
 			document.getElementById("like_button").addEventListener("click", carousel.likeButtonAction);
 			document.getElementById("nope_button").addEventListener("click", carousel.nopeButtonAction);
 			document.getElementById("skip_button").addEventListener("click", carousel.skipButtonAction);
+			document.getElementById("keep_flying").addEventListener("click", carousel.keepFlyingButtonAction);
+			document.getElementById("open_match").addEventListener("click", carousel.openMatchButtonAction);
+
 			}
 		});
 
