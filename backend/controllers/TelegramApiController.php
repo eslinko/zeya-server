@@ -1296,11 +1296,11 @@ class TelegramApiController extends AppController
         $user = $res['user'];
         $matches = Matches::getUserMatches($user->id);
         $i=1;
-        $text = __('My matches', $user['user']['language'])."\n";
+        $text = 'My matches'."\n";
         foreach ($matches as $item) {
             $user_name_text = $item['user']['publicAlias'];
             if (!empty($item['user']['telegram_alias'])) $user_name_text = '@' . $item['user']['telegram_alias'] . ' (' . $user_name_text . ')';
-            $text .= $i . '. ' . $user_name_text . ' ' . __('created on', $user['user']['language']) . ' ' . date('j/m/y', strtotime($item['timestamp'])) . "\n";
+            $text .= $i . '. ' . $user_name_text . ' ' . 'created on' . ' ' . date('j/m/y', strtotime($item['timestamp'])) . "\n";
             $i++;
         }
         $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage?chat_id={$user->telegram}&text={$text}";
