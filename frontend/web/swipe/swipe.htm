@@ -5,6 +5,7 @@
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link href="https://vjs.zencdn.net/8.6.0/video-js.css" rel="stylesheet" />
 <style>
 @font-face {
   font-family: "Montserrat";
@@ -62,7 +63,7 @@ background: black;
 .content_descr_opened
 {
 max-width: 100%;
-max-height:70%;
+max-height:70vh;
 position: relative;
 background: black;
 }
@@ -921,11 +922,6 @@ class Carousel {
 			{
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
-
-
-/*			let url = new URL(current_expr.content)
-			let split_arr = url.pathname.split(".");
-			let ext = split_arr[split_arr.length-1];*/
 				let url = '/backend/web' + current_expr.content;
 				let ext = current_expr.content.split('.').pop();
 
@@ -989,30 +985,7 @@ class Carousel {
 				} 
 			else if (this.videos_ext.includes(ext)) 
 				{
-				/*let vd = document.createElement('video');
-				vd.setAttribute("src", url);
-
-				vd.autoplay = true;
-				vd.loop = true;
-
-				vd.classList.add('content');
-				vd.setAttribute('playsinline','');
-				vd.setAttribute('muted','');
-				vd.setAttribute('controls','');
-				card.appendChild(vd);
-
-				//bottom gradient
-				let div_bottom = document.createElement('div');
-				div_bottom.classList.add('card_bottom');
-					
-				let p_descr = document.createElement('p');	
-				p_descr.classList.add('card_description');
-				p_descr.innerHTML = current_expr.description;
-
-				div_bottom.appendChild(p_descr);
-				card.appendChild(div_bottom);	*/
-
-				card.innerHTML = "<video src='"+url+"' class='content content_descr_closed' autoplay loop playsinline muted controls></video>"+
+				card.innerHTML = "<video-js src='"+url+"' class='content content_descr_closed' loop muted data-setup='{\"controls\": true, \"autoplay\": false, \"preload\": \"auto\"}'></video-js>"+
 				"<div class='card_gradient'></div>"+
 				"<div class='card_bottom card_bottom_descr_closed'>"+
 					"<div class='descr_container descr_container_descr_closed'><tr>"+
@@ -1160,7 +1133,6 @@ class Carousel {
 					response.json().then(data => 
 						{					
 						console.log(data);
-						console.log(data);
 						if(data.hasOwnProperty('error'))
 							{
 							window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -1170,8 +1142,6 @@ class Carousel {
 							if(data.match == true)
 								{
 								//animate match
-								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches',id:'open_matches'}]});
-									console.log(data);
 								this.show_match(data.CE, this.expression_queue[this.top_card_i]);
 								}
 							else
@@ -1517,5 +1487,6 @@ fetch(URL_str).then((response) =>
 */			
        
 </script>
+  <script src="https://vjs.zencdn.net/8.6.0/video.min.js"></script>
 </body>
 </html>
