@@ -1303,8 +1303,8 @@ class TelegramApiController extends AppController
             $text .= $i . '. ' . $user_name_text . ' ' . 'created on' . ' ' . date('j/m/y', strtotime($item['timestamp'])) . "\n";
             $i++;
         }
-        $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage?chat_id={$user->telegram}&text={$text}";
-        CurlHelper::curl($url);
+        $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage";//?chat_id={$user->telegram}&text={$text}";
+        CurlHelper::curl($url,array('chat_id' => $user->telegram, 'text' => $text));
         return true;
     }
     public function actionWebAppValidate(){
