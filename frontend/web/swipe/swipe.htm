@@ -48,6 +48,7 @@ body {
 }
 .card.card_opened {
 	overflow: visible;
+	height: initial;
 }
 .content_descr_closed
 {
@@ -80,7 +81,7 @@ height:136px;
 background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.76) 32.08%, #272043 100%, #151124 100%);
 width: 100%;
 position: relative;
-
+	padding-bottom: 70px;
 }
 .card_gradient
 {
@@ -622,7 +623,7 @@ background-color: red;
 </head>
 <body>
   <div id="board"></div>	
-  <div id='bottom_bar'>
+
 		
 		<table id='buttons_bar_table'>
 	  		<tr>
@@ -631,7 +632,7 @@ background-color: red;
 				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
 			</tr>
 		</table>
-  </div>
+
   <div id='match' class="match_hidden_small">
 	  <img src="austronauts.png" class="match_austronauts">
 	  <div class="match_dome_container">
