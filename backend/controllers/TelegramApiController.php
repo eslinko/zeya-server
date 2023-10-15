@@ -20,6 +20,7 @@ use app\models\SendGridMailer;
 use app\models\Teacher;
 use app\models\HashTag;
 use backend\models\UsersWithSharedInterests;
+use common\models\CurlHelper;
 use common\models\TelegramApi;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
@@ -1282,6 +1283,29 @@ class TelegramApiController extends AppController
         if ($res['status'] == false) return ['error' => 'Error! Try again later.'];
         return ['match' =>  $match,'CE' => $CE];
 
+    }
+    static function actionOpenMatches () {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if ($res['status'] == false) {
+            return false;//['error' => 'Error! Try again later.'];
+        }
+
+        $user = $res['user'];
+        $matches = Matches::getUserMatches($user->id);
+        $i=1;
+        $text = __('My matches', $user['user']['language'])."\n";
+        foreach ($matches as $item) {
+            $user_name_text = $item['user']['publicAlias'];
+            if (!empty($item['user']['telegram_alias'])) $user_name_text = '@' . $item['user']['telegram_alias'] . ' (' . $user_name_text . ')';
+            $text .= $i . '. ' . $user_name_text . ' ' . __('created on', $user['user']['language']) . ' ' . date('j/m/y', strtotime($item['timestamp'])) . "\n";
+            $i++;
+        }
+        $url = "https://api.telegram.org/bot".TelegramBotId."/sendMessage?chat_id={$user->telegram}&text={$text}";
+        CurlHelper::curl($url);
+        return true;
     }
     public function actionWebAppValidate(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
