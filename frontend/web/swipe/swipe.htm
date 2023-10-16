@@ -1064,6 +1064,7 @@ class Carousel {
 					//vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
 
 				card.prepend(vid);
+					document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
 				//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
 				}
 			else if (this.audios_ext.includes(ext)) 
