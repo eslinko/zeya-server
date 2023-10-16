@@ -752,11 +752,8 @@ class TelegramApiController extends AppController
 
         $user->last_request_to_chatgpt_date = time();
         $user->save(false);
-        $tmp = parse_url(__DIR__);
-        $u = $tmp['scheme'].':\\'.$tmp['host'];
-        $tmp = parse_url($_SERVER['DOCUMENT_ROOT']);
-        $u2 = $tmp['scheme'].':\\'.$tmp['host'];
-        return ['status' => 'success', 'list_of_interests' => $list_of_interests.$u.'+'.$u2];
+
+        return ['status' => 'success', 'list_of_interests' => $list_of_interests];
     }
 
     public function actionAddInterestToUserList()
@@ -1257,6 +1254,11 @@ class TelegramApiController extends AppController
             else
                 return 0;
         });
+        $tmp = parse_url(__DIR__);
+        $u = $tmp['scheme'].':\\'.$tmp['host'];
+        $tmp = parse_url($_SERVER['DOCUMENT_ROOT']);
+        $u2 = $tmp['scheme'].':\\'.$tmp['host'];
+        $creative_expressions[]=$u.' '.$u2;
         return $creative_expressions;
     }
     public function actionMatchAction()
