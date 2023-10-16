@@ -171,7 +171,7 @@ class CreativeExpressions extends ActiveRecord
         $target_file = $target_dir . $new_file_name;
 
         if (file_put_contents($target_file, $file) !== false) {
-            return '/uploads/creative_expressions/' . $user_id . '/' . $new_file_name;
+            return 'https://staging-server.zeya888.com/uploads/creative_expressions/' . $user_id . '/' . $new_file_name;
         } else {
             return '';
         }
