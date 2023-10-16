@@ -637,6 +637,29 @@ background-color: red;
 	line-height: 72px;
 	margin: 0;
 }
+.video-js .vjs-play-control {
+	bottom: 3em;
+	position: absolute;
+	left: 0;
+}
+.video-js .vjs-volume-panel
+{
+	bottom: 3em;
+	position: absolute;
+	left: 3em;
+}
+.video-js .vjs-remaining-time
+{
+	bottom: 3em;
+	position: absolute;
+	right: 3em;
+}
+.video-js .vjs-fullscreen-control
+{
+	bottom: 3em;
+	position: absolute;
+	right: 0;
+}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -1035,7 +1058,7 @@ class Carousel {
 					vid.classList.add('content_descr_closed');
 					vid.setAttribute("loop", '');
 					vid.setAttribute("muted", '');
-					vid.setAttribute("data-setup", '{"controls": true, "preload": "auto"}');
+					vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "disablePictureInPicture": true}');
 
 				card.prepend(vid);
 				}
