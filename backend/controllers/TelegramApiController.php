@@ -1254,11 +1254,7 @@ class TelegramApiController extends AppController
             else
                 return 0;
         });
-        $tmp = parse_url(__DIR__);
-        $u = $tmp['scheme'].':\\'.$tmp['host'];
-        $tmp = parse_url($_SERVER['DOCUMENT_ROOT']);
-        $u2 = $tmp['scheme'].':\\'.$tmp['host'];
-        $creative_expressions[]=$u.' '.$u2;
+        $creative_expressions[]=json_encode(parse_url(__DIR__)).' '.json_encode(parse_url($_SERVER['DOCUMENT_ROOT']));
         return $creative_expressions;
     }
     public function actionMatchAction()
