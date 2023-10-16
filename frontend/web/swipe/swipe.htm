@@ -53,10 +53,11 @@ body {
 }
 .content_descr_closed
 {
-width: 100%;
-transform: translateX(-50%) translateY(-50%);
+max-width: 100%;
+	max-height: 100vh;
+/*transform: translateX(-50%) translateY(-50%);
 top: 50%;
-left: 50%;
+left: 50%;*/
 position: relative;
 background: black;
 }
@@ -616,6 +617,10 @@ background-color: red;
     transform: scale(1) rotate(-7deg);
     opacity: 1;
   }
+}
+
+.video-js .vjs-play-progress {
+	background: linear-gradient(90.1deg, #A834FF -2.39%, #77FDF5 24.06%, #FFF3B1 42.73%, #AE44FF 60.36%, #35FAEE 77.48%, #FFE999 94.07%);
 }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
