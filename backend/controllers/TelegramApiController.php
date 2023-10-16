@@ -752,8 +752,11 @@ class TelegramApiController extends AppController
 
         $user->last_request_to_chatgpt_date = time();
         $user->save(false);
-        $tmp = '@web:'.Yii::getAlias('@web').' '.'@app:'.Yii::getAlias('@app');
-        return ['status' => 'success', 'list_of_interests' => $list_of_interests.$tmp];
+        $tmp = parse_url(__DIR__);
+        $u = $tmp['scheme'].':\\'.$tmp['host'];
+        $tmp = parse_url($_SERVER['DOCUMENT_ROOT']);
+        $u2 = $tmp['scheme'].':\\'.$tmp['host'];
+        return ['status' => 'success', 'list_of_interests' => $list_of_interests.$u.'+'.$u2];
     }
 
     public function actionAddInterestToUserList()
