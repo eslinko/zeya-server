@@ -965,7 +965,7 @@ class Carousel {
 			{
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
-				let url = '/backend/web' + current_expr.content;
+				let url = current_expr.content;
 				let ext = current_expr.content.split('.').pop();
 
 			let time_left = Math.round((current_expr.active_period - current_expr.upload_date)/3600);//hours
