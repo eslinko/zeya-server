@@ -1029,11 +1029,11 @@ class Carousel {
 			else if (this.videos_ext.includes(ext)) 
 				{
 
-				card.innerHTML = "<video-js src='"+url+"' class='content content_descr_closed' loop muted data-setup='" + '{"controls": true, "preload": "auto"}' + "'></video-js>"+
-				/*card.innerHTML =*/ "<div class='card_gradient'></div>"+
+				//card.innerHTML = "<video-js src='"+url+"' class='content content_descr_closed' loop muted data-setup='" + '{"controls": true, "preload": "auto"}' + "'></video-js>"+
+				card.innerHTML = "<div class='card_gradient'></div>"+
 				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'><tr>"+
-						"<table><td>"+
+					"<div class='descr_container descr_container_descr_closed'>"+
+						"<table><tr><td>"+
 							"<p class='descr_title'>"+current_expr.description+"</p>"+
 						"</td>"+
 						"<td>"+
@@ -1053,18 +1053,18 @@ class Carousel {
 						"</div>"+
 					"</div>"+
 				"</div>";
-					//let vid = document.createElement('video-js');
-					//vid.setAttribute("src", url);
+					let vid = document.createElement('video-js');
+					vid.setAttribute("src", url);
 					//let id = Math.random().toString(36).substring(2, 11);
 					//vid.id = id;
-					//vid.classList.add('content');
-					//vid.classList.add('content_descr_closed');
-					//vid.setAttribute("loop", '');
-					//vid.setAttribute("muted", '');
-					//vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
+					vid.classList.add('content');
+					vid.classList.add('content_descr_closed');
+					vid.setAttribute("loop", '');
+					vid.setAttribute("muted", '');
+					vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
 					//vid.setAttribute("data-setup", '{}');
 
-				//card.prepend(vid);
+				card.prepend(vid);
 					//document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
 				//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
 				}
@@ -1555,32 +1555,6 @@ fetch(URL_str).then((response) =>
        
 </script>
   <script src="https://vjs.zencdn.net/8.6.0/video.min.js"></script>
-
-  <div class="card">
-	  <video-js src='https://staging-server.zeya888.com/backend/web/uploads/creative_expressions/18/6526e56a4b71a_file_6.mp4' class='content content_descr_closed' loop muted data-setup='{"controls": true, "preload": "auto"}'></video-js>
-  <div class='card_gradient'></div>
-  <div class='card_bottom card_bottom_descr_closed'>
-	  <div class='descr_container descr_container_descr_closed'>
-		  <table><tr><td>
-			  <p class='descr_title'>descr</p>
-			  </td>
-			  <td>
-				  <p class='descr_date'>date</p>
-				  </td>
-			  <td>
-				  <button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>
-				  </td></tr></table>
-		  <p class='descr_text descr_text_close'>des</p>
-		  <div class='descr_after_text descr_after_text_descr_closed'>
-			  <p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>
-			  <div class='line'></div>
-			  <p class='descr_tag_title'>Tags</p>
-
-			  <div class='line'></div>
-			  </div>
-		  </div>
-	  </div>
-  </div>
 
 </body>
 </html>
