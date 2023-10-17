@@ -1062,9 +1062,10 @@ class Carousel {
 					vid.setAttribute("loop", '');
 					vid.setAttribute("muted", '');
 					//vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
+					vid.setAttribute("data-setup", '{}');
 
 				card.prepend(vid);
-					document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
+					//document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
 				//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
 				}
 			else if (this.audios_ext.includes(ext)) 
