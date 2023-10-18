@@ -700,7 +700,7 @@ button.vjs-play-control
 video-js.video-js .vjs-load-progress div {
 	background: #857AAF;
 }
-.music
+.music:after
 {
 	width: 100%;
 	position: absolute;
@@ -713,6 +713,11 @@ video-js.video-js .vjs-load-progress div {
 	bottom: 0;
 	background-size: 50%;
 	mix-blend-mode: overlay;
+	pointer-events: none;
+}
+.button-primary-s-nope, .button-skip, .button-primary-s-heart
+{
+	cursor: pointer;
 }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
