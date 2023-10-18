@@ -1068,7 +1068,10 @@ class Carousel {
 
 				card.prepend(vid);
 				//document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
-					setTimeout(()=>{console.log(id);videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});}, 5000);
+					setTimeout(()=>{
+						console.log(id);
+						document.getElementById(id).classList.add('testttttt');
+						videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});}, 5000);
 
 					//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
 				}
