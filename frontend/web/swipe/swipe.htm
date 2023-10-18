@@ -120,10 +120,34 @@ line-height: 24px;
 letter-spacing: 0.44px;
 text-align: left;
 }
-.descr_title:before
+.descr_title_image:before
 {
 content:url(image-symbol.png);
 margin-right: 2px;
+	display: inline-block;
+	vertical-align: middle;
+	height: 24px;
+}
+.descr_title_video:before
+{
+	content:url(video-symbol.png);
+	margin-right: 2px;
+	display: inline-block;
+	vertical-align: middle;
+	height: 24px;
+}
+.descr_title_music:before
+{
+	content:url(music-symbol.png);
+	margin-right: 2px;
+	display: inline-block;
+	vertical-align: middle;
+	height: 24px;
+}
+.descr_title_text:before
+{
+	content:url(text-symbol.png);
+	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
 	height: 24px;
@@ -652,7 +676,7 @@ background-color: red;
 {
 	bottom: 3em;
 	position: absolute;
-	right: 3em;
+	right: 0;
 }
 .video-js .vjs-fullscreen-control
 {
@@ -671,6 +695,9 @@ button.vjs-play-control
 .video-js .vjs-play-progress:before
 {
 	display: none;
+}
+video-js.video-js .vjs-load-progress div {
+	background: #857AAF;
 }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -995,7 +1022,7 @@ class Carousel {
 				"<div class='card_bottom card_bottom_descr_closed'>"+
 					"<div class='descr_container descr_container_descr_closed'><tr>"+
 						"<table style='width: 100%;'><td>"+
-							"<p class='descr_title'>"+current_expr.description+"</p>"+
+							"<p class='descr_title_image'>"+current_expr.description+"</p>"+
 						"</td>"+
 						"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
@@ -1046,7 +1073,7 @@ class Carousel {
 				"<div class='card_bottom card_bottom_descr_closed'>"+
 					"<div class='descr_container descr_container_descr_closed'>"+
 						"<table><tr><td>"+
-							"<p class='descr_title'>"+current_expr.description+"</p>"+
+							"<p class='descr_title_video'>"+current_expr.description+"</p>"+
 						"</td>"+
 						"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
