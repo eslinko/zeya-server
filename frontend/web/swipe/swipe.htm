@@ -1067,12 +1067,12 @@ class Carousel {
 					//vid.setAttribute("data-setup", '{}');
 
 				card.prepend(vid);
-				document.getElementById(id).classList.add('testttttt');
+
 				//document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
 					setTimeout(()=>{
 						console.log(id);
-
-						videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});}, 50);
+						document.getElementById(id).classList.add('testttttt');
+						videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});}, 0);
 
 					//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
 				}
