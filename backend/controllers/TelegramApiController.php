@@ -1254,7 +1254,7 @@ class TelegramApiController extends AppController
             else
                 return 0;
         });
-
+        $creative_expressions[]=Yii::getAlias('@webroot');
         return $creative_expressions;
     }
     public function actionMatchAction()
