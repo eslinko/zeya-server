@@ -1254,7 +1254,7 @@ class TelegramApiController extends AppController
             else
                 return 0;
         });
-        $creative_expressions[]=env('DOMAIN');
+
         return $creative_expressions;
     }
     public function actionMatchAction()

@@ -700,6 +700,20 @@ button.vjs-play-control
 video-js.video-js .vjs-load-progress div {
 	background: #857AAF;
 }
+.music
+{
+	width: 100%;
+	position: absolute;
+	content: '';
+	background-image: url(music-background.png);
+	height: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	left: 0;
+	bottom: 0;
+	background-size: 50%;
+	mix-blend-mode: overlay;
+}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -1074,6 +1088,7 @@ class Carousel {
 				vid.setAttribute("id", id);
 				vid.classList.add('content');
 				vid.classList.add('content_descr_closed');
+
 				vid.setAttribute("loop", '');
 				vid.setAttribute("muted", '');
 
@@ -1114,8 +1129,8 @@ class Carousel {
 				vid.classList.add('content');
 				vid.classList.add('content_descr_closed');
 				vid.setAttribute("loop", '');
-				vid.setAttribute("poster", 'music-background.png');
-
+				//vid.setAttribute("poster", 'music-background.png');
+				vid.classList.add('music');
 				card.prepend(vid);
 
 				setTimeout(()=>{//let exit from function for child to append
