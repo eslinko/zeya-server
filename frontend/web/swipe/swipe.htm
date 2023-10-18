@@ -1462,7 +1462,7 @@ fetch(URL_str).then((response) =>
 			}
 		else
 			{
-			let board = document.querySelector('#board')
+			let board = document.getElementById('board')
 			carousel = new Carousel(board, expr_queue)
 			document.getElementById("like_button").addEventListener("click", carousel.likeButtonAction);
 			document.getElementById("nope_button").addEventListener("click", carousel.nopeButtonAction);
