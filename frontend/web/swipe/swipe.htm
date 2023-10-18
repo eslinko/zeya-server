@@ -660,6 +660,18 @@ background-color: red;
 	position: absolute;
 	right: 0;
 }
+video-js.video-js .vjs-control-bar
+{
+background: transparent;
+}
+button.vjs-play-control
+{
+	color: #C0B0FF;
+}
+.video-js .vjs-play-progress:before
+{
+	display: none;
+}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -1053,28 +1065,22 @@ class Carousel {
 						"</div>"+
 					"</div>"+
 				"</div>";
-					let vid = document.createElement('video-js');
-					vid.setAttribute("src", url);
-					let id = Math.random().toString(36).substring(2, 11);
-					vid.setAttribute("id", id);
-					console.log(id);
-					//vid.id = id;
-					vid.classList.add('content');
-					vid.classList.add('content_descr_closed');
-					vid.setAttribute("loop", '');
-					vid.setAttribute("muted", '');
-					//vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
-					//vid.setAttribute("data-setup", '{}');
+				let vid = document.createElement('video-js');
+				vid.setAttribute("src", url);
+				let id = Math.random().toString(36).substring(2, 11);
+				vid.setAttribute("id", id);
+				vid.classList.add('content');
+				vid.classList.add('content_descr_closed');
+				vid.setAttribute("loop", '');
+				vid.setAttribute("muted", '');
 
 				card.prepend(vid);
 
-				//document.addEventListener("DOMContentLoaded", ()=>{videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});});
-					setTimeout(()=>{
-						console.log(id);
-						document.getElementById(id).classList.add('testttttt');
-						videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});}, 0);
+				setTimeout(()=>{//let exit from function for child to append
+					videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}});
+					}, 0);
 
-					//videojs(id,{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false}});
+
 				}
 			else if (this.audios_ext.includes(ext)) 
 				{
