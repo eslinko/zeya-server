@@ -1093,7 +1093,7 @@ class Carousel {
 				vid.setAttribute("id", id);
 				vid.classList.add('content');
 				vid.classList.add('content_descr_closed');
-
+				vid.setAttribute("playsinline", '');
 				vid.setAttribute("loop", '');
 				vid.setAttribute("muted", '');
 
@@ -1134,8 +1134,8 @@ class Carousel {
 				vid.classList.add('content');
 				vid.classList.add('content_descr_closed');
 				vid.setAttribute("loop", '');
-				//vid.setAttribute("poster", 'music-background.png');
-				vid.classList.add('music');
+				vid.setAttribute("playsinline", '');
+				card.classList.add('music');
 				card.prepend(vid);
 
 				setTimeout(()=>{//let exit from function for child to append
