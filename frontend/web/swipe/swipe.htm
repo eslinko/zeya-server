@@ -106,7 +106,7 @@ padding: 6px 16px 0px 16px;
 padding: 6px 16px 0px 16px;
 }
 
-.descr_title
+.descr_title_image,.descr_title_video,.descr_title_music,.descr_title_text
 {
 height: 24px;
 color: #FFF;
@@ -1016,7 +1016,7 @@ class Carousel {
 			let upload_date= new Date(current_expr.upload_date);
 				
 			if (this.images_ext.includes(ext)) 
-				{//<div style='position:relative; width:100%; height: 100%;'>
+				{
 				card.innerHTML = "<img src='"+url+"' class='content content_descr_closed img_fix'>"+
 				"<div class='card_gradient'></div>"+
 				"<div class='card_bottom card_bottom_descr_closed'>"+
@@ -1040,35 +1040,10 @@ class Carousel {
 							"<div class='line'></div>"+
 						"</div>"+
 					"</div>"+
-				"</div>";//</div>
-				//document.getElementById("button_descr").addEventListener("click", carousel.toggle_descr);
-				/*let img = document.createElement('img');
-				img.setAttribute("src", url);
-				img.classList.add('content');
-				img.classList.add('img_fix');
-				card.appendChild(img);		
-
-				//bottom gradient
-				let div_bottom = document.createElement('div');
-				div_bottom.classList.add('card_bottom');
-					
-				let div_cont = document.createElement('div');	
-				//div_cont.classList.add('card_description');
-				//p_descr.innerHTML = current_expr.description;
-				div_bottom.appendChild(p_descr);
-
-				let p_descr = document.createElement('p');	
-				p_descr.classList.add('card_description');
-				p_descr.innerHTML = current_expr.description;
-				div_bottom.appendChild(p_descr);*/
-
-				//card.appendChild(div_bottom);	
-
+				"</div>";
 				} 
 			else if (this.videos_ext.includes(ext)) 
 				{
-
-				//card.innerHTML = "<video-js src='"+url+"' class='content content_descr_closed' loop muted data-setup='" + '{"controls": true, "preload": "auto"}' + "'></video-js>"+
 				card.innerHTML = "<div class='card_gradient'></div>"+
 				"<div class='card_bottom card_bottom_descr_closed'>"+
 					"<div class='descr_container descr_container_descr_closed'>"+
@@ -1106,40 +1081,18 @@ class Carousel {
 				setTimeout(()=>{//let exit from function for child to append
 					videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}});
 					}, 0);
-
-
 				}
-			else if (this.audios_ext.includes(ext)) 
-				{
-				/*let audio = document.createElement('audio');
-				audio.setAttribute("src", url);
-
-				audio.classList.add('content');
-				audio.setAttribute('controls','');
-				card.appendChild(audio);
-
-				//bottom gradient
-				let div_bottom = document.createElement('div');
-				div_bottom.classList.add('card_bottom');
-					
-				let p_descr = document.createElement('p');	
-				p_descr.classList.add('card_description');
-				p_descr.innerHTML = current_expr.description;
-
-				div_bottom.appendChild(p_descr);
-				card.appendChild(div_bottom);*/
-
-				//card.innerHTML = "<audio src='"+url+"' class='content content_descr_closed' controls></audio>"+
+			else if(this.audios_ext.includes(ext)) {
 				card.innerHTML = "<div class='card_gradient'></div>"+
 				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'><tr>"+
-						"<table><td>"+
-							"<p class='descr_title'>"+current_expr.description+"</p>"+
-						"</td>"+
-						"<td>"+
+					"<div class='descr_container descr_container_descr_closed'>"+
+						"<table><tr><td>"+
+							"<p class='descr_title_video'>"+current_expr.description+"</p>"+
+							"</td>"+
+							"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
-						"</td>"+
-						"<td>"+
+							"</td>"+
+							"<td>"+
 							"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>"+
 						"</td></tr></table>"+
 
@@ -1148,21 +1101,26 @@ class Carousel {
 							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
 							"<div class='line'></div>"+
 							"<p class='descr_tag_title'>Tags</p>"+
-							tag_str+
+								tag_str+
 							"<div class='line'></div>"+
 						"</div>"+
 					"</div>"+
 				"</div>";
-					let vid = document.createElement('video-js');
-					vid.setAttribute("src", url);
-					vid.classList.add('content');
-					vid.classList.add('content_descr_closed');
-					vid.setAttribute("loop", '');
-					vid.setAttribute("muted", '');
-					vid.setAttribute("data-setup", '{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false}}');
+				let vid = document.createElement('video-js');
+				vid.setAttribute("src", url);
+				let id = Math.random().toString(36).substring(2, 11);
+				vid.setAttribute("id", id);
+				vid.classList.add('content');
+				vid.classList.add('content_descr_closed');
+				vid.setAttribute("loop", '');
+				vid.setAttribute("muted", '');
 
-					card.prepend(vid);
-				}
+				card.prepend(vid);
+
+				setTimeout(()=>{//let exit from function for child to append
+					videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}});
+				}, 0);
+			}
 			else
 				{
 				/*let div = document.createElement('div');
