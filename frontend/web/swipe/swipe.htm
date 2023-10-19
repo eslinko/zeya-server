@@ -948,7 +948,7 @@ class Carousel {
 			setTimeout(() => {
 				// remove swiped card
 				this.topCard.style.transition = '';
-				}, 800);
+				}, 600);
 //			if (this.nextCard) this.nextCard.style.transition = 'transform 100ms linear'
 
 			// check threshold and movement direction
@@ -994,7 +994,7 @@ class Carousel {
 				this.handle()
 
 				document.getElementById("result").className = '';
-				}, 800)
+				}, 600)
 			if (window.hasOwnProperty('Telegram') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no Telegram'; 
 			if (window.Telegram.hasOwnProperty('WebApp') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no WebApp'; 
 			if (window.Telegram.WebApp.hasOwnProperty('HapticFeedback') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no HapticFeedback'; 
@@ -1273,7 +1273,7 @@ class Carousel {
 			carousel.handle()
 	
 			
-			}, 800)
+			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 		carousel.actionOnSwipe(1);
 		
@@ -1296,7 +1296,7 @@ class Carousel {
 			carousel.handle()
 	
 			
-			}, 800)
+			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 		carousel.actionOnSwipe(0);
 		
@@ -1311,7 +1311,10 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			videojs(this.topCard.querySelector('video-js')).dispose();
+			if('null' !== this.topCard.querySelector('video-js')){
+				videojs(this.topCard.querySelector('video-js')).dispose();
+			}
+
 			carousel.board.removeChild(carousel.topCard)
 			// add new card
 			carousel.push()
@@ -1319,7 +1322,7 @@ class Carousel {
 			carousel.handle()
 	
 			
-			}, 800)
+			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 		//carousel.actionOnSwipe(0);
 		
