@@ -957,7 +957,7 @@ class Carousel {
 			successful = true
 			// get right border position
 			posX = this.board.clientWidth
-			document.getElementById("result").classList.add("liking");
+
 			this.actionOnSwipe(1);
 
 		} else if (propX < -0.25 && e.direction == Hammer.DIRECTION_LEFT) {
@@ -965,7 +965,7 @@ class Carousel {
 			successful = true
 			// get left border position
 			posX = -(this.board.clientWidth + this.topCard.clientWidth)
-			document.getElementById("result").classList.add("noping");
+
 			this.actionOnSwipe(0);
 
 		}/* else if (propY < -0.25 && e.direction == Hammer.DIRECTION_UP) {
@@ -995,7 +995,7 @@ class Carousel {
 				// handle gestures on new top card
 				this.handle()
 
-				document.getElementById("result").className = '';
+
 				}, 600)
 			if (window.hasOwnProperty('Telegram') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no Telegram'; 
 			if (window.Telegram.hasOwnProperty('WebApp') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no WebApp'; 
