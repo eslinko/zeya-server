@@ -986,8 +986,8 @@ class Carousel {
 			// wait transition end
 			setTimeout(() => {
 				// remove swiped card
-				if('null' !== this.topCard.querySelector('video-js')){
-					videojs(this.topCard.querySelector('video-js')).dispose();
+				if(null != carousel.topCard.querySelector('video-js')){
+					videojs(carousel.topCard.querySelector('video-js')).dispose();
 				}
 				this.board.removeChild(this.topCard)
 				// add new card
@@ -1002,7 +1002,7 @@ class Carousel {
 			if (window.Telegram.WebApp.hasOwnProperty('HapticFeedback') == false) document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + 'no HapticFeedback'; 
 
 			window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-			document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe '; 
+			//document.getElementById('log').innerHTML=document.getElementById('log').innerHTML + ' swipe ';
 	
 
 			} else {
@@ -1267,8 +1267,8 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			if('null' !== this.topCard.querySelector('video-js')){
-				videojs(this.topCard.querySelector('video-js')).dispose();
+			if(null != carousel.topCard.querySelector('video-js')){
+				videojs(carousel.topCard.querySelector('video-js')).dispose();
 			}
 			carousel.board.removeChild(carousel.topCard)
 			// add new card
@@ -1292,8 +1292,8 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			if('null' !== this.topCard.querySelector('video-js')){
-				videojs(this.topCard.querySelector('video-js')).dispose();
+			if(null != carousel.topCard.querySelector('video-js')){
+				videojs(carousel.topCard.querySelector('video-js')).dispose();
 			}
 			carousel.board.removeChild(carousel.topCard)
 			// add new card
@@ -1317,8 +1317,8 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			if('null' !== this.topCard.querySelector('video-js')){
-				videojs(this.topCard.querySelector('video-js')).dispose();
+			if(null != carousel.topCard.querySelector('video-js')){
+				videojs(carousel.topCard.querySelector('video-js')).dispose();
 			}
 
 			carousel.board.removeChild(carousel.topCard)
