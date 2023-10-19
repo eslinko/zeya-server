@@ -986,7 +986,9 @@ class Carousel {
 			// wait transition end
 			setTimeout(() => {
 				// remove swiped card
-				videojs(this.topCard.querySelector('video-js')).dispose();
+				if('null' !== this.topCard.querySelector('video-js')){
+					videojs(this.topCard.querySelector('video-js')).dispose();
+				}
 				this.board.removeChild(this.topCard)
 				// add new card
 				this.push()
@@ -1265,7 +1267,9 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			videojs(this.topCard.querySelector('video-js')).dispose();
+			if('null' !== this.topCard.querySelector('video-js')){
+				videojs(this.topCard.querySelector('video-js')).dispose();
+			}
 			carousel.board.removeChild(carousel.topCard)
 			// add new card
 			carousel.push()
@@ -1288,7 +1292,9 @@ class Carousel {
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
-			videojs(this.topCard.querySelector('video-js')).dispose();
+			if('null' !== this.topCard.querySelector('video-js')){
+				videojs(this.topCard.querySelector('video-js')).dispose();
+			}
 			carousel.board.removeChild(carousel.topCard)
 			// add new card
 			carousel.push()
