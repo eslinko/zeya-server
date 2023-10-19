@@ -1355,6 +1355,7 @@ class Carousel {
 			}
 		//descr
 		let element = this.topCard.querySelector('.descr_text');
+		if(element == null) return;
 		
 
 		if(element.classList.contains('descr_text_close'))
@@ -1369,7 +1370,7 @@ class Carousel {
 			}
 		//content
 		element = this.topCard.querySelector('.content');
-		
+		if(element == null) return;
 
 		if(element.classList.contains('content_descr_closed'))
 			{
@@ -1384,7 +1385,7 @@ class Carousel {
 
 		//card bottom
 		element = this.topCard.querySelector('.card_bottom');
-		
+		if(element == null) return;
 
 		if(element.classList.contains('card_bottom_descr_closed'))
 			{
@@ -1398,7 +1399,7 @@ class Carousel {
 			}
 		//descr_container
 		element = this.topCard.querySelector('.descr_container');
-		
+		if(element == null) return;
 
 		if(element.classList.contains('descr_container_descr_closed'))
 			{
@@ -1413,7 +1414,8 @@ class Carousel {
 
 
 		//descr_after text
-		element = this.topCard.querySelector('.descr_after_text');		
+		element = this.topCard.querySelector('.descr_after_text');
+		if(element == null) return;
 
 		if(element.classList.contains('descr_after_text_descr_closed'))
 			{
@@ -1426,25 +1428,27 @@ class Carousel {
 			element.classList.add('descr_after_text_descr_closed');
 			}
 
-			//descr arrow button
-			element = this.topCard.querySelector('.button_descr');
+		//descr arrow button
+		element = this.topCard.querySelector('.button_descr');
+		if(element == null) return;
 
-			if(element.classList.contains('description_more_arrow_closed'))
+		if(element.classList.contains('description_more_arrow_closed'))
 			{
 				element.classList.remove('description_more_arrow_closed');
 				element.classList.add('description_more_arrow_opened');
 			}
-			else
+		else
 			{
 				element.classList.remove('description_more_arrow_opened');
 				element.classList.add('description_more_arrow_closed');
 			}
-			//enable card scroll
-			if(this.topCard.classList.contains('card_opened'))
+
+		//enable card scroll
+		if(this.topCard.classList.contains('card_opened'))
 			{
 				this.topCard.classList.remove('card_opened');
 			}
-			else
+		else
 			{
 				this.topCard.classList.add('card_opened');
 			}
