@@ -740,7 +740,7 @@ video-js.video-js .vjs-load-progress div {
 	  <img src="austronauts.png" class="match_austronauts">
 	  <div class="match_dome_container">
 		  <img class='frequency_match_text' src="frequency_match_text.png">
-		  <p id="match_resonated_text">You and Jenny resonated to each other’s expressions</p>
+		  <p id="match_resonated_text">You and <span id="new_friend_name"></span> resonated to each other’s expressions</p>
 
 		  <table class="match_CE_icons"><tr>
 			  <td>
@@ -1232,7 +1232,7 @@ class Carousel {
 							if(data.match == true)
 								{
 								//animate match
-								this.show_match(data.CE, this.expression_queue[this.top_card_i]);
+								this.show_match(data.CE, data.new_friend_name , this.expression_queue[this.top_card_i]);
 								}
 							else
 								{
@@ -1453,14 +1453,15 @@ class Carousel {
 				this.topCard.classList.add('card_opened');
 			}
 		}
-	show_match(CE_user1, CE_user2)
+	show_match(CE_user1, new_friend_name, CE_user2)
 	{
 		let element = document.getElementById("match");
 		element.classList.remove('match_hidden_small');
 		/*element.classList.remove('hide');*/
 		element.classList.add('match_display_big');
-		document.getElementById('user_1_CE').style.backgroundImage = 'url(/backend/web' + CE_user1.content+')';
-		document.getElementById('user_2_CE').style.backgroundImage = 'url(/backend/web' + CE_user2.content+')';
+		document.getElementById('new_friend_name').innerText = new_friend_name;
+		document.getElementById('user_1_CE').style.backgroundImage = 'url(' + CE_user1.content+')';
+		document.getElementById('user_2_CE').style.backgroundImage = 'url(' + CE_user2.content+')';
 		document.getElementById('user_1_CE_title').innerText = CE_user1.description;
 		document.getElementById('user_2_CE_title').innerText = CE_user2.description;
 	}

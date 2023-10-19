@@ -1270,19 +1270,25 @@ class TelegramApiController extends AppController
         $user = $res['user'];
         $match = false;
         $CE = NULL;
+        $new_friend_name = NULL;
         if(intval($data['action_result']) == 1){//like
             $rs = MatchAction::didUserLikedAnyOfOursExpression($user['id'], intval($data['expression_user_id']));
-            if($rs !== NULL){//return CE on success or NULL
+            if($rs !== NULL){//return MatchAction on success or NULL
                 //match
                 $match = true;
                 $CE = CreativeExpressions::find()->where(['id' => $rs->expression_id])->one();
+                $new_friend = User::find()->where(['id' => intval($data['expression_user_id'])])->one();
+                if(empty($new_friend->telegram_alias))
+                    $new_friend_name = $new_friend->publicAlias;
+                else
+                    $new_friend_name = $new_friend->publicAlias.'(@'.$new_friend->telegram_alias.')';
                 Matches::addMatch(intval($data['expression_user_id']), $user['id']);
             }
         }
 
         $res = MatchAction::addAction($user['id'], intval($data['expression_id']), intval($data['expression_user_id']), intval($data['action_result']));
         if ($res['status'] == false) return ['error' => 'Error! Try again later.'];
-        return ['match' =>  $match,'CE' => $CE];
+        return ['match' =>  $match,'CE' => $CE, 'new_friend_name' => $new_friend_name];
 
     }
     static function actionOpenMatches () {
