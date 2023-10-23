@@ -1058,7 +1058,7 @@ class TelegramApiController extends AppController
             ->one();
 
         if(!empty($cur_expression)) {
-            $cur_expression->type = $data['type'];
+            $cur_expression->type_enum = $data['type'];
             $cur_expression->save(false);
         }
 
