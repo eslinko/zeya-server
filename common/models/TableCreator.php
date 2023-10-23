@@ -35,6 +35,7 @@ class TableCreator
         $this->BotSettings();
         $this->MatchAction();
         $this->Matches();
+        $this->Notifications();
     }
 
     private function updateTables(): void
@@ -90,6 +91,23 @@ class TableCreator
         ";
         $this->db->createCommand($query)->execute();
     }
+    private function Notifications(): void
+    {
+        $query = "
+            CREATE TABLE IF NOT EXISTS Notifications (
+                id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+                user_id INT(11) NOT NULL,
+                type ENUM('CONNECTION_REQUEST', 'CONNECTION_ACCEPTED', 'CONNECTION_REJECTED', 'NEW_MATCH', 'INVITE_CODE_USED', 'CE_EXPIRATION_WARNING') NOT NULL,
+                related_entity_id INT(11) DEFAULT NULL,
+                message_code VARCHAR(255) NOT NULL,
+                params JSON DEFAULT NULL,
+                read_status BOOLEAN NOT NULL DEFAULT FALSE,
+                created_at int(11) NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES User (id)
+            );
+        ";
+        $this->db->createCommand($query)->execute();
+    }
 
     // update table methods
     private function userUpdate(): void
@@ -98,6 +116,22 @@ class TableCreator
         if (!isset($table->columns['telegram_alias'])) {
             $this->db->createCommand()->addColumn('User', 'telegram_alias', 'varchar(33) AFTER telegram')->execute();
         }
+        if (!isset($table->columns['notify_connections'])) {
+            $this->db->createCommand()->addColumn('User', 'notify_connections', 'BOOLEAN NOT NULL DEFAULT TRUE')->execute();
+        }
+        if (!isset($table->columns['notify_matches'])) {
+            $this->db->createCommand()->addColumn('User', 'notify_matches', 'BOOLEAN NOT NULL DEFAULT TRUE')->execute();
+        }
+        if (!isset($table->columns['notify_invite_codes'])) {
+            $this->db->createCommand()->addColumn('User', 'notify_invite_codes', 'BOOLEAN NOT NULL DEFAULT TRUE')->execute();
+        }
+        if (!isset($table->columns['notify_ce_activity'])) {
+            $this->db->createCommand()->addColumn('User', 'notify_ce_activity', 'BOOLEAN NOT NULL DEFAULT TRUE')->execute();
+        }
+        if (!isset($table->columns['last_notification_read_time'])) {
+            $this->db->createCommand()->addColumn('User', 'last_notification_read_time', 'DATETIME DEFAULT NULL')->execute();
+        }
+
     }
     private function partnerUpdate(): void
     {
@@ -175,5 +209,6 @@ class TableCreator
             ";
         $this->db->createCommand($query)->execute();
     }
+
 
 }

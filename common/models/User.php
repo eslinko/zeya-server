@@ -37,6 +37,11 @@ use yii\web\IdentityInterface;
  * @property string $calculated_interests
  * @property string $interests_description
  * @property string $last_request_to_chatgpt_date
+ * @property boolean $notify_connections
+ * @property boolean $notify_matches
+ * @property boolean $notify_invite_codes
+ * @property boolean $notify_ce_activity
+ * @property string $last_notification_read_time
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -87,7 +92,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'password_hash', 'role', 'status', 'full_name', 'telegram', 'verifiedUser', 'publicAlias'], 'required'],
             [['status'], 'integer'],
-            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date','telegram_alias'], 'safe'],
+            [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date','telegram_alias','notify_connections','notify_matches','notify_invite_codes','notify_ce_activity','last_notification_read_time'], 'safe'],
             [['username', 'password_hash', 'full_name', 'email', 'confirmPass'], 'string', 'max' => 255],
             [['password_hash', 'confirmPass'], 'string', 'min' => 5],
             [['role'], 'string', 'max' => 32],
