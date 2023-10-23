@@ -135,12 +135,12 @@ class TelegramApiController extends AppController
             ->asArray()
             ->one();
 
-        if(!empty($creative_expression['type'])) {
+/*        if(!empty($creative_expression['type'])) {//DEPRECATED
             $creative_expression['type_names'] = CreativeTypes::find($creative_expression['type'])
                 ->where(['id' => $creative_expression['type']])
                 ->asArray()
                 ->one();
-        }
+        }*/
 
         $result['expressions_in_proccess'] = $creative_expression;
 
@@ -1017,7 +1017,7 @@ class TelegramApiController extends AppController
         return ['status' => 'success'];
     }
 
-    public function actionGetCreativeTypes() {
+/*    public function actionGetCreativeTypes() {//DEPRECATED
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
 
@@ -1029,7 +1029,7 @@ class TelegramApiController extends AppController
 
         $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user->language, 'id');
         return ['status' => 'success', 'creative_types' => $creative_types];
-    }
+    }*/
 
     public function actionSetCreativeTypeToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
