@@ -135,12 +135,12 @@ class TelegramApiController extends AppController
             ->asArray()
             ->one();
 
-        if(!empty($creative_expression['type'])) {
+/*        if(!empty($creative_expression['type'])) {//DEPRECATED
             $creative_expression['type_names'] = CreativeTypes::find($creative_expression['type'])
                 ->where(['id' => $creative_expression['type']])
                 ->asArray()
                 ->one();
-        }
+        }*/
 
         $result['expressions_in_proccess'] = $creative_expression;
 
@@ -1017,7 +1017,7 @@ class TelegramApiController extends AppController
         return ['status' => 'success'];
     }
 
-    public function actionGetCreativeTypes() {
+/*    public function actionGetCreativeTypes() {//DEPRECATED
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
 
@@ -1029,7 +1029,7 @@ class TelegramApiController extends AppController
 
         $creative_types = array_column(CreativeTypes::find()->all(), 'type_' . $user->language, 'id');
         return ['status' => 'success', 'creative_types' => $creative_types];
-    }
+    }*/
 
     public function actionSetCreativeTypeToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1037,11 +1037,11 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
 
-        if (!$user || empty($data['type_title'])) {
+        if (!$user || empty($data['type'])) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
-        $find_creative_type = CreativeTypes::find()
+/*        $find_creative_type = CreativeTypes::find()
             ->where(['type_en' => $data['type_title']])
             ->orWhere(['type_ru' => $data['type_title']])
             ->orWhere(['type_et' => $data['type_title']])
@@ -1050,7 +1050,7 @@ class TelegramApiController extends AppController
 
         if(empty($find_creative_type)) {
             return ['status' => 'error', 'text' => 'No such type was found! Try using a type from the suggested variants.'];
-        }
+        }*/
 
         $cur_expression = CreativeExpressions::find()
             ->where(['user_id' => $user->id])
@@ -1058,11 +1058,11 @@ class TelegramApiController extends AppController
             ->one();
 
         if(!empty($cur_expression)) {
-            $cur_expression->type = $find_creative_type['id'];
+            $cur_expression->type = $data['type'];
             $cur_expression->save(false);
         }
 
-        return ['status' => 'success', 'finded_type' => $find_creative_type];
+        return ['status' => 'success'];
     }
 
     public function actionSetDescriptionToExpression()
