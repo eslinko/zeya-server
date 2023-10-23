@@ -129,6 +129,16 @@ return [
 
 				'admin/no-access' => '/admin/site/no-access',
 				'<action>' => 'site/<action>',
+
+                'telegram-api/notifications/<ntId:\d+>/read' => 'telegram-api/notifications-read',
+                'telegram-api/notifications/<ntId:\d+>' => 'telegram-api/notifications-delete',
+                'telegram-api/notifications/unread-count' => 'telegram-api/notifications-unread-count',
+                'telegram-api/notifications/read-all' => 'telegram-api/notifications-read-all',
+                'telegram-api/notifications/<ntId:\d+>/details' => 'telegram-api/notifications-details',
+                /*                [
+                                    'pattern' => 'telegram-api/notifications/<messageId:\d+>/read',
+                                    'route' => 'telegram-api/notifications'
+                                ]*/
 			],
 		],
 		'assetManager' => [

@@ -8,6 +8,7 @@ use app\models\InvitationCodesLogs;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
+use app\models\Notifications;
 use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;
@@ -41,8 +42,18 @@ class TelegramApiController extends AppController
 /*    public function init() {
         //$this->enableCsrfValidation = false;//enable incoming POST requests
     }*/
+/*    public function actions() {
+        return [
+            'notifications' => [
+                'class' => 'yii\web\UrlRule',
+                'pattern' => 'telegram-api/notifications/<messageId:\d+>/read',
+                'route' => 'telegram-api/notifications'
+            ]
+        ];
+    }*/
     public function beforeAction($action) { //enable incoming POST requests
-        if($action->id === 'get-user-matches') {
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all'];
+        if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -1382,5 +1393,97 @@ class TelegramApiController extends AppController
         User::addedLovestarsCount($user->id, count($lovestars));
 
         return ['status' => 'success', 'emitted_lovestars' => count($lovestars)];
+    }
+    public function actionNotificationsRead($ntId)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $res = Notifications::setAsRead(intval($ntId));
+        if($res)
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
+    public function actionNotifications()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        if(isset($data['messageTypes'])) $messageTypes = explode(',', strtoupper($data['messageTypes']));
+        $nots = Notifications::find()->where(['user_id' => $user->id])->all();
+        $return_array=[];
+        foreach ($nots as $nt){
+            if(isset($data['messageTypes'])){
+                if(!in_array($nt->type, $messageTypes)) continue;
+            }
+            if(isset($data['hoursAgo'])){
+                if((time() - strtotime($nt->created_at))/3600 > intval($data['hoursAgo'])) continue;
+            }
+            if(isset($data['readStatus'])){
+                if($data['readStatus'] === 'read'){
+                    if($nt->read_status !== true) continue;
+                }
+                if($data['readStatus'] === 'unread'){
+                    if($nt->read_status !== false) continue;
+                }
+            }
+            $return_array[] = ['id' => $nt->id, 'type' => $nt->type, 'messageCode' => $nt->message_code, 'messageParameters' => $nt->params, 'createdAt' => $nt->created_at, 'readStatus' => $nt->read_status];
+        }
+        return ['status' => 'success', 'data' => $return_array];
+    }
+    public function actionNotificationsDelete($ntId)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $res = Notifications::deleteOne(intval($ntId));
+        if($res)
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+
+    }
+    public function actionNotificationsUnreadCount()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+
+        return ['status' => 'success', 'data' => Notifications::unreadCount($user->id)];
+    }
+    public function actionNotificationsReadAll()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $res = Notifications::setAllAsRead($user->id);
+        if($res)
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
+    public function actionNotificationsDetails($ntId)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $res = Notifications::find()->where(['id' => intval($ntId)])->one();
+        if($res !==NULL)
+            return ['status' => 'success','data' => $res];
+        else
+            return ['status' => 'error'];
     }
 }
