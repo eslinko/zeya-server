@@ -70,7 +70,7 @@ class TableCreator
     private function UserInterestsAnswers(): void
     {
         $query = "        
-        CREATE TABLE UserInterestsAnswers (
+        CREATE TABLE IF NOT EXISTS UserInterestsAnswers (
             id SERIAL PRIMARY KEY,
             user_id INT NOT NULL REFERENCES User(id) ON DELETE CASCADE,
             question_type ENUM ('TIME_TRAVEL','UNLIMITED_ISLAND','MAGIC_WISH', 'INTEREST_FESTIVAL', 'LIFE_BOOK') NOT NULL,
