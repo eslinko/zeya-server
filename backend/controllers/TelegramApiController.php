@@ -1494,7 +1494,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
         if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
-        $res = UserInterestsAnswers::find()->where(['user_id' => $user['id']])->all();
+        $res = UserInterestsAnswers::find()->where(['user_id' => $user->id])->asArray()->all();
         if($res === NULL)
             return ['status' => 'success','data' => []];
         else
@@ -1507,7 +1507,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
         if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
-        User::MessageCounterIncrement($user['id']);
+        User::MessageCounterIncrement($user->id);
         return ['status' => 'success'];
 
     }
@@ -1518,7 +1518,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
         if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
-        if(User::setMessageCounter($user['id'], $data['message_counter']))
+        if(User::setMessageCounter($user->id, $data['message_counter']))
             return ['status' => 'success'];
         else
             return ['status' => 'error'];
@@ -1530,7 +1530,7 @@ class TelegramApiController extends AppController
 
         $user = TelegramApi::validateAction($data);
         if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
-        if(UserInterestsAnswers::setUserInterestsAnswers($user['id'], $data['question_type'], $data['answer']))
+        if(UserInterestsAnswers::setUserInterestsAnswers($user->id, $data['question_type'], $data['answer']))
             return ['status' => 'success'];
         else
             return ['status' => 'error'];
