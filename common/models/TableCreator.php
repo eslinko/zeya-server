@@ -36,6 +36,7 @@ class TableCreator
         $this->MatchAction();
         $this->Matches();
         $this->Notifications();
+        $this->UserInterestsAnswers();
     }
 
     private function updateTables(): void
@@ -64,6 +65,18 @@ class TableCreator
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )
             ";
+        $this->db->createCommand($query)->execute();
+    }
+    private function UserInterestsAnswers(): void
+    {
+        $query = "        
+        CREATE TABLE UserInterestsAnswers (
+            id SERIAL PRIMARY KEY,
+            user_id INT NOT NULL REFERENCES User(id) ON DELETE CASCADE,
+            question_type ENUM ('TIME_TRAVEL','UNLIMITED_ISLAND','MAGIC_WISH', 'INTEREST_FESTIVAL', 'LIFE_BOOK') NOT NULL,
+            response TEXT NOT NULL
+        );                
+        ";
         $this->db->createCommand($query)->execute();
     }
     private function BotSettings(): void
@@ -130,6 +143,9 @@ class TableCreator
         }
         if (!isset($table->columns['last_notification_read_time'])) {
             $this->db->createCommand()->addColumn('User', 'last_notification_read_time', 'DATETIME DEFAULT NULL')->execute();
+        }
+        if (!isset($table->columns['message_counter'])) {//counter for internal general use
+            $this->db->createCommand()->addColumn('User', 'message_counter', 'SMALLINT DEFAULT 0')->execute();
         }
 
     }
