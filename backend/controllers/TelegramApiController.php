@@ -13,6 +13,7 @@ use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;
 use app\models\Settings;
+use app\models\UserInterestsAnswers;
 use backend\models\ChatGPT;
 use app\models\Events;
 use app\models\InvitationCodes;
@@ -1486,4 +1487,53 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error'];
     }
+    public function actionGetInterestsAnswers()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $res = UserInterestsAnswers::find()->where(['user_id' => $user['id']])->all();
+        if($res === NULL)
+            return ['status' => 'success','data' => []];
+        else
+            return ['status' => 'success','data' => $res];
+    }
+    public function actionMessageCounterIncrement()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        User::MessageCounterIncrement($user['id']);
+        return ['status' => 'success'];
+
+    }
+    public function actionSetMessageCounter()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        if(User::setMessageCounter($user['id'], $data['message_counter']))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
+    public function actionSetInterestsAnswers()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        if(UserInterestsAnswers::setUserInterestsAnswers($user['id'], $data['question_type'], $data['answer']))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
+
 }

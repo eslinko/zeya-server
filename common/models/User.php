@@ -42,6 +42,7 @@ use yii\web\IdentityInterface;
  * @property boolean $notify_invite_codes
  * @property boolean $notify_ce_activity
  * @property string $last_notification_read_time
+ * @property integer $message_counter
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -91,7 +92,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'password_hash', 'role', 'status', 'full_name', 'telegram', 'verifiedUser', 'publicAlias'], 'required'],
-            [['status'], 'integer'],
+            [['status','message_counter'], 'integer'],
             [['created_at', 'updated_at', 'currentLovestarsCounter', 'partners', 'verificationCode', 'teacher', 'temp_email', 'language', 'invitation_code_id', 'calculated_interests', 'interests_description', 'last_request_to_chatgpt_date','telegram_alias','notify_connections','notify_matches','notify_invite_codes','notify_ce_activity','last_notification_read_time'], 'safe'],
             [['username', 'password_hash', 'full_name', 'email', 'confirmPass'], 'string', 'max' => 255],
             [['password_hash', 'confirmPass'], 'string', 'min' => 5],
@@ -123,7 +124,8 @@ class User extends ActiveRecord implements IdentityInterface
             'language' => 'Language',
             'calculated_interests' => 'Calculated interests',
             'interests_description' => 'Interests description',
-            'telegram_alias' => 'Telegram alias'
+            'telegram_alias' => 'Telegram alias',
+            'message_counter' => 'Message counter'
         ];
     }
 
@@ -350,5 +352,18 @@ class User extends ActiveRecord implements IdentityInterface
             $user->telegram_alias=$alias;
             $user->save(false);
         }
+    }
+    public static function setMessageCounter($user_id, $counter) {
+        $user=User::find()->where(['id' => $user_id])->one();
+        $user->message_counter = intval($counter);
+        if($user->save(false))
+            return true;
+        else
+            return false;
+    }
+    public static function MessageCounterIncrement($user_id) {
+        $user=User::find()->where(['id' => $user_id])->one();
+        $user->message_counter = $user->message_counter + 1;
+        $user->save(false);
     }
 }
