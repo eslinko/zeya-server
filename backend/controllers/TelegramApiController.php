@@ -738,6 +738,39 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success', 'list_of_interests' => $list_of_interests];
     }
+    public function actionSetUserInterestsAnswers()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if ($user === false) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $interests_answ_array = UserInterestsAnswers::find()->where(['user_id' => $user->id])->asArray()->all();
+        if ($interests_answ_array === NULL) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $interests_answers_text = '';
+        foreach ($interests_answ_array as $answ){
+            $interests_answers_text.=$answ['response']."\n";
+        }
+        if (empty($interests_answers_text)) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        $interests_description = $interests_answers_text;
+        $calculated_interests = ['en' => ChatGPT::getUserInterests2($interests_description)];
+        if($data['user_lang'] === 'en' || empty($data['user_lang'])) {
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests['en']);
+        } else {
+            $calculated_interests[$data['user_lang']] = ChatGPT::translateCalculatedInterest($calculated_interests['en'], $data['user_lang']);
+            $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
+        }
+
+        $user->calculated_interests = serialize($calculated_interests);
+        //$user->interests_description = json_decode($interests_description);
+        $user->save(false);
+
+        UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
+
+        return ['status' => 'success', 'list_of_interests' => $list_of_interests];
+    }
 
     public function actionGetUserInterestsList()
     {
