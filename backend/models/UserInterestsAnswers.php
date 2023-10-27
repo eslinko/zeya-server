@@ -49,7 +49,7 @@ class UserInterestsAnswers extends ActiveRecord
 
     public static function setUserInterestsAnswers($user_id, $question_type, $answer) {
 
-        $ans = UserInterestsAnswers::find()->where(['id' => $user_id, 'question_type' => $question_type])->one();
+        $ans = UserInterestsAnswers::find()->where(['user_id' => $user_id, 'question_type' => $question_type])->one();
         if($ans === NULL){
             $ans = new UserInterestsAnswers();
             $ans->user_id = $user_id;
