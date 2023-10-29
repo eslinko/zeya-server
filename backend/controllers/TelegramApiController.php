@@ -1042,12 +1042,16 @@ class TelegramApiController extends AppController
         if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
-
-        $new_expression = new CreativeExpressions();
-        $new_expression->user_id = $user->id;
-        $new_expression->status = 'process_of_creation';
-        $new_expression->save(false);
-
+        $new_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+        if($new_expression === NULL){
+            $new_expression = new CreativeExpressions();
+            $new_expression->user_id = $user->id;
+            $new_expression->status = 'process_of_creation';
+            $new_expression->save(false);
+        }
         return ['status' => 'success'];
     }
 
