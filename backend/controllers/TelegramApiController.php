@@ -1247,7 +1247,18 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success'];
     }
+    public function actionGetUserCreativeExpressions(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+        if ($user === false) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        $res = CreativeExpressions::getCreativeExpressionsByUser($user->id);
+        if($res === NULL)
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        else
+            return ['status' => 'success', 'data' => $res];
+    }
     public function actionSetUserRegistrationLovecoins(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
