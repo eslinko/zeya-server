@@ -1150,6 +1150,29 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success'];
     }
+    public function actionSetExpirationToExpression()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['expiration'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if (!empty($cur_expression)) {
+            $cur_expression->active_period = time() + intval($data['expiration'])*60*60;
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
 
     public function actionSetUrlContentToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
