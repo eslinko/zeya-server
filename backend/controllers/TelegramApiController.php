@@ -1263,7 +1263,7 @@ class TelegramApiController extends AppController
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
 
-        $cur_expression->active_period = time() + 3600 * 24;
+        //$cur_expression->active_period = time() + 3600 * 24;
         $cur_expression->upload_date = time();
         $cur_expression->status = 'active';
         $cur_expression->save(false);
