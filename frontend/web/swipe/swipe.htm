@@ -719,7 +719,25 @@ video-js.video-js .vjs-load-progress div {
 {
 	cursor: pointer;
 }
-
+#screen_cover{
+	position:absolute;
+	width: 100vw;
+	height: 100vh;
+	background-color: #FFF;
+	opacity: 0.8;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+}
+.warning
+{
+	bottom: 50%;
+	position: absolute;
+	width: 100%;
+	font-weight: bold;
+	font-size: 2em;
+	margin: 0;
+}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -760,8 +778,20 @@ video-js.video-js .vjs-load-progress div {
 		  </div>
 	  </div>
   </div>
+  <div id="screen_cover" class="hide">
+	  <p class="warning">&#8635; Yo, keep that phone upright!</p>
+  </div>
 <script>
+	window.screen.orientation.addEventListener("change", (event) => {
+		if(event.target.type.indexOf('portrait') !== -1){
 
+			document.getElementById('screen_cover').classList.add('hide');
+		}
+		if(event.target.type.indexOf('landscape') !== -1){
+
+			document.getElementById('screen_cover').classList.remove('hide');
+		}
+	});
 var carousel;//expression_queue, 
 window.Telegram.WebApp.expand();
 /*window.Telegram.WebApp.MainButton.show();
