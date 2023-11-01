@@ -1511,7 +1511,7 @@ class Carousel {
 		if (this.images_ext.includes(ext)){
 			document.getElementById('user_1_CE').style.backgroundImage = 'url(' + CE_user1.content+')';
 			document.getElementById('user_1_CE').classList.remove('user_CE_just_icon');
-			document.getElementById('user_1_CE_type_icon').remove('hide');
+			document.getElementById('user_1_CE_type_icon').classList.remove('hide');
 		} else if (this.videos_ext.includes(ext)){
 			document.getElementById('user_1_CE').style.backgroundImage = 'url(video-big-icon.png)';
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
@@ -1525,7 +1525,7 @@ class Carousel {
 		if (this.images_ext.includes(ext)){
 			document.getElementById('user_2_CE').style.backgroundImage = 'url(' + CE_user2.content+')';
 			document.getElementById('user_2_CE').classList.remove('user_CE_just_icon');
-			document.getElementById('user_2_CE_type_icon').remove('hide');
+			document.getElementById('user_2_CE_type_icon').classList.remove('hide');
 		} else if (this.videos_ext.includes(ext)){
 			document.getElementById('user_2_CE').style.backgroundImage = 'url(video-big-icon.png)';
 			document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
