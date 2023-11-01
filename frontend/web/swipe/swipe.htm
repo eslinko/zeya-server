@@ -1264,6 +1264,7 @@ class Carousel {
 				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
 				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
 				URL_str.searchParams.set('action_result', action);
+				let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
 				fetch(URL_str).then((response) => 
 					{
 					response.json().then(data => 
@@ -1278,7 +1279,7 @@ class Carousel {
 							if(data.match == true)
 								{
 								//animate match
-								this.show_match(data.CE, data.new_friend_name , this.expression_queue[this.top_card_i]);
+								this.show_match(data.CE, data.new_friend_name , this.expression_queue[current_top_card]);
 								}
 							else
 								{
