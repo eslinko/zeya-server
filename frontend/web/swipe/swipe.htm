@@ -1045,7 +1045,7 @@ class Carousel {
 				tag_str = "<span class='descr_tag'>" + current_expr.tags + "</span>";
 			}
 			let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-			let upload_date= new Date(current_expr.upload_date);
+			let upload_date= new Date(current_expr.upload_date*1000);//ms
 				
 			if (this.images_ext.includes(ext)) 
 				{
