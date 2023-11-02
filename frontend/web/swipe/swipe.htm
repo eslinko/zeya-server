@@ -1595,42 +1595,52 @@ class Carousel {
 				this.topCard.classList.add('card_opened');
 			}
 		}
-	show_match(CE_user1, new_friend_name, CE_user2)
-	{
+	show_match(CE_user1, new_friend_name, CE_user2) {
 		let element = document.getElementById("match");
 		element.classList.remove('match_hidden_small');
 
 		element.classList.add('match_display_big');
 		document.getElementById('new_friend_name').innerText = new_friend_name;
+		if (isValidUrl(CE_user1.content) == false) {
+			document.getElementById('user_1_CE').style.backgroundImage = 'url(text-big-icon.png)';
+			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
+			document.getElementById('user_1_CE_type_icon').classList.add('hide');
+		} else {
 		let ext = CE_user1.content.split('.').pop();
-		if (this.images_ext.includes(ext)){
-			document.getElementById('user_1_CE').style.backgroundImage = 'url(' + CE_user1.content+')';
+		if (this.images_ext.includes(ext)) {
+			document.getElementById('user_1_CE').style.backgroundImage = 'url(' + CE_user1.content + ')';
 			document.getElementById('user_1_CE').classList.remove('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.remove('hide');
-		} else if (this.videos_ext.includes(ext)){
+		} else if (this.videos_ext.includes(ext)) {
 			document.getElementById('user_1_CE').style.backgroundImage = 'url(video-big-icon.png)';
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
-		} else if (this.audios_ext.includes(ext)){
+		} else if (this.audios_ext.includes(ext)) {
 			document.getElementById('user_1_CE').style.backgroundImage = 'url(music-background.png)';
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
 		}
-		ext = CE_user2.content.split('.').pop();
-		if (this.images_ext.includes(ext)){
-			document.getElementById('user_2_CE').style.backgroundImage = 'url(' + CE_user2.content+')';
-			document.getElementById('user_2_CE').classList.remove('user_CE_just_icon');
-			document.getElementById('user_2_CE_type_icon').classList.remove('hide');
-		} else if (this.videos_ext.includes(ext)){
-			document.getElementById('user_2_CE').style.backgroundImage = 'url(video-big-icon.png)';
+	}
+		if (isValidUrl(CE_user2.content) == false) {
+			document.getElementById('user_2_CE').style.backgroundImage = 'url(text-big-icon.png)';
 			document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_2_CE_type_icon').classList.add('hide');
-		} else if (this.audios_ext.includes(ext)){
-			document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.png)';
-			document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
-			document.getElementById('user_2_CE_type_icon').classList.add('hide');
+		} else {
+			let ext = CE_user2.content.split('.').pop();
+			if (this.images_ext.includes(ext)) {
+				document.getElementById('user_2_CE').style.backgroundImage = 'url(' + CE_user2.content + ')';
+				document.getElementById('user_2_CE').classList.remove('user_CE_just_icon');
+				document.getElementById('user_2_CE_type_icon').classList.remove('hide');
+			} else if (this.videos_ext.includes(ext)) {
+				document.getElementById('user_2_CE').style.backgroundImage = 'url(video-big-icon.png)';
+				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
+				document.getElementById('user_2_CE_type_icon').classList.add('hide');
+			} else if (this.audios_ext.includes(ext)) {
+				document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.png)';
+				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
+				document.getElementById('user_2_CE_type_icon').classList.add('hide');
+			}
 		}
-
 		document.getElementById('user_1_CE_title').innerText = CE_user1.description;
 		document.getElementById('user_2_CE_title').innerText = CE_user2.description;
 	}
