@@ -1302,9 +1302,9 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if ($user === false) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         $res = CreativeExpressions::getCreativeExpressionsByUser($user->id);
-        foreach ($res as $rs){
+        foreach ($res as $id=>$rs){
             if(strlen($rs['content'])>500) {
-                $rs['content'] = substr($rs['content'],0,500).'...';
+                $res[$id]['content'] = substr($rs['content'],0,500).'...';
             }
         }
         if($res === NULL)
