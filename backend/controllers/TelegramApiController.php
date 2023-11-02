@@ -1196,7 +1196,30 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success'];
     }
+    public function actionSetTextContentToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['text'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            ->one();
+
+        if($cur_expression === NULL) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        if($cur_expression->type_enum !== 'Text') return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        $cur_expression->content = $data['text'];
+        $cur_expression->save(false);
+
+        return ['status' => 'success'];
+    }
     public function actionSetFileContentToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = Yii::$app->request->get();
