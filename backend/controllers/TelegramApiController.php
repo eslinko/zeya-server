@@ -142,10 +142,10 @@ class TelegramApiController extends AppController
                 ->asArray()
                 ->one();
         }*/
-/*        if(strlen($creative_expression['content'])>500) {
+        if($creative_expression!== NULL AND strlen($creative_expression['content'])>500) {
             $creative_expression['content'] = substr($creative_expression['content'],0,497).'...';
         }
-        $result['expressions_in_proccess'] = $creative_expression;*/
+        $result['expressions_in_proccess'] = $creative_expression;
 
         return $result;
     }
@@ -1302,15 +1302,18 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if ($user === false) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         $res = CreativeExpressions::getCreativeExpressionsByUser($user->id);
-        foreach ($res as $id=>$rs){
-            if(strlen($rs['content'])>500) {
-                $res[$id]['content'] = substr($rs['content'],0,500).'...';
-            }
-        }
+
         if($res === NULL)
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
-        else
+        else{
+            foreach ($res as $id=>$rs){
+                if(strlen($rs['content'])>500) {
+                    $res[$id]['content'] = substr($rs['content'],0,500).'...';
+                }
+            }
             return ['status' => 'success', 'data' => $res];
+        }
+
     }
     public function actionSetUserRegistrationLovecoins(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
