@@ -142,7 +142,7 @@ class TelegramApiController extends AppController
                 ->asArray()
                 ->one();
         }*/
-        if($creative_expression!== NULL AND strlen($creative_expression['content'])>500) {
+        if($creative_expression!== NULL AND !empty($creative_expression['content']) AND strlen($creative_expression['content'])>500) {
             $creative_expression['content'] = substr($creative_expression['content'],0,497).'...';
         }
         $result['expressions_in_proccess'] = $creative_expression;
@@ -1307,7 +1307,7 @@ class TelegramApiController extends AppController
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         else{
             foreach ($res as $id=>$rs){
-                if(strlen($rs['content'])>500) {
+                if(!empty($rs['content']) AND strlen($rs['content'])>500) {
                     $res[$id]['content'] = substr($rs['content'],0,500).'...';
                 }
             }
