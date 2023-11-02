@@ -53,7 +53,7 @@ class TelegramApiController extends AppController
         ];
     }*/
     public function beforeAction($action) { //enable incoming POST requests
-        $post_actions = ['notifications-delete','notifications-read','notifications-read-all'];
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression'];
         if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
@@ -142,7 +142,9 @@ class TelegramApiController extends AppController
                 ->asArray()
                 ->one();
         }*/
-
+        if(strlen($creative_expression['content'])>500) {
+            $creative_expression['content'] = substr($creative_expression['content'],0,500).'...';
+        }
         $result['expressions_in_proccess'] = $creative_expression;
 
         return $result;
@@ -1198,7 +1200,7 @@ class TelegramApiController extends AppController
     }
     public function actionSetTextContentToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = Yii::$app->request->get();
+        $data = Yii::$app->request->post();
 
         $user = TelegramApi::validateAction($data);
 
@@ -1300,6 +1302,11 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if ($user === false) return ['status' => 'error', 'text' => 'Error! Try again later.'];
         $res = CreativeExpressions::getCreativeExpressionsByUser($user->id);
+        foreach ($res as $rs){
+            if(strlen($rs['content'])>500) {
+                $rs['content'] = substr($rs['content'],0,500).'...';
+            }
+        }
         if($res === NULL)
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         else
