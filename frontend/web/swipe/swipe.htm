@@ -63,8 +63,8 @@ body {
 	width: 100%;
 	height: 100%;
 	position: absolute;
-	top: 50%;
-	left: 50%;
+/*	top: 50%;
+	left: 50%;*/
 	border-radius: 1%;
 	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
 	background-color: #efefef;
@@ -72,7 +72,7 @@ body {
 	background-repeat: no-repeat;
 	background-position: center;
 	/*transition: transform 600ms ease-in;*/
-	transform: translateX(-50%) translateY(-50%) scale(0.95);
+	/*transform: translateX(-50%) translateY(-50%) scale(0.95);*/
 	background-image: url(background_dark.png);
 	text-align: center;
 	color: #FFF;
@@ -87,8 +87,8 @@ body {
 {
 max-width: 100%;
 	max-height: 100vh;
-	transform: translateY(-50%);
-	top: calc(50% - 68px);
+/*	transform: translateY(-50%);
+	top: calc(50% - 68px);*/
 position: relative;
 	background: transparent;
 }
@@ -777,6 +777,27 @@ video-js.video-js .vjs-load-progress div {
 	font-size: 2em;
 	margin: 0;
 }
+
+.text_container
+{
+	background: rgba(58, 50, 92, 0.56);
+	padding: 16px;
+	border-radius: 16px;
+	overflow: hidden;
+	font-family: 'Montserrat';
+	font-weight: 300;
+	font-size: 12px;
+	line-height: 16px;
+	margin: 15px;
+}
+.text_container.content_descr_closed
+{
+	max-height: calc(100vh - 185px);
+}
+	.text_container.content_descr_opened
+	{
+		max-height: initial;
+	}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -869,7 +890,14 @@ fetch(URL_str1).then((response) => {
       alert("Error: " + error);
     });
 
-
+function isValidUrl(urlString)	{
+		try {
+			return Boolean(new URL(urlString));
+		}
+		catch(e){
+			return false;
+		}
+	}
 //tinder code
 class Carousel {
 	//current_expr = null;
@@ -914,7 +942,7 @@ class Carousel {
 		if (this.cards.length > 0) {
 	
 			// set default top card position and scale
-			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+			this.topCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(0deg) scale(1)'
 		
 			// destroy previous Hammer instance, if present
 			if (this.hammer) this.hammer.destroy()
@@ -953,12 +981,12 @@ class Carousel {
 //		this.topCard.style.transition = 'transform 100ms ease-out'
 
 		// apply rotation around Y axis
-		this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(' + rotateY + 'deg) scale(1)'
+		this.topCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(' + rotateY + 'deg) scale(1)'
 
 		// wait for transition end
 		setTimeout(() => {
 			// reset transform properties
-			this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
+			this.topCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(0deg) scale(1)'
             }, 100)
 
         }
@@ -1005,7 +1033,7 @@ class Carousel {
 		this.topCard.style.transform = 'translateX(' + posX + 'px) translateY(' + posY + 'px) rotate(' + deg + 'deg) rotateY(0deg) scale(1)'
 
 		// scale up next card
-		if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(' + scale + ')'
+		if (this.nextCard) this.nextCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(0deg) scale(' + scale + ')'
 
 		if (e.isFinal) {
 
@@ -1079,8 +1107,8 @@ class Carousel {
 			} else {
 
 				// reset cards position and size
-				this.topCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(1)'
-				if (this.nextCard) this.nextCard.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg) rotateY(0deg) scale(0.95)'
+				this.topCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(0deg) scale(1)'
+				if (this.nextCard) this.nextCard.style.transform = 'translateX(0%) translateY(0%) rotate(0deg) rotateY(0deg) scale(0.95)'
 
 				}
 
@@ -1098,8 +1126,13 @@ class Carousel {
 			{
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
-				let url = current_expr.content;
-				let ext = current_expr.content.split('.').pop();
+			let url = current_expr.content;
+			let ext = current_expr.content.split('.').pop();
+			let pure_text = false;
+			if(isValidUrl(url) == false){
+				pure_text = true;
+				ext = 'pure_text';
+			}
 
 			let time_left = Math.round((current_expr.active_period - current_expr.upload_date)/3600);//hours
 			let tag_str='';
@@ -1115,117 +1148,146 @@ class Carousel {
 			}
 			let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 			let upload_date= new Date(current_expr.upload_date*1000);//ms
-				
-			if (this.images_ext.includes(ext)) 
-				{
-				card.innerHTML = "<img src='"+url+"' class='content content_descr_closed img_fix'>"+
-				"<div class='card_gradient'></div>"+
-				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'><tr>"+
-						"<table style='width: 100%;'><td>"+
+				if(pure_text == true){
+					card.innerHTML = "<div class='content content_descr_closed img_fix text_container'>"+url+"</div>"+
+							"<div class='card_gradient'></div>"+
+							"<div class='card_bottom card_bottom_descr_closed'>"+
+							"<div class='descr_container descr_container_descr_closed'><tr>"+
+							"<table style='width: 100%;'><td>"+
 							"<p class='descr_title_image'>"+current_expr.description+"</p>"+
-						"</td>"+
-						"<td>"+
+							"</td>"+
+							"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
-						"</td>"+
-						"<td>"+
+							"</td>"+
+							"<td>"+
 							"<button class='button_descr description_more_arrow_closed' onclick='carousel.toggle_descr()'></button>"+
-						"</td></tr></table>"+
+							"</td></tr></table>"+
 
-						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
-						"<div class='descr_after_text descr_after_text_descr_closed'>"+
+							"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
+							"<div class='descr_after_text descr_after_text_descr_closed'>"+
 							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
 							"<div class='line'></div>"+
 							"<p class='descr_tag_title'>Tags</p>"+
 							tag_str+
 							"<div class='line'></div>"+
-						"</div>"+
-					"</div>"+
-				"</div>";
-				} 
-			else if (this.videos_ext.includes(ext)) 
-				{
-				card.innerHTML = "<div class='card_gradient'></div>"+
-				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'>"+
-						"<table><tr><td>"+
-							"<p class='descr_title_video'>"+current_expr.description+"</p>"+
-						"</td>"+
-						"<td>"+
-							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
-						"</td>"+
-						"<td>"+
-							"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>"+
-						"</td></tr></table>"+
+							"</div>"+
+							"</div>"+
+							"</div>";
+				} else {
 
-						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
-						"<div class='descr_after_text descr_after_text_descr_closed'>"+
-							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
-							"<div class='line'></div>"+
-							"<p class='descr_tag_title'>Tags</p>"+
-							tag_str+
-							"<div class='line'></div>"+
-						"</div>"+
-					"</div>"+
-				"</div>";
-				let vid = document.createElement('video-js');
-				vid.setAttribute("src", url);
-				let id = Math.random().toString(36).substring(2, 11);
-				vid.setAttribute("id", id);
-				vid.classList.add('content');
-				vid.classList.add('content_descr_closed');
-				vid.setAttribute("playsinline", '');
-				vid.setAttribute("loop", '');
-				vid.setAttribute("muted", '');
 
-				card.prepend(vid);
+					if (this.images_ext.includes(ext)) {
+						card.innerHTML = "<img src='" + url + "' class='content content_descr_closed img_fix'>" +
+								"<div class='card_gradient'></div>" +
+								"<div class='card_bottom card_bottom_descr_closed'>" +
+								"<div class='descr_container descr_container_descr_closed'><tr>" +
+								"<table style='width: 100%;'><td>" +
+								"<p class='descr_title_image'>" + current_expr.description + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<button class='button_descr description_more_arrow_closed' onclick='carousel.toggle_descr()'></button>" +
+								"</td></tr></table>" +
 
-				setTimeout(()=>{//let exit from function for child to append
-					videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}});
-					}, 0);
-				}
-			else if(this.audios_ext.includes(ext)) {
-				card.innerHTML = "<div class='card_gradient'></div>"+
-				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'>"+
-						"<table><tr><td>"+
-							"<p class='descr_title_video'>"+current_expr.description+"</p>"+
-							"</td>"+
-							"<td>"+
-							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
-							"</td>"+
-							"<td>"+
-							"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>"+
-						"</td></tr></table>"+
+								"<p class='descr_text descr_text_close'>" + current_expr.description + "</p>" +
+								"<div class='descr_after_text descr_after_text_descr_closed'>" +
+								"<p class='descr_available'>AVAILABLE FOR " + time_left + " HOURS MORE</p>" +
+								"<div class='line'></div>" +
+								"<p class='descr_tag_title'>Tags</p>" +
+								tag_str +
+								"<div class='line'></div>" +
+								"</div>" +
+								"</div>" +
+								"</div>";
+					} else if (this.videos_ext.includes(ext)) {
+						card.innerHTML = "<div class='card_gradient'></div>" +
+								"<div class='card_bottom card_bottom_descr_closed'>" +
+								"<div class='descr_container descr_container_descr_closed'>" +
+								"<table><tr><td>" +
+								"<p class='descr_title_video'>" + current_expr.description + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>" +
+								"</td></tr></table>" +
 
-						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
-						"<div class='descr_after_text descr_after_text_descr_closed'>"+
-							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
-							"<div class='line'></div>"+
-							"<p class='descr_tag_title'>Tags</p>"+
-								tag_str+
-							"<div class='line'></div>"+
-						"</div>"+
-					"</div>"+
-				"</div>";
-				let vid = document.createElement('video-js');
-				vid.setAttribute("src", url);
-				let id = Math.random().toString(36).substring(2, 11);
-				vid.setAttribute("id", id);
-				vid.classList.add('content');
-				vid.classList.add('content_descr_closed');
-				vid.setAttribute("loop", '');
-				vid.setAttribute("playsinline", '');
-				card.classList.add('music');
-				card.prepend(vid);
+								"<p class='descr_text descr_text_close'>" + current_expr.description + "</p>" +
+								"<div class='descr_after_text descr_after_text_descr_closed'>" +
+								"<p class='descr_available'>AVAILABLE FOR " + time_left + " HOURS MORE</p>" +
+								"<div class='line'></div>" +
+								"<p class='descr_tag_title'>Tags</p>" +
+								tag_str +
+								"<div class='line'></div>" +
+								"</div>" +
+								"</div>" +
+								"</div>";
+						let vid = document.createElement('video-js');
+						vid.setAttribute("src", url);
+						let id = Math.random().toString(36).substring(2, 11);
+						vid.setAttribute("id", id);
+						vid.classList.add('content');
+						vid.classList.add('content_descr_closed');
+						vid.setAttribute("playsinline", '');
+						vid.setAttribute("loop", '');
+						vid.setAttribute("muted", '');
 
-				setTimeout(()=>{//let exit from function for child to append
-					videojs(document.getElementById(id),{controls: true, preload: 'auto', controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}});
-				}, 0);
-			}
-			else
-				{
-				/*let div = document.createElement('div');
+						card.prepend(vid);
+
+						setTimeout(() => {//let exit from function for child to append
+							videojs(document.getElementById(id), {
+								controls: true,
+								preload: 'auto',
+								controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}
+							});
+						}, 0);
+					} else if (this.audios_ext.includes(ext)) {
+						card.innerHTML = "<div class='card_gradient'></div>" +
+								"<div class='card_bottom card_bottom_descr_closed'>" +
+								"<div class='descr_container descr_container_descr_closed'>" +
+								"<table><tr><td>" +
+								"<p class='descr_title_video'>" + current_expr.description + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>" +
+								"</td></tr></table>" +
+
+								"<p class='descr_text descr_text_close'>" + current_expr.description + "</p>" +
+								"<div class='descr_after_text descr_after_text_descr_closed'>" +
+								"<p class='descr_available'>AVAILABLE FOR " + time_left + " HOURS MORE</p>" +
+								"<div class='line'></div>" +
+								"<p class='descr_tag_title'>Tags</p>" +
+								tag_str +
+								"<div class='line'></div>" +
+								"</div>" +
+								"</div>" +
+								"</div>";
+						let vid = document.createElement('video-js');
+						vid.setAttribute("src", url);
+						let id = Math.random().toString(36).substring(2, 11);
+						vid.setAttribute("id", id);
+						vid.classList.add('content');
+						vid.classList.add('content_descr_closed');
+						vid.setAttribute("loop", '');
+						vid.setAttribute("playsinline", '');
+						card.classList.add('music');
+						card.prepend(vid);
+
+						setTimeout(() => {//let exit from function for child to append
+							videojs(document.getElementById(id), {
+								controls: true,
+								preload: 'auto',
+								controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}
+							});
+						}, 0);
+					} else {
+						/*let div = document.createElement('div');
 				div.innerHTML = "unsupported format: " + url;
 				div.classList.add('content');
 				card.appendChild(div);		
@@ -1241,33 +1303,33 @@ class Carousel {
 				div_bottom.appendChild(p_descr);
 				card.appendChild(div_bottom);	*/
 
-				card.innerHTML = "<p>unsupported format</p>"+
-				"<div class='card_gradient'></div>"+
-				"<div class='card_bottom card_bottom_descr_closed'>"+
-					"<div class='descr_container descr_container_descr_closed'><tr>"+
-						"<table><td>"+
-							"<p class='descr_title'>"+current_expr.description+"</p>"+
-						"</td>"+
-						"<td>"+
-							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
-						"</td>"+
-						"<td>"+
-							"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>"+
-						"</td></tr></table>"+
+						card.innerHTML = "<p>unsupported format</p>" +
+								"<div class='card_gradient'></div>" +
+								"<div class='card_bottom card_bottom_descr_closed'>" +
+								"<div class='descr_container descr_container_descr_closed'><tr>" +
+								"<table><td>" +
+								"<p class='descr_title'>" + current_expr.description + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
+								"</td>" +
+								"<td>" +
+								"<button class='button_descr description_more_arrow_closed'  onclick='carousel.toggle_descr()'></button>" +
+								"</td></tr></table>" +
 
-						"<p class='descr_text descr_text_close'>"+current_expr.description+"</p>"+
-						"<div class='descr_after_text descr_after_text_descr_closed'>"+
-							"<p class='descr_available'>AVAILABLE FOR "+time_left+" HOURS MORE</p>"+
-							"<div class='line'></div>"+
-							"<p class='descr_tag_title'>Tags</p>"+
-							tag_str+
-							"<div class='line'></div>"+
-						"</div>"+
-					"</div>"+
-				"</div>";			
-				} 
-			//this.board.insertBefore(card, this.board.firstChild);
-			
+								"<p class='descr_text descr_text_close'>" + current_expr.description + "</p>" +
+								"<div class='descr_after_text descr_after_text_descr_closed'>" +
+								"<p class='descr_available'>AVAILABLE FOR " + time_left + " HOURS MORE</p>" +
+								"<div class='line'></div>" +
+								"<p class='descr_tag_title'>Tags</p>" +
+								tag_str +
+								"<div class='line'></div>" +
+								"</div>" +
+								"</div>" +
+								"</div>";
+					}
+					//this.board.insertBefore(card, this.board.firstChild);
+				}
 			}
 		else//queue is done
 			{
