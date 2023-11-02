@@ -142,10 +142,10 @@ class TelegramApiController extends AppController
                 ->asArray()
                 ->one();
         }*/
-        if(strlen($creative_expression['content'])>500) {
-            $creative_expression['content'] = substr($creative_expression['content'],0,500).'...';
+/*        if(strlen($creative_expression['content'])>500) {
+            $creative_expression['content'] = substr($creative_expression['content'],0,497).'...';
         }
-        $result['expressions_in_proccess'] = $creative_expression;
+        $result['expressions_in_proccess'] = $creative_expression;*/
 
         return $result;
     }
