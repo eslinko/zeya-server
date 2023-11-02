@@ -1307,7 +1307,7 @@ class TelegramApiController extends AppController
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         else{
             foreach ($res as $id=>$rs){
-                if(strlen($rs['content'])>500) {
+                if(!empty($rs['content']) AND strlen($rs['content'])>500) {
                     $res[$id]['content'] = substr($rs['content'],0,500).'...';
                 }
             }
