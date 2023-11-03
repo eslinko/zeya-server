@@ -83,6 +83,10 @@ body {
 	height: initial;
 	min-height: 100vh;
 }
+.content{
+	transform: translateY(-50%);
+	top: calc(50% - 80px);
+}
 .content_descr_closed
 {
 max-width: 100%;
@@ -91,6 +95,7 @@ max-width: 100%;
 	top: calc(50% - 68px);*/
 position: relative;
 	background: transparent;
+
 }
 video-js.content_descr_closed {
 	height: calc(100vh - 136px);
@@ -102,6 +107,8 @@ max-width: 100%;
 max-height:70vh;
 position: relative;
 	background: transparent;
+	transform: initial;
+	top: initial;
 }
 .img_fix {pointer-events: none;}
 .card_bottom_descr_closed
@@ -798,6 +805,7 @@ video-js.video-js .vjs-load-progress div {
 	.text_container.content_descr_opened
 	{
 		max-height: initial;
+
 	}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
