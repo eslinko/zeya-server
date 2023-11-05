@@ -278,19 +278,20 @@ margin: 2px;
 
 .descr_tag
 {
-height: 16px;
-padding: 2px 6px 2px 6px;
-border-radius: 16px;
-gap: 10px;
-font-family: Montserrat;
-font-size: 10px;
-font-weight: 500;
-line-height: 26px;
-letter-spacing: 0.03em;
-text-align: left;
-background: rgba(88, 68, 166, 1);
-margin-right: 6px;
+	height: 16px;
+	padding: 2px 6px 2px 6px;
+	border-radius: 16px;
+	gap: 10px;
+	font-family: Montserrat;
+	font-size: 10px;
+	font-weight: 500;
+	line-height: 26px;
+	letter-spacing: 0.03em;
+	text-align: left;
+	background: rgba(88, 68, 166, 1);
+	margin-right: 6px;
 	text-transform: uppercase;
+	white-space: nowrap;
 }
 
 .descr_after_text_descr_closed
@@ -1178,7 +1179,7 @@ class Carousel {
 					tag_str = "<span class='descr_tag'>" + current_expr.tags + "</span>";
 				else
 					current_expr.tags.split(',').forEach((tag) => {
-						tag_str = tag_str + "<span class='descr_tag'>" + tag + "</span>"
+						tag_str = tag_str + "<span class='descr_tag'>" + tag + "</span> ";//space between is important for line breaks!
 					});
 			} else {
 				tag_str = "<span class='descr_tag'>" + current_expr.tags + "</span>";
