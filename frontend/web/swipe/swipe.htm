@@ -74,7 +74,7 @@ body {
 	/*transition: transform 600ms ease-in;*/
 	/*transform: translateX(-50%) translateY(-50%) scale(0.95);*/
 	background-image: url(background_dark.png);
-	text-align: center;
+	/*text-align: center;*/ /*it breaks translateX!!!*/
 	color: #FFF;
 	overflow: hidden;
 }
@@ -84,36 +84,58 @@ body {
 	min-height: 100vh;
 }
 .content{
-	transform: translateY(-50%);
-	top: calc(50% - 80px);
+
 }
 .content_descr_closed
 {
-max-width: 100%;
+	max-width: 100%;
 	max-height: 100vh;
-/*	transform: translateY(-50%);
-	top: calc(50% - 68px);*/
-position: relative;
+	position: relative;
 	background: transparent;
-
+/*	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50vw;
+	align-self: center;*/
+	margin: auto;
 }
 video-js.content_descr_closed {
-	height: calc(100vh - 136px);
-	width:100%;
+/*	height: calc(100vh - 136px);
+	width:100%;*/
 }
 .content_descr_opened
 {
-max-width: 100%;
-max-height:70vh;
-position: relative;
+	max-width: 100%;
+	max-height:70vh;
+	position: relative;
 	background: transparent;
 	transform: initial;
 	top: initial;
 }
+.content_music
+{
+	width:100%;
+}
 .img_fix {
 	pointer-events: none;
-	-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 90%, rgba(0,0,0,0));
+	-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 92%, rgba(0,0,0,0));
 }
+.content_container
+{
+
+}
+.content_container_descr_opened
+{
+	position: relative;
+	width: 100%;
+	text-align: center;
+}
+	.content_container_descr_closed
+	{
+		position: absolute;
+		height: calc(100vh - 136px);
+		width: 100%;
+		display: flex;
+	}
 .card_bottom_descr_closed
 {
 /*background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 40%, rgba(255,255,255,0) 100%);*/
@@ -132,7 +154,7 @@ position: relative;
 }
 .card_gradient
 {
-background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 1) 32.08%, #272043 100%, #151124 100%);
+background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.76) 32.08%, #272043 100%, #151124 100%);
 bottom: 0;
 width: 100%;
 position: absolute;
@@ -799,16 +821,19 @@ video-js.video-js .vjs-load-progress div {
 	font-weight: 300;
 	font-size: 12px;
 	line-height: 16px;
-	margin: 15px;
+	width: calc(100vw - 30px);
+	box-sizing: border-box;
+	text-align: justify;
+	display: inline-block;
 }
 .text_container.content_descr_closed
 {
-	max-height: calc(100vh - 185px);
+	max-height: calc(100vh - 160px);
 }
 	.text_container.content_descr_opened
 	{
 		max-height: initial;
-
+		margin-top: 15px;
 	}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -1161,7 +1186,7 @@ class Carousel {
 			let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 			let upload_date= new Date(current_expr.upload_date*1000);//ms
 				if(pure_text == true){
-					card.innerHTML = "<div class='content content_descr_closed img_fix text_container'>"+url+"</div>"+
+					card.innerHTML = "<div class='content_container content_container_descr_closed'><div class='content content_descr_closed img_fix text_container'>"+url+"</div></div>"+
 							"<div class='card_gradient'></div>"+
 							"<div class='card_bottom card_bottom_descr_closed'>"+
 							"<div class='descr_container descr_container_descr_closed'><tr>"+
@@ -1189,7 +1214,7 @@ class Carousel {
 
 
 					if (this.images_ext.includes(ext)) {
-						card.innerHTML = "<img src='" + url + "' class='content content_descr_closed img_fix'>" +
+						card.innerHTML = "<div class='content_container content_container_descr_closed'><img src='" + url + "' class='content content_descr_closed img_fix'></div>" +
 								"<div class='card_gradient'></div>" +
 								"<div class='card_bottom card_bottom_descr_closed'>" +
 								"<div class='descr_container descr_container_descr_closed'><tr>" +
@@ -1237,6 +1262,11 @@ class Carousel {
 								"</div>" +
 								"</div>" +
 								"</div>";
+
+						let cont = document.createElement('div');
+						cont.classList.add('content_container');
+						cont.classList.add('content_container_descr_closed');
+
 						let vid = document.createElement('video-js');
 						vid.setAttribute("src", url);
 						let id = Math.random().toString(36).substring(2, 11);
@@ -1247,13 +1277,15 @@ class Carousel {
 						vid.setAttribute("loop", '');
 						vid.setAttribute("muted", '');
 
-						card.prepend(vid);
+						cont.append(vid);
+						card.prepend(cont);
 
 						setTimeout(() => {//let exit from function for child to append
 							videojs(document.getElementById(id), {
 								controls: true,
 								preload: 'auto',
-								controlBar: {fullscreenToggle: false, pictureInPictureToggle: false}
+								controlBar: {fullscreenToggle: false, pictureInPictureToggle: false},
+								fluid: true
 							});
 						}, 0);
 					} else if (this.audios_ext.includes(ext)) {
@@ -1280,16 +1312,23 @@ class Carousel {
 								"</div>" +
 								"</div>" +
 								"</div>";
+
+						let cont = document.createElement('div');
+						cont.classList.add('content_container');
+						cont.classList.add('content_container_descr_closed');
+
 						let vid = document.createElement('video-js');
 						vid.setAttribute("src", url);
 						let id = Math.random().toString(36).substring(2, 11);
 						vid.setAttribute("id", id);
 						vid.classList.add('content');
 						vid.classList.add('content_descr_closed');
+						vid.classList.add('content_music');
 						vid.setAttribute("loop", '');
 						vid.setAttribute("playsinline", '');
 						card.classList.add('music');
-						card.prepend(vid);
+						cont.append(vid);
+						card.prepend(cont);
 
 						setTimeout(() => {//let exit from function for child to append
 							videojs(document.getElementById(id), {
@@ -1428,8 +1467,6 @@ class Carousel {
 			carousel.push()
 			// handle gestures on new top card
 			carousel.handle()
-	
-			
 			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 		carousel.actionOnSwipe(1);
@@ -1522,20 +1559,37 @@ class Carousel {
 			element.classList.remove('descr_text_open');
 			element.classList.add('descr_text_close');
 			}
-		//content
-		element = this.topCard.querySelector('.content');
-		if(element == null) return;
+			//content
+			element = this.topCard.querySelector('.content_container');
+			if(element != null)
+			{
+				if(element.classList.contains('content_container_descr_closed'))
+				{
+					element.classList.remove('content_container_descr_closed');
+					element.classList.add('content_container_descr_opened');
+				}
+				else
+				{
+					element.classList.remove('content_container_descr_opened');
+					element.classList.add('content_container_descr_closed');
+				}
+			}
+			element = this.topCard.querySelector('.content');
+			if(element != null)
+			{
+				if(element.classList.contains('content_descr_closed'))
+				{
+					element.classList.remove('content_descr_closed');
+					element.classList.add('content_descr_opened');
+				}
+				else
+				{
+					element.classList.remove('content_descr_opened');
+					element.classList.add('content_descr_closed');
+				}
+			}
 
-		if(element.classList.contains('content_descr_closed'))
-			{
-			element.classList.remove('content_descr_closed');
-			element.classList.add('content_descr_opened');
-			}
-		else
-			{
-			element.classList.remove('content_descr_opened');
-			element.classList.add('content_descr_closed');
-			}
+
 
 		//card bottom
 		element = this.topCard.querySelector('.card_bottom');
