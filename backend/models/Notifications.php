@@ -3,6 +3,7 @@
 namespace app\models;
 
 use common\models\CurlHelper;
+use common\models\Translations;
 use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
@@ -179,6 +180,8 @@ class Notifications extends ActiveRecord
                     else
                         $name_from = $user_from->publicAlias.' (@'.$user_from->telegram_alias.')';
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -190,6 +193,8 @@ class Notifications extends ActiveRecord
                     else
                         $name_from = $user_from->publicAlias.' (@'.$user_from->telegram_alias.')';
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -201,6 +206,8 @@ class Notifications extends ActiveRecord
                     else
                         $name_from = $user_from->publicAlias.' (@'.$user_from->telegram_alias.')';
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -212,6 +219,8 @@ class Notifications extends ActiveRecord
                     else
                         $name_from = $user_from->publicAlias.' (@'.$user_from->telegram_alias.')';
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -223,6 +232,8 @@ class Notifications extends ActiveRecord
                     else
                         $name_from = $user_from->publicAlias.' (@'.$user_from->telegram_alias.')';
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -239,6 +250,8 @@ class Notifications extends ActiveRecord
                         $name_via = $additional_data->publicAlias.' (@'.$additional_data->telegram_alias.')';
 
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $name_from, $name_via);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -246,6 +259,8 @@ class Notifications extends ActiveRecord
             case self::INVITE_CODE_UNUSED_REMINDER:
                 if ($user_to->notify_invite_codes == 1) {
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $additional_data);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
@@ -253,12 +268,20 @@ class Notifications extends ActiveRecord
             case self::CE_EXPIRATION_WARNING:
                 if ($user_to->notify_invite_codes == 1) {
                     $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $additional_data);
                     Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
                 }
                 break;
         }
 
+    }
+    static function translateButtons($buttons, $user_language) {
+        foreach ($buttons as $k=>$butt){
+            $buttons[$k]['text'] = Translations::s($butt['text'], $user_language);
+        }
+        return $buttons;
     }
     static function pushMessage($user, $text, $buttons, $not_id) {
         $data = ['chat_id' => $user->telegram, 'text' => $text];
