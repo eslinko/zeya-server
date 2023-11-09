@@ -683,9 +683,14 @@ class TelegramApiController extends AppController
                     $result['code_owner_connections'] = $res;
                 }
                 //create connection
-                if(!isset($code_owner['status'])) UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
+                UserConnections::setUserConnection($code_owner, $user->id, 'accepted');
                 //find owner user
-                if(!isset($telegram_id['status'])) $result['owner_user'] = User::findOne($code_owner);
+                $result['owner_user'] = User::findOne($code_owner);
+                Notifications::createNotification(Notifications::INVITE_CODE_USED, $user, $result['owner_user']);
+                foreach ($result['code_owner_connections'] as $code_owner_connection) {
+                    Notifications::createNotification(Notifications::INVITE_CODE_USED_CONNECTIONS, $user, $code_owner_connection, $result['owner_user']);//from registered user to owner connections via owner user
+
+                }
             }
         }
         return $result;
@@ -990,7 +995,11 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
 
-        return UserConnections::setUserConnection($user->id,$data['user_id_2']);
+        if (!UserConnections::setUserConnection($user->id,$data['user_id_2'])) return ['status' => 'error'];
+        $user_to = User::find()->where(['id' => $data['user_id_2']])->one();
+        Notifications::createNotification(Notifications::CONNECTION_REQUEST, $user, $user_to);
+        return ['status' => 'success'];
+
     }
     public function actionDeleteUserConnection(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1015,6 +1024,10 @@ class TelegramApiController extends AppController
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
         if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        Notifications::setAsRead($data['notification_id']);
+        $user_1 = User::find()->where(['id' => $data['user_id_1']])->one();
+        $user_2 = User::find()->where(['id' => $data['user_id_2']])->one();
+        Notifications::createNotification(Notifications::CONNECTION_ACCEPTED, $user_2, $user_1);
         return UserConnections::AcceptUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
     }
     public function actionDeclineUserConnectionRequest(){
@@ -1023,6 +1036,10 @@ class TelegramApiController extends AppController
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
         if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        Notifications::setAsRead($data['notification_id']);
+        $user_1 = User::find()->where(['id' => $data['user_id_1']])->one();
+        $user_2 = User::find()->where(['id' => $data['user_id_2']])->one();
+        Notifications::createNotification(Notifications::CONNECTION_REJECTED, $user_2, $user_1);
         return UserConnections::DeclineUserConnectionRequest($data['user_id_1'],$data['user_id_2']);
     }
     public function actionCheckUserConnection(){
@@ -1399,6 +1416,8 @@ class TelegramApiController extends AppController
                 else
                     $new_friend_name = $new_friend->publicAlias.'(@'.$new_friend->telegram_alias.')';
                 Matches::addMatch(intval($data['expression_user_id']), $user['id']);
+                Notifications::createNotification(Notifications::NEW_MATCH, $user, $new_friend);
+
             }
         }
 
@@ -1639,5 +1658,6 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error'];
     }
+
 
 }
