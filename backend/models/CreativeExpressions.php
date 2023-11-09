@@ -137,7 +137,7 @@ class CreativeExpressions extends ActiveRecord
         return CreativeExpressions::deleteAll(['user_id' => $user_id]);
     }
 
-    public static function uploadFileFromTelegram($user_id, $file_id) {
+    public static function uploadFileFromTelegram($user_id, $file_id, $supported_formats=NULL) {
         $target_dir = Yii::getAlias('@webroot').'/uploads/creative_expressions/' . $user_id . '/';
 
         if(!file_exists($target_dir)){
@@ -153,6 +153,12 @@ class CreativeExpressions extends ActiveRecord
         }
 
         $file_path = $result->result->file_path;
+        if($supported_formats !== NULL){
+            $arr = explode('.', $file_path);
+            $ext = strtolower($arr[count($arr)-1]);
+            if(!in_array($ext,$supported_formats)) return 'unsupported_format';
+        }
+
 
         if(empty($file_path)) {
             return '';
