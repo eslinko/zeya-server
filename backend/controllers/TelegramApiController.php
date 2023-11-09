@@ -628,9 +628,12 @@ class TelegramApiController extends AppController
 
         if (!$user) return ['status' => 'error'];
 
-        if(empty($user->telegram_alias))
+        $user_name = 'unknown user(telegram id: '.$user->telegram.')';
+        if(!empty($user->publicAlias))
             $user_name = $user->publicAlias;
-        else
+        if(!empty($user->telegram_alias))
+            $user_name = '@'.$user->telegram_alias;
+        if(!empty($user->telegram_alias) AND !empty($user->publicAlias))
             $user_name = $user->publicAlias.' (@'.$user->telegram_alias.')';
         $message = str_replace('{userPublicAlias}', $user_name , $data['message']);
 
