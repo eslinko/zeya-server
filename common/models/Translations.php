@@ -35,7 +35,56 @@ Viimase 24h jooksul:
 2. Teie ühendused tõid {newSecondaryUsers} kasutajaid. Nüüd on teie sekundaarsetes ringkondades {secondaryUsers} kasutajaid.
 
 3. Uued liitumised tõid sulle {newSecondaryUsersWithSharedInterests} ühendused kandidaadid. Varsti on teil juurdepääs {secondaryUsersWithSharedInterests} kasutajate loomingulistele väljendustele. Nende seas kinnitate oma emotsionaalse resonantsi ja saate uusi ühendusi!'
-        ]
+        ],
+        "🚀 %s wants to vibe with you!" => [
+            'en' => "🚀 %s wants to vibe with you!",
+            'ru' => "🚀 %s готов подружиться и весело провести время!"
+        ],
+        "🎉 %s vibed with your request!" => [
+            'en' => "🎉 %s vibed with your request!",
+            'ru' => "🎉 %s на одной волне с твоим запросом!"
+        ],
+        "🥺 %s didn't vibe with your request" => [
+            'en' => "🥺 %s didn't vibe with your request",
+            'ru' => "🥺 %s на разных волнах с твоим запросом"
+        ],
+        "🔥 Hot news! You and %s are a cosmic match!" => [
+            'en' => "🔥 Hot news! You and %s are a cosmic match!",
+            'ru' => "🔥 Вот это да! Ты и %s - космическое совпадение!"
+        ],
+        "🌟 Get a Lovestar! %s joined Zeya4Eve space using your invite code!" => [
+            'en' => "🌟 Get a Lovestar! %s joined Zeya4Eve space using your invite code!",
+            'ru' => "🌟 Принимай Lovestar! %s присоединился к Zeya4Eve используя твой код приглашения!"
+        ],
+        "🌟 Get a Lovestar! %s joined Zeya4Eve space via the invitation of your connection %s!" => [
+            'en' => "🌟 Get a Lovestar! %s joined Zeya4Eve space via the invitation of your connection %s!",
+            'ru' => "🌟 Принимай Lovestar! %s присоединился к Zeya4Eve через приглашение от %s из твоих связей!"
+        ],
+        "💌 Hey, spread the love! You have %d invite codes chillin" => [
+            'en' => "💌 Hey, spread the love! You have %d invite codes chillin",
+            'ru' => "💌 Привет, распространи любовь! У тебя %d инвайт-кодов готовы к действию"
+        ],
+        "⏳ Quick! Your creative vibe fades in %d hours. Keep the fire alive and share your new expression!" => [
+            'en' => "⏳ Quick! Your creative vibe fades in %d hours. Keep the fire alive and share your new expression!",
+            'ru' => "⏳ Поспеши! Твоё творческое выражение заканчивается через %d часов. Поддержи огонь и поделись новым творением!"
+        ],
+        "Accept" => [
+            'en' => "ACCEPT",
+            'ru' => "ПРИНЯТЬ"
+        ],
+        "Decline" => [
+            'en' => "DECLINE",
+            'ru' => "ОТКЛОНИТЬ"
+        ],
+        "Show_match_info" => [
+            'en' => "SHOW MATCH INFO",
+            'ru' => "ПОКАЗАТЬ СОВПАДЕНИЕ"
+        ],
+        "Update_ce" => [
+            'en' => "UPDATE EXPRESSION",
+            'ru' => "ОБНОВИТЬ ТВОРЕНИЕ"
+        ],
+
     ];
 
     public static function s($text, $lang = 'en'){
