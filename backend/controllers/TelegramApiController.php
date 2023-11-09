@@ -1255,7 +1255,9 @@ class TelegramApiController extends AppController
             ->one();
 
         if (!empty($cur_expression)) {
-            $cur_expression->content = CreativeExpressions::uploadFileFromTelegram($user->id, $data['file_id']);
+            $new_content = CreativeExpressions::uploadFileFromTelegram($user->id, $data['file_id'], $data['supported_formats']);
+            if($new_content === 'unsupported_format') return ['status' => 'error', 'text' => 'unsupported_format'];
+            $cur_expression->content = $new_content;
             $cur_expression->save(false);
         }
 
