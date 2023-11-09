@@ -217,10 +217,10 @@ class UserConnections extends ActiveRecord
         $new_connection->status = $status;
         $new_connection->attempts = 1;
         if($new_connection->save(false)){
-            return ['status' => 'success'];
+            return true;
         }
         else{
-            return ['status' => 'error'];
+            return false;
         }
     }
 
