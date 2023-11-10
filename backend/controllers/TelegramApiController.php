@@ -1663,6 +1663,17 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error'];
     }
+    public function actionSetJsonProfileData()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        if(User::setProfileData($user->id, $data['field'], $data['data']))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
 
 }
