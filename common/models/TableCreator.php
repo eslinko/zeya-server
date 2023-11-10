@@ -147,6 +147,9 @@ class TableCreator
         if (!isset($table->columns['message_counter'])) {//counter for internal general use
             $this->db->createCommand()->addColumn('User', 'message_counter', 'SMALLINT DEFAULT 0')->execute();
         }
+        if (!isset($table->columns['profile_data'])) {//bio, social networks etc
+            $this->db->createCommand()->addColumn('User', 'profile_data', 'JSON DEFAULT NULL')->execute();
+        }
 
     }
     private function partnerUpdate(): void

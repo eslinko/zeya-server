@@ -43,6 +43,7 @@ use yii\web\IdentityInterface;
  * @property boolean $notify_ce_activity
  * @property string $last_notification_read_time
  * @property integer $message_counter
+ * @property string $profile_data
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -125,7 +126,8 @@ class User extends ActiveRecord implements IdentityInterface
             'calculated_interests' => 'Calculated interests',
             'interests_description' => 'Interests description',
             'telegram_alias' => 'Telegram alias',
-            'message_counter' => 'Message counter'
+            'message_counter' => 'Message counter',
+            'profile_data' => 'Profile data(json)'
         ];
     }
 
@@ -365,5 +367,13 @@ class User extends ActiveRecord implements IdentityInterface
         $user=User::find()->where(['id' => $user_id])->one();
         $user->message_counter = $user->message_counter + 1;
         $user->save(false);
+    }
+    public static function setProfileData($user_id, $field, $value) {
+        $user=User::find()->where(['id' => $user_id])->one();
+        $profile_data = $user->profile_data;//$profile_data = json_decode($user->profile_data ?? '{}', true);
+        $profile_data[$field] = $value;
+        $user->profile_data = $profile_data;
+        $user->save(false);
+        return true;
     }
 }
