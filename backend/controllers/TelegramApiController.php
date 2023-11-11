@@ -1675,5 +1675,20 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error'];
     }
+    public function actionUploadAvatar()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
 
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+        $resp = User::uploadAvatarFromTelegram($user->id, $data['file_id']);
+        if($resp === 'unsupported_format') return ['status' => 'error', 'text' => 'unsupported_format'];
+        if($resp === false) return ['status' => 'error'];
+        if(User::setProfileData($user->id, 'avatar', $resp))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+
+    }
 }

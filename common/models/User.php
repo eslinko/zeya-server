@@ -9,6 +9,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
+use \yii\helpers\FileHelper;
 
 /**
  * User model
@@ -375,5 +376,50 @@ class User extends ActiveRecord implements IdentityInterface
         $user->profile_data = $profile_data;
         $user->save(false);
         return true;
+    }
+    public static function uploadAvatarFromTelegram($user_id, $file_id)
+    {
+        $supported_formats = ['jpg','jpeg','png','gif'];
+        $target_dir = Yii::getAlias('@webroot').'/uploads/avatars/';
+
+        if(!file_exists($target_dir)){
+            FileHelper::createDirectory($target_dir);
+        }
+
+        // get file path
+        $url = "https://api.telegram.org/bot".TelegramBotId."/getFile?file_id={$file_id}";
+        $result = json_decode(CurlHelper::curl($url));
+
+        if(!$result->ok) {
+            return false;
+        }
+
+        $file_path = $result->result->file_path;
+
+        if(empty($file_path)) {
+            return false;
+        }
+        $arr = explode('.', $file_path);
+        $ext = strtolower($arr[count($arr)-1]);
+        if(!in_array($ext,$supported_formats)) return 'unsupported_format';
+
+
+        //get file
+        $url = "https://api.telegram.org/file/bot".TelegramBotId."/{$file_path}";
+        $file = file_get_contents($url);
+
+        if(!$file) {
+            return false;
+        }
+
+        $new_file_name = uniqid() . '_' . basename($url);
+
+        $target_file = $target_dir . $new_file_name;
+
+        if (file_put_contents($target_file, $file) !== false) {
+            return $new_file_name;
+        } else {
+            return false;
+        }
     }
 }
