@@ -1685,6 +1685,7 @@ class TelegramApiController extends AppController
         $resp = User::uploadAvatarFromTelegram($user->id, $data['file_id']);
         if($resp === 'unsupported_format') return ['status' => 'error', 'text' => 'unsupported_format'];
         if($resp === false) return ['status' => 'error'];
+        return $resp;
         if(User::setProfileData($user->id, 'avatar', $resp))
             return ['status' => 'success'];
         else
