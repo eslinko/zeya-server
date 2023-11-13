@@ -113,7 +113,7 @@ class TableCreator
                 type ENUM('CONNECTION_REQUEST', 'CONNECTION_ACCEPTED', 'CONNECTION_REJECTED', 'NEW_MATCH', 'INVITE_CODE_USED', 'INVITE_CODE_USED_CONNECTIONS','INVITE_CODE_UNUSED_REMINDER','CE_EXPIRATION_WARNING') NOT NULL,
                 related_entity_id INT(11) DEFAULT NULL,
                 message_code VARCHAR(255) NOT NULL,
-                params JSON DEFAULT NULL,
+                params TEXT,
                 read_status BOOLEAN NOT NULL DEFAULT FALSE,
                 created_at int(11) NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES User (id)
@@ -148,7 +148,7 @@ class TableCreator
             $this->db->createCommand()->addColumn('User', 'message_counter', 'SMALLINT DEFAULT 0')->execute();
         }
         if (!isset($table->columns['profile_data'])) {//bio, social networks etc
-            $this->db->createCommand()->addColumn('User', 'profile_data', 'JSON DEFAULT NULL')->execute();
+            $this->db->createCommand()->addColumn('User', 'profile_data', 'TEXT')->execute();
         }
 
     }
