@@ -371,9 +371,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
     public static function setProfileData($user_id, $field, $value) {
         $user=User::find()->where(['id' => $user_id])->one();
-        $profile_data = $user->profile_data;//$profile_data = json_decode($user->profile_data ?? '{}', true);
-        $profile_data[$field] = $value;
-        $user->profile_data = $profile_data;
+        if(empty($user->profile_data)){
+            $profile_data = [$field => $value];
+        } else {
+            $profile_data = json_decode($user->profile_data, true);
+            if($profile_data === NULL) $profile_data = [];
+            $profile_data[$field] = $value;
+        }
+        $user->profile_data = json_encode($profile_data);
         $user->save(false);
         return true;
     }
