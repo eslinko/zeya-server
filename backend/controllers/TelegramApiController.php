@@ -1691,4 +1691,17 @@ class TelegramApiController extends AppController
             return ['status' => 'error'];
 
     }
+    public function actionDie()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if($user === false) return false;
+        if($user['role'] !== 'admin') return 'You do not have permission to die';
+
+        return User::kill($user->id);
+
+
+    }
 }

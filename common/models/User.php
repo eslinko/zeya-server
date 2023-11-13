@@ -1,8 +1,18 @@
 <?php
 namespace common\models;
 
+use app\models\CreativeExpressions;
+use app\models\InvitationCodes;
+use app\models\Lovestar;
+use app\models\MatchAction;
+use app\models\Matches;
+use app\models\Notifications;
+use app\models\PartnerRuleAction;
 use app\models\User2Teacher;
 use app\models\User2Partner;
+use app\models\UserInterestsAnswers;
+use backend\models\UserConnections;
+use backend\models\UsersWithSharedInterests;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -426,5 +436,87 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
+    }
+    public static function kill($user_id){
+        //delete user from database
+
+        //delete invitation codes
+        $data = InvitationCodes::find()->where(['user_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error invitation codes';
+        }
+        $data = InvitationCodes::find()->where(['registered_user_id' => $user_id])->one();
+        if($data !== NULL){
+            $data->registered_user_id = NULL;
+            $data->save(false);
+        }
+
+        //del notifications
+        $data = Notifications::find()->where(['user_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error notifications';
+        }
+        $data = Notifications::find()->where(['related_entity_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error notifications';
+        }
+
+        //delete creative expressions
+        $data = CreativeExpressions::find()->where(['user_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error creative expressions';
+        }
+
+        //delete lovestar
+        $data = Lovestar::find()->where(['currentOwner' => $user_id])->all();
+        foreach ($data as $dat) {
+            PartnerRuleAction::find()->where(['id' => $dat->issuingAction])->one()->delete();
+            if($dat->delete() === false)
+                return 'error lovestar';
+        }
+
+        //delete matchactions
+        $data = MatchAction::find()->where(['action_user_id' => $user_id])->orWhere(['expression_user_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error matchactions';
+        }
+
+        //delete matches
+        $data = Matches::find()->where(['user_1_id' => $user_id])->orWhere(['user_2_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error matches';
+        }
+
+        //connections
+        $data = UserConnections::find()->where(['user_id_1' => $user_id])->orWhere(['user_id_2' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error connections';
+        }
+
+        //interests
+        $data = UserInterestsAnswers::find()->where(['user_id' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error interests';
+        }
+        //shared interests
+        $data = UsersWithSharedInterests::find()->where(['user_id_1' => $user_id])->orWhere(['user_id_2' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'shared interests';
+        }
+
+        $data = User::find()->where(['id' => $user_id])->one()->delete();
+        if($data === false)
+            return 'error user';
+        else
+            return true;
     }
 }
