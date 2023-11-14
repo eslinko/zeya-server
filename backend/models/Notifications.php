@@ -137,9 +137,9 @@ class Notifications extends ActiveRecord
                 $buttons = [];
                 break;
             case self::NEW_MATCH:
-                $buttons = [
+                $buttons =[];/* [
                     ['text' => 'Show_match_info', 'callback_data' => 'show_match_info__'.$user_from->id.'__'.$user_to->id],
-                    ];
+                    ];*/
                 break;
             case self::INVITE_CODE_USED:
                 $buttons = [];
