@@ -10,7 +10,7 @@ use yii\db\Expression;
 class Daemon {
 
     public static function sendEcosystemGrowthNotification() {
-        $all_users = User::find()->all();
+        $all_users = User::find()->where(['<>','invitation_code_id', 0])->andWhere(['<>','invitation_code_id', NULL])->all();
         $count_users = count($all_users);
 
         $new_day_users = array_filter($all_users, function ($a){
