@@ -474,7 +474,8 @@ class User extends ActiveRecord implements IdentityInterface
         //delete lovestar
         $data = Lovestar::find()->where(['currentOwner' => $user_id])->all();
         foreach ($data as $dat) {
-            PartnerRuleAction::find()->where(['id' => $dat->issuingAction])->one()->delete();
+            $p = PartnerRuleAction::find()->where(['id' => $dat->issuingAction])->one();
+            if($p !== NULL) $p->delete();
             if($dat->delete() === false)
                 return 'error lovestar';
         }
