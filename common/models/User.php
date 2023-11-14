@@ -471,13 +471,18 @@ class User extends ActiveRecord implements IdentityInterface
                 return 'error creative expressions';
         }
 
-        //delete lovestar
+        //delete lovestar emittedLovestarsUser
         $data = Lovestar::find()->where(['currentOwner' => $user_id])->all();
         foreach ($data as $dat) {
-            $p = PartnerRuleAction::find()->where(['id' => $dat->issuingAction])->one();
-            if($p !== NULL) $p->delete();
             if($dat->delete() === false)
                 return 'error lovestar';
+        }
+
+        //delete partnerruleaction
+        $data = PartnerRuleAction::find()->where(['emittedLovestarsUser' => $user_id])->all();
+        foreach ($data as $dat) {
+            if($dat->delete() === false)
+                return 'error partnerruleaction';
         }
 
         //delete matchactions
