@@ -14,7 +14,7 @@ During the latest 24h:
 
 2. Your connections brought {newSecondaryUsers} users. Now your secondary circles contain {secondaryUsers} users.
 
-3. New signups brought you {newSecondaryUsersWithSharedInterests} connections candidates. Soon you will have access to the creative expressions of {secondaryUsersWithSharedInterests} users. Among those, you will be validating your emotional resonance and get new connections!',
+3. New signups brought you {newSecondaryUsersWithSharedInterests} connections candidates. Soon you will have an access to the creative expressions of {secondaryUsersWithSharedInterests} users. Among those, you will be validating your emotional resonance and get new connections!',
             'ru' => 'Доброе утро!
 Это Ваш персональный отчет о росте Zeya4eve-сообщества.
 
