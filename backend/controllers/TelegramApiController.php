@@ -988,7 +988,7 @@ class TelegramApiController extends AppController
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
         if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
-        $users = User::find()->where(['publicAlias' => $data['alias']])->orWhere(['telegram_alias' => $data['alias']])->andWhere(['<>','id', $user->id])->asArray()->all();
+        $users = User::find()->where(['publicAlias' => $data['alias']])->orWhere(['telegram_alias' => $data['alias']])->andWhere(['not',['id' => $user->id]])->asArray()->all();
         return $users;
     }
     public function actionSetUserConnection(){
