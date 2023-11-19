@@ -56,7 +56,9 @@ body {
 	height: 100%;
 	position: relative;
 	/*overflow: hidden;*/
-	background-color: rgb(245, 247, 250);
+	/*background-color: rgb(245, 247, 250);*/
+	background-image: url(background_tinder.jpg);
+	background-size: cover;
 }
 
 .card {
@@ -603,7 +605,14 @@ background-color: red;
 	left: auto;
 	border-radius: 0 30px 30px 0;
 }
-#open_match
+#end_of_flight{
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	top: 50%;
+	display:none;
+}
+#open_match,#end_of_flight
 {
 	width: 90%;
 	height: 56px;
@@ -854,6 +863,7 @@ video-js.video-js .vjs-load-progress div {
 				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
 			</tr>
 		</table>
+  <button id="end_of_flight">END OF FLIGHT</button>
 
   <div id='match' class="match_hidden_small">
 	  <img src="austronauts.png" class="match_austronauts">
@@ -967,7 +977,14 @@ class Carousel {
 		this.cards = this.board.querySelectorAll('.card')
 	
 		// get top card
-		this.topCard = this.cards[this.cards.length - 1];
+			if(this.cards.length > 0)
+				this.topCard = this.cards[this.cards.length - 1];
+			else{
+				this.topCard = null;
+				document.getElementById('buttons_bar_table').style.display = 'none';
+				document.getElementById('end_of_flight').style.display = 'block';
+			}
+
 /*		var top_video = this.topCard.getElementsByTagName('video')[0];
 		if(top_video != undefined)
 			{
@@ -976,7 +993,10 @@ class Carousel {
 			}*/
 		
 		// get next card
-		this.nextCard = this.cards[this.cards.length - 2]
+			if(this.cards.length > 1)
+				this.nextCard = this.cards[this.cards.length - 2];
+			else
+				this.nextCard = null;
 		
 		// if at least one card is present
 		if (this.cards.length > 0) {
@@ -994,6 +1014,7 @@ class Carousel {
 				position: Hammer.position_ALL,
 				threshold: 0
 			}))*/
+			if(this.topCard != null){
 			this.hammer = new Hammer(this.topCard, { recognizers: [[Hammer.Pan],[Hammer.Tap]]});
 		
 			// pass events data to custom callbacks
@@ -1003,6 +1024,7 @@ class Carousel {
 			this.hammer.on('pan', (e) => {
 				this.onPan(e)
 				})
+			}
 	
 		}
 
@@ -1159,11 +1181,11 @@ class Carousel {
 	push() 
 		{
 
-		let card = document.createElement('div')			
-		card.classList.add('card')
-
 		if(this.expression_queue.length > this.expr_queue_counter)
 			{
+				let card = document.createElement('div')
+				card.classList.add('card')
+
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
 			let url = current_expr.content;
@@ -1385,22 +1407,24 @@ class Carousel {
 					}
 					//this.board.insertBefore(card, this.board.firstChild);
 				}
+				this.board.insertBefore(card, this.board.firstChild)
 			}
-		else//queue is done
-			{
-			card.style.backgroundImage = "url(1.jpg)";
-			//bottom gradient
-			let div_bottom = document.createElement('div');
-			div_bottom.classList.add('card_bottom');
-					
-			let p_descr = document.createElement('p');	
-			p_descr.classList.add('card_description');
-			p_descr.innerHTML = 'no more expressions to show';
+			/*	else//queue is done
+             {
 
-			div_bottom.appendChild(p_descr);
-			card.appendChild(div_bottom);
-			}
-		this.board.insertBefore(card, this.board.firstChild)
+                    /*	card.style.backgroundImage = "url(1.jpg)";
+                    //bottom gradient
+                    let div_bottom = document.createElement('div');
+                    div_bottom.classList.add('card_bottom');
+
+                    let p_descr = document.createElement('p');
+                    p_descr.classList.add('card_description');
+                    p_descr.innerHTML = 'no more expressions to show';
+
+                    div_bottom.appendChild(p_descr);
+                    card.appendChild(div_bottom);
+			}*/
+
 
         }
 	actionOnSwipe(action) 
@@ -1445,7 +1469,7 @@ class Carousel {
 					})
 				//we swiped already, top card is next card
 				this.top_card_i++;
-				
+
 
 				}
 
@@ -1731,6 +1755,11 @@ class Carousel {
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
 		window.Telegram.WebApp.close();
 	}
+	EndOfFlightButtonAction()
+	{
+		window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+		window.Telegram.WebApp.close();
+	}
 }
 
 //load queue
@@ -1756,7 +1785,7 @@ fetch(URL_str).then((response) =>
 			document.getElementById("skip_button").addEventListener("click", carousel.skipButtonAction);
 			document.getElementById("keep_flying").addEventListener("click", carousel.keepFlyingButtonAction);
 			document.getElementById("open_match").addEventListener("click", carousel.openMatchButtonAction);
-
+			document.getElementById("end_of_flight").addEventListener("click", carousel.EndOfFlightButtonAction);
 			}
 		});
 
