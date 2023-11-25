@@ -525,4 +525,9 @@ class User extends ActiveRecord implements IdentityInterface
         else
             return true;
     }
+    public static function getUsersInterestsMatchPercentage($user_id_1, $user_id_2){
+        $user_1 = User::find()->where(['id' => $user_id_1])->one();
+        $user_2 = User::find()->where(['id' => $user_id_2])->one();
+        $user_1_interests = json_decode($user_1->profile_data);
+    }
 }
