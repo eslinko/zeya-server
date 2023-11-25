@@ -237,7 +237,8 @@ function isValidUrl(urlString)	{
 
 
 //load queue
-let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile?user_id='+user_id);
+let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile');
+  URL_str.searchParams.set('user_id', user_id);
 URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str).then((response) => 
 	{
