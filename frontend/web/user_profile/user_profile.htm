@@ -189,6 +189,7 @@ body {
   <p class="warning">&#8635; Yo, keep that phone upright!</p>
 </div>
 <script>
+  var user_id;
 	window.screen.orientation.addEventListener("change", (event) => {
 		if(event.target.type.indexOf('portrait') !== -1){
 			document.getElementById('screen_cover').classList.add('hide');
@@ -220,10 +221,10 @@ fetch(URL_str1).then((response) => {
       alert("Error: " + error);
     });
 
-    let params = new URLSearchParams(window.location.search);
-    if(params.has('user_id') == false)throw new Error('wrong user_id');
-    let s = params.get("user_id");
-    console.log(s); //show C
+  let params = new URLSearchParams(window.location.search);
+  if(params.has('user_id') == false)throw new Error('wrong user_id');
+  user_id = params.get("user_id");
+    console.log(user_id); //show C
 function isValidUrl(urlString)	{
 		try {
 			return Boolean(new URL(urlString));
@@ -236,7 +237,7 @@ function isValidUrl(urlString)	{
 
 
 //load queue
-let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile');
+let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile?user_id='+user_id);
 URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str).then((response) => 
 	{
@@ -260,7 +261,8 @@ fetch(URL_str).then((response) =>
               document.getElementById('telegram_alias').innerHTML = data.telegram_alias??'&nbsp;';
               document.getElementById('public_alias').innerHTML = data.public_alias??'&nbsp;';
               document.getElementById('about_me').innerHTML = data.about_you??'&nbsp;';
-
+              document.getElementById('match_of_interests_percentage').innerHTML = data.match_percentage+'%';
+              document.getElementById('match_of_interests_progress_bar').style.width = data.match_percentage+'%';
               //social
 
               if(data.hasOwnProperty('facebook')){
