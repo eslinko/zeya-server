@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+
+<style>
+	@font-face {
+		font-family: "Montserrat";
+		src: url(Montserrat-Thin.woff2);
+		font-weight: 100;
+	}
+	@font-face {
+		font-family: "Montserrat";
+		src: url(Montserrat-ExtraLight.woff2);
+		font-weight: 200;
+	}
+	@font-face {
+		font-family: "Montserrat";
+		src: url(Montserrat-Light.woff2);
+		font-weight: 300;
+	}
+@font-face {
+  	font-family: "Montserrat";
+  	src: url(Montserrat-Regular.woff2);
+	font-weight: 400;
+}
+@font-face {
+	font-family: "Montserrat";
+	src: url(Montserrat-Medium.woff2);
+	font-weight: 500;
+}
+@font-face {
+	font-family: "Montserrat";
+	src: url(Montserrat-SemiBold.woff2);
+	font-weight: 600;
+}
+@font-face {
+	font-family: "Montserrat";
+	src: url(Montserrat-Bold.woff2);
+	font-weight: 700;
+}
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Montserrat, sans-serif;
+
+  background-image: url(background_dark.png);
+}
+
+    #screen_cover{
+      position:absolute;
+      width: 100vw;
+      height: 100vh;
+      background-color: #FFF;
+      opacity: 0.8;
+      bottom: 0;
+      left: 0;
+      text-align: center;
+    }
+    .hide
+    {
+      display:none;
+    }
+    #avatar{
+      height: 240px;
+      width: 240px;
+      border-radius: 50%;
+      background-position: center;
+      background-size: cover;
+      margin: auto;
+    }
+    #job{
+      font-family: Montserrat;
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 14px;
+      letter-spacing: 0.03em;
+      text-align: center;
+      color: rgba(179, 108, 255, 1);
+    }
+    #telegram_alias{
+      font-family: Montserrat;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      letter-spacing: 0.1px;
+      text-align: center;
+      color: rgba(245, 233, 255, 1);
+    }
+    #public_alias{
+      font-family: Montserrat;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 25px;
+      letter-spacing: 0.02em;
+      text-align: center;
+      color: rgba(245, 233, 255, 1);
+    }
+    #about_me{
+      font-family: Montserrat;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      letter-spacing: 0.1px;
+      text-align: center;
+      color: rgba(245, 233, 255, 1);
+    }
+    #social{
+      text-align: center;
+    }
+    #match_of_interests{
+      border: 1px solid rgba(0, 255, 41, 1);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+    #profile_container{
+      padding: 30px;
+    }
+    #match_of_interests_progress_container{
+      flex-grow: 2;
+
+    }
+    #match_of_interests_percentage{
+      flex-grow: 1;
+      padding-left: 5px;
+      font-family: Montserrat;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 41px;
+      letter-spacing: 0.02em;
+      text-align: center;
+      color: rgba(0, 255, 41, 1);
+    }
+    #match_of_interests_title{
+      font-family: Montserrat;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      letter-spacing: 0.44px;
+      vertical-align: super;
+      color: #FFF;
+      margin-left: 4px;
+    }
+    #match_of_interests_progress_bar_container{
+      width: 100%;
+      border-radius: 16px;
+      background-color: rgba(90, 83, 118, 1);
+      height: 16px;
+    }
+    #match_of_interests_progress_bar{
+      width: 70%;
+      background-color: rgba(0, 255, 41, 1);
+      border-radius: 16px;
+      height: 16px;
+    }
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+</head>
+<body>
+<div id="profile_container">
+  <div id="avatar"></div>
+  <p id="job"></p>
+  <p id="telegram_alias"></p>
+  <p id="public_alias"></p>
+  <p id="about_me"></p>
+  <div id="social"></div>
+  <div id="match_of_interests">
+    <div id="match_of_interests_progress_container">
+      <img src="match_of_interests.png"/><span id="match_of_interests_title">Match of interests</span>
+      <br>
+      <div id="match_of_interests_progress_bar_container">
+        <div id="match_of_interests_progress_bar"></div>
+      </div>
+    </div>
+    <div id="match_of_interests_percentage">
+70%
+    </div>
+  </div>
+</div>
+<div id="screen_cover" class="hide">
+  <p class="warning">&#8635; Yo, keep that phone upright!</p>
+</div>
+<script>
+	window.screen.orientation.addEventListener("change", (event) => {
+		if(event.target.type.indexOf('portrait') !== -1){
+			document.getElementById('screen_cover').classList.add('hide');
+		}
+		if(event.target.type.indexOf('landscape') !== -1){
+			document.getElementById('screen_cover').classList.remove('hide');
+		}
+	});
+
+window.Telegram.WebApp.expand();
+
+Telegram.WebApp.onEvent('viewportChanged', function (object){
+	if (!this.isExpanded){this.expand()}
+});
+
+
+//verification
+let URL_str1 = new URL(window.location.origin + '/admin/telegram-api/web-app-validate');
+URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
+
+fetch(URL_str1).then((response) => {
+	response.json().then(data => {
+	
+	console.log ('validation: '+JSON.stringify(data));
+	if (data == false) throw new Error('User validation error');
+});
+    //return response.json();
+  }, error => {      
+      alert("Error: " + error);
+    });
+
+    let params = new URLSearchParams(window.location.search);
+    if(params.has('user_id') == false)throw new Error('wrong user_id');
+    let s = params.get("user_id");
+    console.log(s); //show C
+function isValidUrl(urlString)	{
+		try {
+			return Boolean(new URL(urlString));
+		}
+		catch(e){
+			return false;
+		}
+	}
+
+
+
+//load queue
+let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile');
+URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+fetch(URL_str).then((response) => 
+	{
+	response.json().then(data => 
+		{
+		expr_queue = data;
+		console.log (JSON.stringify(expr_queue));
+		if(data.hasOwnProperty('error'))
+			{
+			window.Telegram.WebApp.showAlert('Error: '+data.error);
+			//window.Telegram.WebApp.close();
+			}
+		else
+			{
+              if(data.hasOwnProperty('avatar'))
+                  document.getElementById('avatar').style.backgroundImage = "url('"+window.location.origin + '/backend/web/uploads/avatars/'+ data.avatar +"')";
+              else
+                  document.getElementById('avatar').style.backgroundImage = "url('"+window.location.origin + "/backend/web/assets/images/avatar-default.png')";
+
+              document.getElementById('job').innerHTML = data.creative_job??'&nbsp;';
+              document.getElementById('telegram_alias').innerHTML = data.telegram_alias??'&nbsp;';
+              document.getElementById('public_alias').innerHTML = data.public_alias??'&nbsp;';
+              document.getElementById('about_me').innerHTML = data.about_you??'&nbsp;';
+
+              //social
+
+              if(data.hasOwnProperty('facebook')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/facebook.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('youtube')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/youtube.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('tik_tok')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/tik_tok.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('discord')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/discord.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('linkedin')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/linkedin.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('instagram')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/instagram.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('twitter')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/twitter.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('pinterest')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/pinterest.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('twitch')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/twitch.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+              if(data.hasOwnProperty('snapchat')){
+                let social_link = document.createElement('a');
+                let social_image = document.createElement('img');
+                social_link.href = data.facebook;
+                social_image.src = window.location.origin + '/backend/web/assets/images/snapchat.png';
+                social_link.appendChild(social_image);
+                document.getElementById('social').appendChild(social_link);
+              }
+
+            }
+		});
+
+    //return response.json();
+	}, error => 
+	{      
+    alert("Our errorr: " + error); 
+    });
+
+
+       
+</script>
+
+
+</body>
+</html>

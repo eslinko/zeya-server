@@ -767,10 +767,10 @@ class TelegramApiController extends AppController
         $interests_description = $interests_answers_text;
         $calculated_interests = ['en' => ChatGPT::getUserInterests2($interests_description)];
         if($data['user_lang'] === 'en' || empty($data['user_lang'])) {
-            $list_of_interests = User::calculatedInterestsToList($calculated_interests['en']);
+            //$list_of_interests = User::calculatedInterestsToList($calculated_interests['en']);
         } else {
             $calculated_interests[$data['user_lang']] = ChatGPT::translateCalculatedInterest($calculated_interests['en'], $data['user_lang']);
-            $list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
+            //$list_of_interests = User::calculatedInterestsToList($calculated_interests[$data['user_lang']]);
         }
 
         $user->calculated_interests = serialize($calculated_interests);
@@ -779,7 +779,7 @@ class TelegramApiController extends AppController
 
         UsersWithSharedInterests::setNeedUpdateSharedInterests($user->id);
 
-        return ['status' => 'success', 'list_of_interests' => $list_of_interests];
+        return ['status' => 'success'];
     }
 
     public function actionGetUserInterestsList()
@@ -1704,6 +1704,28 @@ class TelegramApiController extends AppController
 
         return User::kill($user->id);
 
+
+    }
+    public function actionGetUserPublicProfile(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if($res['status'] == false){
+            if(isset($res['message']))return ['error' => 'Error! '.$res['message']];
+            return ['error' => 'Error! Try again later.'];
+        }
+//file_put_contents('log.txt', print_r($res['user']['profile_data'],true));
+
+        //$send_data=json_decode($res['user']['profile_data']??'{}',true);
+        $send_data = $res['user']['profile_data']??[];
+        $send_data['public_alias'] = $res['user']['publicAlias'];
+        if(!empty($res['user']['telegram_alias']))
+            $send_data['telegram_alias'] = '@'.$res['user']['telegram_alias'];
+        else
+            $send_data['telegram_alias'] = NULL;
+
+        return $send_data;
 
     }
 }

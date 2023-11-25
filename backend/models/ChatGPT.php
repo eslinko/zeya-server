@@ -46,7 +46,7 @@ class ChatGPT {
         return !empty($response['choices'][0]['message']['content']) ? $response['choices'][0]['message']['content'] : false;
     }
     static function getUserInterests2($user_text) {
-        $message = "Based on the following user responses, what key interests and values can be identified? Extract a detailed list of interests and values, in English, even if this text consists of a single word. Make this list comma-separated and return without any another symbols and text. Create a list even if it's a question. User responses: \n";
+        $message = "Based on the following user responses, what key interests and values can be identified? Extract a detailed list of interests and values and translate that list to English if text is not in English, even if this text consists of a single word. Make this list comma-separated and return without any another symbols and text. Create a list even if it's a question. User responses: \n";
         $message .= $user_text;
         $response = self::sendChatGPTRequest($message);
 
