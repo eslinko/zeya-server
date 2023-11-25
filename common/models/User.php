@@ -531,11 +531,12 @@ class User extends ActiveRecord implements IdentityInterface
         $user_1_interests = unserialize($user_1->calculated_interests);
         $user_2_interests = unserialize($user_2->calculated_interests);
         if(!isset($user_1_interests['en']) OR !isset($user_2_interests['en'])) return 0;
+        $user_1_interests['en'] = explode(',', $user_1_interests['en']);
         $user_1_count = count($user_1_interests['en']);
         if($user_1_count == 0) return 0;
         $match_count = 0;
         foreach ($user_1_interests['en'] as $interest){
-            if(in_array($interest, $user_2_interests['en']))
+            if(strpos($user_2_interests['en'], $interest) !== false)
                 $match_count++;
         }
         $one_perc = $user_1_count/100;
