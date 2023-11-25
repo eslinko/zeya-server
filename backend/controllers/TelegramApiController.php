@@ -1711,20 +1711,24 @@ class TelegramApiController extends AppController
         $data = Yii::$app->request->get();
 
         $res = TelegramApi::validateWebAppRequest($data['initData']);
-        if($res['status'] == false){
+        if($res['status'] == false OR empty($data['user_id'])){
             if(isset($res['message']))return ['error' => 'Error! '.$res['message']];
             return ['error' => 'Error! Try again later.'];
         }
 //file_put_contents('log.txt', print_r($res['user']['profile_data'],true));
-
-        //$send_data=json_decode($res['user']['profile_data']??'{}',true);
-        $send_data = $res['user']['profile_data']??[];
-        $send_data['public_alias'] = $res['user']['publicAlias'];
-        if(!empty($res['user']['telegram_alias']))
-            $send_data['telegram_alias'] = '@'.$res['user']['telegram_alias'];
+        $target_user = User::find()->where(['id' => $data['user_id']])->one();
+        if($target_user === NULL){
+            return ['error' => 'Error! Try again later.'];
+        }
+        $send_data=json_decode($target_user['profile_data']??'{}',true);
+        //$send_data = $res['user']['profile_data']??[];
+        $send_data['public_alias'] = $target_user['publicAlias'];
+        if(!empty($target_user['telegram_alias']))
+            $send_data['telegram_alias'] = '@'.$target_user['telegram_alias'];
         else
             $send_data['telegram_alias'] = NULL;
 
+        $send_data['match_percentage'] = User::getUsersInterestsMatchPercentage($res['user']['id'],$target_user['id']).'%';
         return $send_data;
 
     }
