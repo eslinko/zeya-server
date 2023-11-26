@@ -1729,6 +1729,8 @@ class TelegramApiController extends AppController
             $send_data['telegram_alias'] = NULL;
 
         $send_data['match_percentage'] = User::getUsersInterestsMatchPercentage($res['user']['id'],$target_user['id']);
+
+        $send_data['match_ce'] = Matches::checkGetUsersMatch($res['user']['id'],$target_user['id']);
         return $send_data;
 
     }
