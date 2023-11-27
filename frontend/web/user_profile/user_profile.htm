@@ -74,6 +74,7 @@ body {
       background-position: center;
       background-size: cover;
       margin: auto;
+      position: relative;
     }
     #job{
       font-family: Montserrat;
@@ -170,9 +171,12 @@ body {
       background-color: rgba(58, 50, 92, 1);
       margin-top: 15px;
     }
+    #ce_container{
+      margin-top: 15px;
+    }
     #match_ce_top{
       width: 100%;
-      height: 90px;
+      height: 80px;
       border-bottom: 2px solid rgba(39, 32, 67, 1);
       padding: 10px;
     }
@@ -183,7 +187,7 @@ body {
     #match_ce_top_ce{
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: space-evenly;
     }
     .match_ce_user{
       border: 1px solid;
@@ -191,7 +195,10 @@ body {
       width: 48px;
       height: 48px;
       background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
       background-color: #7f5df1;
+      position: relative;
     }
   #match_ce_love_do{
     background-image: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
@@ -211,6 +218,153 @@ body {
   }
   .match_ce_user_title{
     position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-family: Montserrat;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin: auto;
+    width: 80px;
+    overflow: hidden;
+    height: 26px;
+    top: 100%;
+    color:#FFF;
+    margin-top: 6px;
+  }
+  .match_ce_user_just_icon{
+    background-size: 60%;
+  }
+  #ce_container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .ce{
+    height: 118px;
+    border-radius: 8px;
+    margin: 3px;
+    position: relative;
+    background-color: rgba(88, 68, 166, 1);
+    max-width: 120px;
+    min-width: 90px;
+    flex-grow: 1;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .ce_image{
+    background-size: cover;
+  }
+  .ce_text_icon_on_background{
+    background: no-repeat center url(text-roll64.png), rgba(88, 68, 166, 1);
+    background-blend-mode: overlay;
+  }
+    .ce_music_icon_on_background{
+      background: no-repeat center url(music54.png), rgba(88, 68, 166, 1);
+      background-blend-mode: overlay;
+    }
+    .ce_video_icon_on_background{
+      background: no-repeat center url(video-big-icon.png), rgba(88, 68, 166, 1);
+      background-blend-mode: overlay;
+      background-size: 64px;
+    }
+  .ce_title_container{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, rgba(21, 17, 36, 0) 0%, rgba(21, 17, 36, 0.4256) 32.08%, rgba(39, 32, 67, 0.56) 100%, rgba(21, 17, 36, 0.56) 100%);
+    display: flex;
+    align-items: center;
+    padding: 4px;
+  }
+  .ce_title{
+    font-family: Montserrat;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 14px;
+    letter-spacing: 0em;
+    text-align: left;
+    max-height: 42px;
+    color: rgba(245, 233, 255, 1);
+    display: inline-block;
+    overflow: hidden;
+  }
+  .ce_title_icon{
+    width: 15px;
+    margin: 5px;
+  }
+  .ce_time{
+    background-color: rgba(58, 50, 92, 1);
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Montserrat;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFF;
+  }
+  .ce_time_background{
+    background-color: rgba(58, 50, 92, 1);
+    width: 28px;
+    height: 28px;
+    border-radius: 28px;
+    background-color: red;
+    position: absolute;
+    right: 0;
+    margin: 3px;
+  }
+  .ce_like_icon{
+    position: absolute;
+    margin: 5px;
+  }
+  #button_connect{
+    background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
+    height: 56px;
+    padding: 14px 24px 14px 24px;
+    border-radius: 32px;
+    width: 100%;
+    font-family: Montserrat;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0.08em;
+    text-align: center;
+    color: #FFF;
+    border-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #location_container{
+    background: rgba(90, 83, 118, 1);
+    height: 18px;
+    padding: 2px 6px 2px 6px;
+    border-radius: 8px;
+    top: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #location_city{
+    color: rgba(241, 240, 247, 1);
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0.01em;
+    text-align: center;
   }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -218,7 +372,12 @@ body {
 </head>
 <body>
 <div id="profile_container">
-  <div id="avatar"></div>
+  <div id="avatar">
+    <div id="location_container">
+      <img id="location_icon" src="location.png"/>
+      <span id="location_city"></span>
+    </div>
+  </div>
   <p id="job"></p>
   <p id="telegram_alias"></p>
   <p id="public_alias"></p>
@@ -255,6 +414,12 @@ body {
       <button id="match_ce_love_do">create love do</button>
     </div>
   </div>
+
+  <div id="ce_container">
+
+  </div>
+  //BUTTON
+  <button id="button_connect">CONNECT <img src="button_connect_icon.png" /></button>
 </div>
 <div id="screen_cover" class="hide">
   <p class="warning">&#8635; Yo, keep that phone upright!</p>
@@ -308,6 +473,23 @@ function isValidUrl(urlString)	{
 		}
 	}
 
+  function getHoursBetween(timestamp) {
+
+    const now = new Date();
+    const future = new Date(timestamp*1000);
+
+    const diff = future - now ;
+
+    const hours = Math.round(diff / 1000 / 60 / 60);
+
+    return hours;
+  }
+
+  function hoursToDegrees(hours){
+    let max_hours = 72;
+    let one_degree = 72/360;
+    return Math.round(hours/one_degree);
+  }
 
 
 //load queue
@@ -332,10 +514,29 @@ fetch(URL_str).then((response) =>
               else
                   document.getElementById('avatar').style.backgroundImage = "url('"+window.location.origin + "/backend/web/assets/images/avatar-default.png')";
 
-              document.getElementById('job').innerHTML = data.creative_job??'&nbsp;';
-              document.getElementById('telegram_alias').innerHTML = data.telegram_alias??'&nbsp;';
+              if(data.hasOwnProperty('city_village')){
+                document.getElementById('location_city').innerHTML = data.city_village;
+              } else {
+                document.getElementById('location_container').style.display = 'none';
+              }
+              if(data.hasOwnProperty('job')){
+                document.getElementById('job').innerHTML = data.creative_job;
+              } else {
+                document.getElementById('job').style.display = 'none';
+              }
+              if(data.hasOwnProperty('telegram_alias')){
+                document.getElementById('telegram_alias').innerHTML = data.telegram_alias;
+              } else {
+                document.getElementById('telegram_alias').style.display = 'none';
+              }
+              if(data.hasOwnProperty('about_me')){
+                document.getElementById('about_me').innerHTML = data.about_you;
+              } else {
+                document.getElementById('about_me').style.display = 'none';
+              }
+
               document.getElementById('public_alias').innerHTML = data.public_alias??'&nbsp;';
-              document.getElementById('about_me').innerHTML = data.about_you??'&nbsp;';
+
               document.getElementById('match_of_interests_percentage').innerHTML = data.match_percentage+'%';
               document.getElementById('match_of_interests_progress_bar').style.width = data.match_percentage+'%';
               //social
@@ -426,6 +627,7 @@ fetch(URL_str).then((response) =>
                 if(isValidUrl(data.match_ce.user_1_ce.content) == false)//text
                 {
                   document.getElementById('match_ce_user_1').style.backgroundImage = 'url("text-big-icon.png")';
+                  document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
                   document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                 } else
                 {
@@ -437,36 +639,114 @@ fetch(URL_str).then((response) =>
                   }
                   if(videos_ext.includes(ext)){
                     document.getElementById('match_ce_user_1').style.backgroundImage = 'url("video-big-icon.png")';
+                    document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
                     document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                   if(audios_ext.includes(ext)){
                     document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.png")';
+                    document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
                     document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                 }
                 if(isValidUrl(data.match_ce.user_2_ce.content) == false)//text
                 {
                   document.getElementById('match_ce_user_2').style.backgroundImage = 'url("text-big-icon.png")';
-                  document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                  document.getElementById('match_ce_user_2').classList.add('match_ce_user_just_icon');
+                  document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                 } else
                 {
                   let ext = data.match_ce.user_2_ce.content.split('.').pop();
                   if(images_ext.includes(ext))
                   {
                     document.getElementById('match_ce_user_2').style.backgroundImage = 'url("'+data.match_ce.user_2_ce.content+'")';
-                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                   }
                   if(videos_ext.includes(ext)){
                     document.getElementById('match_ce_user_2').style.backgroundImage = 'url("video-big-icon.png")';
-                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                    document.getElementById('match_ce_user_2').classList.add('match_ce_user_just_icon');
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                   }
                   if(audios_ext.includes(ext)){
                     document.getElementById('match_ce_user_2').style.backgroundImage = 'url("music-background.png")';
-                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                    document.getElementById('match_ce_user_2').classList.add('match_ce_user_just_icon');
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                   }
                 }
                 document.getElementById('match_ce').classList.remove('hide');
               }
+              //CE
+              data.ce.forEach(function(ce){
+                let hours_left = getHoursBetween(ce.active_period);
+                let degrees = hoursToDegrees(hours_left);//pointing to end
+                degrees = 360 - degrees;//pointing to start
+                let time_color = 'red';
+                if(hours_left < 6)
+                  time_color = 'rgba(255, 77, 53, 1)';
+                else if(hours_left < 13)
+                  time_color = 'rgba(255, 235, 53, 1)';
+                else
+                  time_color = 'rgba(0, 194, 255, 1)';
+
+                let like_display = '';
+                if(ce.liked == false) like_display = 'display: none;';
+                if(isValidUrl(ce.content) == false)//text
+                {
+                  document.getElementById('ce_container').innerHTML +=
+                          '<div class="ce ce_text_icon_on_background">' +
+                              '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                              '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
+                                '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
+                              '</div> ' +
+                              '<div class="ce_title_container">' +
+                                  '<img src="text-symbol.png" class="ce_title_icon"/> ' +
+                                  '<span class="ce_title">'+ce.description+'</span>' +
+                              '</div>' +
+                          '</div>';
+                } else {
+                  let ext = ce.content.split('.').pop();
+                  if(images_ext.includes(ext)){
+                    document.getElementById('ce_container').innerHTML +=
+                            '<div class="ce ce_image" style="background-image: url('+ce.content+')">' +
+                                '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                               '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
+                                  '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
+                               '</div> ' +
+                               '<div class="ce_title_container">' +
+                               '<img src="image-symbol.png" class="ce_title_icon"/> ' +
+                                  '<span class="ce_title">'+ce.description+'</span>' +
+                               '</div>' +
+                            '</div>';
+                  }
+                  if(videos_ext.includes(ext)){
+                    document.getElementById('ce_container').innerHTML +=
+                            '<div class="ce ce_video_icon_on_background">' +
+                                  '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                                  '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
+                                        '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
+                                  '</div> ' +
+                                  '<div class="ce_title_container">' +
+                                  '<img src="video-symbol.png" class="ce_title_icon"/> ' +
+                                      '<span class="ce_title">'+ce.description+'</span>' +
+                                  '</div>' +
+                            '</div>';
+                  }
+                  if(audios_ext.includes(ext)){
+                    document.getElementById('ce_container').innerHTML +=
+                            '<div class="ce ce_music_icon_on_background">' +
+                                '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                                '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
+                                    '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
+                                '</div> ' +
+                                '<div class="ce_title_container">' +
+                                '<img src="music-symbol.png" class="ce_title_icon"/> ' +
+                                    '<span class="ce_title">'+ce.description+'</span>' +
+                                '</div>' +
+                            '</div>';
+                  }
+                }
+
+              });
+
 
             }
 		});

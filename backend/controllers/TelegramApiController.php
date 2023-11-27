@@ -1731,6 +1731,19 @@ class TelegramApiController extends AppController
         $send_data['match_percentage'] = User::getUsersInterestsMatchPercentage($res['user']['id'],$target_user['id']);
 
         $send_data['match_ce'] = Matches::checkGetUsersMatch($res['user']['id'],$target_user['id']);
+        $ce_list = CreativeExpressions::find()->where(['user_id' => $target_user['id']])->andWhere(['>','active_period',time()])->asArray()->all();
+        $likes_list = MatchAction::find()->where(['action_user_id' => $res['user']['id'], 'expression_user_id' => $target_user['id']])->asArray()->all();
+        foreach ($ce_list as $key=>$ce){
+            $ce_list[$key]['liked'] = false;
+            foreach ($likes_list as $like){
+                if($like['expression_id'] == $ce['id']){
+                    $ce_list[$key]['liked'] = true;
+                    break;
+                }
+            }
+        }
+        $send_data['ce'] = $ce_list;
+
         return $send_data;
 
     }
