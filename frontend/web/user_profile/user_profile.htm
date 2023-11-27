@@ -190,7 +190,8 @@ body {
       border-radius: 48px;
       width: 48px;
       height: 48px;
-      background-color: #FFF;
+      background-size: cover;
+      background-color: #7f5df1;
     }
   #match_ce_love_do{
     background-image: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
@@ -207,6 +208,9 @@ body {
     text-align: center;
     color: rgba(245, 233, 255, 1);
     text-transform: uppercase;
+  }
+  .match_ce_user_title{
+    position: absolute;
   }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -236,11 +240,15 @@ body {
   <div id="match_ce" class="hide">
     <div id="match_ce_top">
       <div id="match_ce_top_ce">
-        <div id="match_ce_user_1" class="match_ce_user"></div>
+        <div id="match_ce_user_1" class="match_ce_user">
+          <span id="match_ce_user_1_title" class="match_ce_user_title"></span>
+        </div>
         <img src="braided.png" style=" width:24px;"/>
         <img src="matched_ce_heart.png" style=" width:56px;"/>
         <img src="braided.png" style="width:24px;"/>
-        <div id="match_ce_user_2"  class="match_ce_user"></div>
+        <div id="match_ce_user_2"  class="match_ce_user">
+          <span id="match_ce_user_2_title" class="match_ce_user_title"></span>
+        </div>
       </div>
     </div>
     <div id="match_ce_bottom">
@@ -418,18 +426,43 @@ fetch(URL_str).then((response) =>
                 if(isValidUrl(data.match_ce.user_1_ce.content) == false)//text
                 {
                   document.getElementById('match_ce_user_1').style.backgroundImage = 'url("text-big-icon.png")';
+                  document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                 } else
                 {
                   let ext = data.match_ce.user_1_ce.content.split('.').pop();
                   if(images_ext.includes(ext))
                   {
                     document.getElementById('match_ce_user_1').style.backgroundImage = 'url("'+data.match_ce.user_1_ce.content+'")';
+                    document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                   if(videos_ext.includes(ext)){
                     document.getElementById('match_ce_user_1').style.backgroundImage = 'url("video-big-icon.png")';
+                    document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                   if(audios_ext.includes(ext)){
                     document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.png")';
+                    document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
+                  }
+                }
+                if(isValidUrl(data.match_ce.user_2_ce.content) == false)//text
+                {
+                  document.getElementById('match_ce_user_2').style.backgroundImage = 'url("text-big-icon.png")';
+                  document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                } else
+                {
+                  let ext = data.match_ce.user_2_ce.content.split('.').pop();
+                  if(images_ext.includes(ext))
+                  {
+                    document.getElementById('match_ce_user_2').style.backgroundImage = 'url("'+data.match_ce.user_2_ce.content+'")';
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                  }
+                  if(videos_ext.includes(ext)){
+                    document.getElementById('match_ce_user_2').style.backgroundImage = 'url("video-big-icon.png")';
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
+                  }
+                  if(audios_ext.includes(ext)){
+                    document.getElementById('match_ce_user_2').style.backgroundImage = 'url("music-background.png")';
+                    document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                 }
                 document.getElementById('match_ce').classList.remove('hide');
