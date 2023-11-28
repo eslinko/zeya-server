@@ -528,6 +528,7 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getUsersInterestsMatchPercentage($user_id_1, $user_id_2){
         $user_1 = User::find()->where(['id' => $user_id_1])->one();
         $user_2 = User::find()->where(['id' => $user_id_2])->one();
+        if(empty($user_1->calculated_interests) OR empty($user_2->calculated_interests)) return 0;
         $user_1_interests = unserialize($user_1->calculated_interests);
         $user_2_interests = unserialize($user_2->calculated_interests);
         if(!isset($user_1_interests['en']) OR !isset($user_2_interests['en'])) return 0;

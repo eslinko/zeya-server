@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-
+  <link rel="stylesheet" type="text/css" href="ce.css">
 <style>
 	@font-face {
 		font-family: "Montserrat";
@@ -253,6 +253,7 @@ body {
     flex-grow: 1;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
   }
   .ce_image{
     background-size: cover;
@@ -367,6 +368,58 @@ body {
     letter-spacing: 0.01em;
     text-align: center;
   }
+  .hidden_small{
+    top:50%;
+    left:50%;
+    width: 0;
+    height: 0;
+    position: absolute;
+    transition: transform 900ms ease-in-out;
+    overflow:hidden;
+/*    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(background_dark.png);*/
+    animation: match_anim_hide .6s ease-in-out;
+  }
+    @keyframes match_anim_hide {
+      100% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    .display_big
+    {
+      display: block;
+      left:0;
+      bottom:0;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transition: transform 900ms ease-in-out;
+      animation: match_anim .6s ease-in-out;
+
+/*      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url(background_dark.png);*/
+    }
+    @keyframes match_anim {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -425,11 +478,46 @@ body {
 <div id="screen_cover" class="hide">
   <p class="warning">&#8635; Yo, keep that phone upright!</p>
 </div>
+
+<div id="ce_window_container" class="hidden_small">
+  <div id="card" class="card">
+    <div id="card_content_container" class='content_container_descr_closed'>
+
+    </div>
+    <div class='card_gradient'></div>
+    <div id="card_bottom" class='card_bottom_descr_closed'>
+      <div id="card_descr_container" class='descr_container_descr_closed'><tr>
+        <table style='width: 100%;'><td>
+          <p id="card_title"></p>
+        </td>
+          <td>
+            <p id="card_date" class='descr_date'></p>
+          </td>
+          <td>
+            <button id="card_button_descr" class='description_more_arrow_closed' onclick='toggle_descr()'></button>
+          </td></tr>
+        </table>
+
+        <p id="card_description" class='descr_text descr_text_close'></p>
+        <div id="card_descr_after_text" class='descr_after_text_descr_closed'>
+          <p id="card_time_left" class='descr_available'></p>
+          <div class='line'></div>
+          <p class='descr_tag_title'>Tags</p>
+          <span id="card_tags"></span>
+          <div class='line'></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 <script>
-  var user_id;
+  var user_id, user_profile;
   var images_ext = ["jpg", "jpeg", "gif", "png"];
   var videos_ext = ["mp4", "mov", "webm", "3gp", "ogg"];
   var audios_ext = ['mp3','aac','wav','wma','flac'];
+  let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var card_description_opened=false;
 	window.screen.orientation.addEventListener("change", (event) => {
 		if(event.target.type.indexOf('portrait') !== -1){
 			document.getElementById('screen_cover').classList.add('hide');
@@ -492,6 +580,187 @@ function isValidUrl(urlString)	{
     return Math.round(hours/one_degree);
   }
 
+  function show_ce_window(ce_id){
+    document.getElementById('ce_window_container').classList.remove('hidden_small');
+    document.getElementById('ce_window_container').classList.add('display_big');
+    document.getElementById('profile_container').classList.add('hide');
+
+    let upload_date= new Date(user_profile.ce[ce_id].upload_date*1000);//ms
+    let time_left = Math.round((user_profile.ce[ce_id].active_period - user_profile.ce[ce_id].upload_date)/3600);//hours
+    let tag_str='';
+    if(typeof user_profile.ce[ce_id].tags === 'string') {
+      if (user_profile.ce[ce_id].tags.indexOf(',') == -1)
+        tag_str = "<span class='descr_tag'>" + user_profile.ce[ce_id].tags + "</span>";
+      else
+        user_profile.ce[ce_id].tags.split(',').forEach((tag) => {
+          tag_str = tag_str + "<span class='descr_tag'>" + tag + "</span> ";//space between is important for line breaks!
+        });
+    } else {
+      tag_str = "<span class='descr_tag'>" + user_profile.ce[ce_id].tags + "</span>";
+    }
+
+    document.getElementById('card_title').innerHTML = user_profile.ce[ce_id].description;
+
+    document.getElementById('card_description').innerHTML = user_profile.ce[ce_id].description;
+    document.getElementById('card_date').innerHTML = upload_date.getDate()+' '+month[upload_date.getMonth()];
+    document.getElementById('card_time_left').innerHTML = 'AVAILABLE FOR ' + time_left + ' HOURS MORE';
+    document.getElementById('card_tags').innerHTML = tag_str;
+
+    if(isValidUrl(user_profile.ce[ce_id].content) == false)//text
+    {
+      document.getElementById('card_title').classList.add('descr_title_text');
+      document.getElementById('card_content_container').innerHTML = '<div id="card_content" class="img_fix text_container content_descr_closed">'+user_profile.ce[ce_id].content+'</div>';
+
+    }
+    else
+    {
+      let ext = user_profile.ce[ce_id].content.split('.').pop();
+      if(images_ext.includes(ext))
+      {
+        document.getElementById('card_title').classList.add('descr_title_image');
+        document.getElementById('card_content_container').innerHTML = "<img id='card_content' src='" + user_profile.ce[ce_id].content + "' class='content_descr_closed img_fix'></div>";
+
+      }
+      if(videos_ext.includes(ext)){
+        document.getElementById('match_ce_user_1').style.backgroundImage = 'url("video-big-icon.png")';
+        document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
+        document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
+      }
+      if(audios_ext.includes(ext)){
+        document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.png")';
+        document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
+        document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
+      }
+    }
+  }
+  
+  function toggle_descr()
+  {
+
+/*    if(card_description_opened == false)
+    {
+      card_description_opened = true;
+    }
+    else
+    {
+      card_description_opened = false;
+    }*/
+    //descr
+    let element = document.getElementById('card_description');
+    if(element == null) return;
+
+    if(element.classList.contains('descr_text_close'))
+    {
+      element.classList.remove('descr_text_close');
+      element.classList.add('descr_text_open');
+    }
+    else
+    {
+      element.classList.remove('descr_text_open');
+      element.classList.add('descr_text_close');
+    }
+    //content
+    element = document.getElementById('card_content_container');
+    if(element != null)
+    {
+      if(element.classList.contains('content_container_descr_closed'))
+      {
+        element.classList.remove('content_container_descr_closed');
+        element.classList.add('content_container_descr_opened');
+      }
+      else
+      {
+        element.classList.remove('content_container_descr_opened');
+        element.classList.add('content_container_descr_closed');
+      }
+    }
+    element = document.getElementById('card_content');
+    if(element != null)
+    {
+      if(element.classList.contains('content_descr_closed'))
+      {
+        element.classList.remove('content_descr_closed');
+        element.classList.add('content_descr_opened');
+      }
+      else
+      {
+        element.classList.remove('content_descr_opened');
+        element.classList.add('content_descr_closed');
+      }
+    }
+
+    //card bottom
+    element = document.getElementById('card_bottom');
+    if(element == null) return;
+
+    if(element.classList.contains('card_bottom_descr_closed'))
+    {
+      element.classList.remove('card_bottom_descr_closed');
+      element.classList.add('card_bottom_descr_opened');
+    }
+    else
+    {
+      element.classList.remove('card_bottom_descr_opened');
+      element.classList.add('card_bottom_descr_closed');
+    }
+    //descr_container
+    element = document.getElementById('card_descr_container');
+    if(element == null) return;
+
+    if(element.classList.contains('descr_container_descr_closed'))
+    {
+      element.classList.remove('descr_container_descr_closed');
+      element.classList.add('descr_container_descr_opened');
+    }
+    else
+    {
+      element.classList.remove('descr_container_descr_opened');
+      element.classList.add('descr_container_descr_closed');
+    }
+
+
+    //descr_after text
+    element = document.getElementById('card_descr_after_text');
+    if(element == null) return;
+
+    if(element.classList.contains('descr_after_text_descr_closed'))
+    {
+      element.classList.remove('descr_after_text_descr_closed');
+      element.classList.add('descr_after_text_descr_opened');
+    }
+    else
+    {
+      element.classList.remove('descr_after_text_descr_opened');
+      element.classList.add('descr_after_text_descr_closed');
+    }
+
+    //descr arrow button
+    element = document.getElementById('card_button_descr');
+    if(element == null) return;
+
+    if(element.classList.contains('description_more_arrow_closed'))
+    {
+      element.classList.remove('description_more_arrow_closed');
+      element.classList.add('description_more_arrow_opened');
+    }
+    else
+    {
+      element.classList.remove('description_more_arrow_opened');
+      element.classList.add('description_more_arrow_closed');
+    }
+
+    //enable card scroll
+    element = document.getElementById('card');
+    if(element == null) return;
+    if(element.classList.contains('card_opened'))
+    {
+      element.classList.remove('card_opened');
+    }
+    else
+    {
+      element.classList.add('card_opened');
+    }
+  }
 
 //load queue
 let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile');
@@ -501,8 +770,8 @@ fetch(URL_str).then((response) =>
 	{
 	response.json().then(data => 
 		{
-		expr_queue = data;
-		console.log (JSON.stringify(expr_queue));
+		user_profile = data;
+		console.log (JSON.stringify(user_profile));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -675,7 +944,7 @@ fetch(URL_str).then((response) =>
                 document.getElementById('match_ce').classList.remove('hide');
               }
               //CE
-              data.ce.forEach(function(ce){
+              data.ce.forEach(function(ce, i){
                 let hours_left = getHoursBetween(ce.active_period);
                 let degrees = hoursToDegrees(hours_left);//pointing to end
                 degrees = 360 - degrees;//pointing to start
@@ -692,7 +961,7 @@ fetch(URL_str).then((response) =>
                 if(isValidUrl(ce.content) == false)//text
                 {
                   document.getElementById('ce_container').innerHTML +=
-                          '<div class="ce ce_text_icon_on_background">' +
+                          '<div class="ce ce_text_icon_on_background" onclick="show_ce_window('+i+')">' +
                               '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
                               '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                 '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
@@ -706,7 +975,7 @@ fetch(URL_str).then((response) =>
                   let ext = ce.content.split('.').pop();
                   if(images_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
-                            '<div class="ce ce_image" style="background-image: url('+ce.content+')">' +
+                            '<div class="ce ce_image" style="background-image: url('+ce.content+')" onclick="show_ce_window('+i+')">' +
                                 '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
                                '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                   '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
@@ -719,7 +988,7 @@ fetch(URL_str).then((response) =>
                   }
                   if(videos_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
-                            '<div class="ce ce_video_icon_on_background">' +
+                            '<div class="ce ce_video_icon_on_background" onclick="show_ce_window('+i+')">' +
                                   '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
                                   '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                         '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
@@ -732,7 +1001,7 @@ fetch(URL_str).then((response) =>
                   }
                   if(audios_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
-                            '<div class="ce ce_music_icon_on_background">' +
+                            '<div class="ce ce_music_icon_on_background" onclick="show_ce_window('+i+')">' +
                                 '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
                                 '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                     '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
