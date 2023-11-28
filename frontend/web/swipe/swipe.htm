@@ -614,7 +614,7 @@ background-color: red;
 	bottom: 20%;
 	display:none;
 }
-#open_match,#end_of_flight
+#end_of_flight
 {
 	width: 90%;
 	height: 56px;
@@ -636,6 +636,27 @@ background-color: red;
 
 	display: none;
 }
+	#open_match
+	{
+		width: 90%;
+		height: 56px;
+		padding: 14px 24px 14px 24px;
+		border-radius: 32px;
+
+		gap: 8px;
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 18px;
+		letter-spacing: 0.08em;
+		text-align: center;
+		margin: 9px;
+		background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
+		border: none;
+		color: #FFF;
+		cursor: pointer;
+
+	}
 .frequency_match_text
 {
 	margin-top: 30px;
@@ -961,7 +982,8 @@ class Carousel {
 		this.top_card_i = 0;//top card
 		this.expr_queue_counter = 0;//loaded cards pointer (background card)
  		this.description_opened = false;
-		this.board = element
+		this.board = element;
+		this.matched_user_id = null;
 	
 		// add first two cards programmatically
 		this.push()
@@ -1433,12 +1455,12 @@ class Carousel {
 		{
 		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
 			{
-
 				let URL_str = new URL(window.location.origin + '/admin/telegram-api/match-action');
 				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
 				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
 				URL_str.searchParams.set('action_result', action);
+				let liked_user_id = this.expression_queue[this.top_card_i].user_id;
 				let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
 				fetch(URL_str).then((response) => 
 					{
@@ -1454,6 +1476,7 @@ class Carousel {
 							if(data.match == true)
 								{
 								//animate match
+								this.matched_user_id = 	liked_user_id;
 								this.show_match(data.CE, data.new_friend_name , this.expression_queue[current_top_card]);
 								}
 							else
@@ -1485,7 +1508,7 @@ class Carousel {
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translate(' + carousel.board.clientWidth + 'px, -400px) rotate(-' + 20 + 'deg)'
-				
+		carousel.actionOnSwipe(1);
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
@@ -1499,8 +1522,6 @@ class Carousel {
 			carousel.handle()
 			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-		carousel.actionOnSwipe(1);
-		
 	}
 	nopeButtonAction() {
 
@@ -1508,7 +1529,7 @@ class Carousel {
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translate(-' + carousel.board.clientWidth + 'px, -400px) rotate(' + 20 + 'deg)'
-				
+		carousel.actionOnSwipe(0);
 		// wait transition end
 		setTimeout(() => {
 			// remove swiped card
@@ -1520,12 +1541,8 @@ class Carousel {
 			carousel.push()
 			// handle gestures on new top card
 			carousel.handle()
-	
-			
 			}, 600)
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-		carousel.actionOnSwipe(0);
-		
 	}
 	skipButtonAction() {
 
@@ -1751,11 +1768,12 @@ class Carousel {
 	}
 	openMatchButtonAction()
 	{
-		let URL_str = new URL(window.location.origin + '/admin/telegram-api/open-matches');
+/*		let URL_str = new URL(window.location.origin + '/admin/telegram-api/open-matches');
 		URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 		fetch(URL_str);
 		window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-		window.Telegram.WebApp.close();
+		window.Telegram.WebApp.close();*/
+		window.open(window.location.origin + '/frontend/web/user_profile/user_profile.htm?user_id='+carousel.matched_user_id,"_self");
 	}
 	EndOfFlightButtonAction()
 	{
