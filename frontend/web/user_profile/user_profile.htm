@@ -180,12 +180,13 @@ body {
     #match_ce_top{
       width: 100%;
       height: 80px;
-      border-bottom: 2px solid rgba(39, 32, 67, 1);
+      /*border-bottom: 2px solid rgba(39, 32, 67, 1);*/
       padding: 10px;
     }
     #match_ce_bottom{
       padding: 10px;
       width: 100%;
+      display: none;
     }
     #match_ce_top_ce{
       display: flex;
@@ -193,7 +194,7 @@ body {
       justify-content: space-evenly;
     }
     .match_ce_user{
-      border: 1px solid;
+      /*border: 1px solid;*/
       border-radius: 48px;
       width: 48px;
       height: 48px;
@@ -348,6 +349,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 9px;
+    cursor: pointer;
   }
   #location_container{
     background: rgba(90, 83, 118, 1);
@@ -539,7 +541,7 @@ body {
   var videos_ext = ["mp4", "mov", "webm", "3gp", "ogg"];
   var audios_ext = ['mp3','aac','wav','wma','flac'];
   let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var card_description_opened=false;
+
 	window.screen.orientation.addEventListener("change", (event) => {
 		if(event.target.type.indexOf('portrait') !== -1){
 			document.getElementById('screen_cover').classList.add('hide');
@@ -819,7 +821,13 @@ function isValidUrl(urlString)	{
       element.classList.add('card_opened');
     }
   }
-
+function send_connection_request(){
+  let URL_str = new URL(window.location.origin + '/admin/telegram-api/connect-from-web-user-public-profile');
+  URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+  URL_str.searchParams.set('user_id', user_id);
+  fetch(URL_str);
+  window.Telegram.WebApp.close();
+}
 //load queue
 let URL_str = new URL(window.location.origin + '/admin/telegram-api/get-user-public-profile');
   URL_str.searchParams.set('user_id', user_id);
@@ -1076,7 +1084,7 @@ fetch(URL_str).then((response) =>
 
               });
 
-
+            document.getElementById('button_connect').addEventListener('click', send_connection_request);
             }
 		});
 
