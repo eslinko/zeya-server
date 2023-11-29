@@ -28,6 +28,7 @@ use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
 use backend\models\UserConnections;
 use backend\models\EmailSendVerificationCode;
+use common\models\Translations;
 use common\models\User;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -1743,8 +1744,48 @@ class TelegramApiController extends AppController
             }
         }
         $send_data['ce'] = $ce_list;
-
+        //$send_data['user_id'] = $target_user['id'];
         return $send_data;
 
+    }
+    public function actionConnectFromWebUserPublicProfile()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if ($res['status'] == false or empty($data['user_id'])) {
+            if (isset($res['message'])) return ['error' => 'Error! ' . $res['message']];
+            return ['error' => 'Error! Try again later.'];
+        }
+
+        $connection = UserConnections::CheckUserConnection($res['user']['id'],$data['user_id']);
+        if($connection !== NULL)
+        {//not fresh connection
+            if($connection['status'] == 'pending'){
+                TelegramApi::sendNotificationToUserTelegram(Translations::s('This invitation was already sent by you and still pending.', $res['user']['language']),$res['user']);
+                return false;
+            } elseif ($connection['status'] == 'accepted'){
+                if($connection['user_id_1'] == $res['user']['id'])
+                    TelegramApi::sendNotificationToUserTelegram(Translations::s('This invitation was already sent by you and accepted.', $res['user']['language']),$res['user']);
+                else
+                    TelegramApi::sendNotificationToUserTelegram(Translations::s('This invitation was already sent to you and accepted.', $res['user']['language']),$res['user']);
+                return false;
+            } elseif ($connection['status'] == 'declined'){
+                if($connection['user_id_1'] == $res['user']['id']){
+                    TelegramApi::sendNotificationToUserTelegram(Translations::s('This invitation was already sent by you and rejected.', $res['user']['language']),$res['user']);
+                    return false;
+                } else {
+                    //send connection
+                }
+            }
+        }
+        //send connection
+        if (!UserConnections::setUserConnection($res['user']['id'],$data['user_id'])) return ['status' => 'error'];
+        $user_to = User::find()->where(['id' => $data['user_id']])->one();
+        Notifications::createNotification(Notifications::CONNECTION_REQUEST, $res['user'], $user_to);
+
+        TelegramApi::sendNotificationToUserTelegram(Translations::s('Connection request has been sent.', $res['user']['language']),$res['user']);
+        return true;
     }
 }

@@ -84,7 +84,26 @@ Viimase 24h jooksul:
             'en' => "UPDATE EXPRESSION",
             'ru' => "ОБНОВИТЬ ТВОРЕНИЕ"
         ],
-
+        "This invitation was already sent by you and still pending." => [
+            'en' => "You've already sent this invitation, and it's pending.",
+            'ru' => "Ты уже отправил(а) это приглашение, и оно в режиме ожидания."
+        ],
+        "This invitation was already sent by you and accepted." => [
+            'en' => "You've already sent this invitation, and it's accepted.",
+            'ru' => "Ты уже отправил(а) это приглашение, и оно принято."
+        ],
+        "This invitation was already sent by you and rejected." => [
+            'en' => "You've already sent this invitation, and it's rejected. You may contact the person and ask them to find your rejected invitation and re-accept it.",
+            'ru' => "Ты уже отправил(а) это приглашение, и оно отклонено. Ты можешь связаться с этим человеком и попросить его найти твое приглашение, чтобы его принять."
+        ],
+        "This invitation was already sent to you and accepted." => [
+            'en' => "You've already received this invitation, and it's accepted.",
+            'ru' => "Ты уже получил(а) это приглашение, и оно принято."
+        ],
+        "Connection request has been sent." => [
+            'en' => "Connection request has been sent.",
+            'ru' => "Запрос добавления в связи отправлен."
+        ],
     ];
 
     public static function s($text, $lang = 'en'){
