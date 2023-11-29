@@ -278,3 +278,71 @@ td
     text-transform: uppercase;
     white-space: nowrap;
 }
+.video-js .vjs-play-progress {
+    background: linear-gradient(90.1deg, #A834FF -2.39%, #77FDF5 24.06%, #FFF3B1 42.73%, #AE44FF 60.36%, #35FAEE 77.48%, #FFE999 94.07%);
+}
+.video-js .vjs-big-play-button
+{
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    border: 1px solid white;
+    background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%), linear-gradient(96.52deg, #CF91FF -1.2%, #FFE999 29.63%, #35FAEE 64.58%, #FFE999 94.38%);
+    transform: translate(-50%,-50%);
+    font-size: 27px;
+    line-height: 72px;
+    margin: 0;
+}
+.video-js .vjs-play-control {
+    bottom: 3em;
+    position: absolute;
+    left: 0;
+}
+.video-js .vjs-volume-panel
+{
+    bottom: 3em;
+    position: absolute;
+    left: 3em;
+}
+.video-js .vjs-remaining-time
+{
+    bottom: 3em;
+    position: absolute;
+    right: 0;
+}
+.video-js .vjs-fullscreen-control
+{
+    bottom: 3em;
+    position: absolute;
+    right: 0;
+}
+video-js.video-js .vjs-control-bar
+{
+    background: transparent;
+}
+button.vjs-play-control
+{
+    color: #C0B0FF;
+}
+.video-js .vjs-play-progress:before
+{
+    display: none;
+}
+video-js.video-js .vjs-load-progress div {
+    background: #857AAF;
+}
+.music:before
+{
+    width: 100%;
+    position: absolute;
+    content: '';
+    background-image: url(music-background.png);
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    left: 0;
+    /*bottom: 68px;*/
+    background-size: 50%;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
