@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+
+  <link href="https://vjs.zencdn.net/8.6.0/video-js.css" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="ce.css">
 <style>
 	@font-face {
@@ -124,6 +126,7 @@ body {
     }
     #profile_container{
       padding: 30px;
+      padding-top: 80px;
     }
     #match_of_interests_progress_container{
       flex-grow: 2;
@@ -368,57 +371,67 @@ body {
     letter-spacing: 0.01em;
     text-align: center;
   }
-  .hidden_small{
-    top:50%;
-    left:50%;
-    width: 0;
-    height: 0;
-    position: absolute;
-    transition: transform 900ms ease-in-out;
-    overflow:hidden;
-/*    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url(background_dark.png);*/
-    animation: match_anim_hide .6s ease-in-out;
-  }
-    @keyframes match_anim_hide {
-      100% {
-        transform: scale(0) rotate(0deg);
-        opacity: 0;
-      }
-      0% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-      }
+    .hidden_small{
+      visibility: collapse;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 600ms linear;
     }
-    .display_big
-    {
-      display: block;
-      left:0;
-      bottom:0;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      transition: transform 900ms ease-in-out;
-      animation: match_anim .6s ease-in-out;
+    .display_big{
+      visibility: visible;
+      opacity: 1;
+      transform: scale(1);
+      transition: all 600ms linear;
+    }
 
-/*      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-image: url(background_dark.png);*/
+    #card_button_back{
+      position: absolute;
+      margin: 9px;
+      z-index: 1;
+      cursor: pointer;
     }
-    @keyframes match_anim {
-      0% {
-        transform: scale(0) rotate(0deg);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-      }
+    #button_back{
+      margin: 9px;
+      cursor: pointer;
+    }
+    #ce_window_container{
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    #top_panel{
+      background: rgba(39, 32, 67, 0.5);
+      display: flex;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+    #top_panel_login_container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+    }
+    #top_panel_login{
+      font-family: Montserrat;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 25px;
+      letter-spacing: 0.02em;
+      text-align: left;
+      color: rgba(245, 233, 255, 1);
+    }
+    #top_panel_location{
+      font-family: Montserrat;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 14px;
+      letter-spacing: 0.01em;
+      text-align: left;
+      color: rgba(245, 233, 255, 1);
     }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -426,6 +439,14 @@ body {
 </head>
 <body>
 <div id="profile_container">
+  <div id="top_panel">
+    <img id="button_back" src="button_back.png" onclick="window.Telegram.WebApp.close();"/>
+    <div id="top_panel_login_container">
+      <span id="top_panel_login"></span>
+      <span id="top_panel_location"></span>
+    </div>
+
+  </div>
   <div id="avatar">
     <div id="location_container">
       <img id="location_icon" src="location.png"/>
@@ -481,6 +502,7 @@ body {
 
 <div id="ce_window_container" class="hidden_small">
   <div id="card" class="card">
+    <img id="card_button_back" src="button_back.png" onclick="close_ce_window();"/>
     <div id="card_content_container" class='content_container_descr_closed'>
 
     </div>
@@ -580,6 +602,23 @@ function isValidUrl(urlString)	{
     return Math.round(hours/one_degree);
   }
 
+  function close_ce_window(){
+    document.getElementById('profile_container').classList.remove('hide');
+    document.getElementById('ce_window_container').classList.add('hidden_small');
+    document.getElementById('ce_window_container').classList.remove('display_big');
+
+    //clean styles
+    document.getElementById('card_title').className = '';
+    document.getElementById('card').className = 'card';
+
+    document.getElementById('card_description').className = 'descr_text descr_text_close';
+    document.getElementById('card_content_container').className = 'content_container_descr_closed';
+    document.getElementById('card_bottom').className =  'card_bottom_descr_closed';
+    document.getElementById('card_descr_container').className =  'descr_container_descr_closed';
+    document.getElementById('card_descr_after_text').className =  'descr_after_text_descr_closed';
+    document.getElementById('card_button_descr').className =  'description_more_arrow_closed';
+
+  }
   function show_ce_window(ce_id){
     document.getElementById('ce_window_container').classList.remove('hidden_small');
     document.getElementById('ce_window_container').classList.add('display_big');
@@ -622,14 +661,33 @@ function isValidUrl(urlString)	{
 
       }
       if(videos_ext.includes(ext)){
-        document.getElementById('match_ce_user_1').style.backgroundImage = 'url("video-big-icon.png")';
-        document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
-        document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
+        document.getElementById('card_title').classList.add('descr_title_video');
+        //document.getElementById('card_content_container').innerHTML = '<video-js src="'+ user_profile.ce[ce_id].content +'" class="content_descr_closed" playsinline loop muted data-setup=\'{"controls": true, "preload": "auto", "controlBar": {"fullscreenToggle": false, "pictureInPictureToggle": false}, "fluid": true}\'></video-js>';
+        //document.getElementById('card_content_container').innerHTML = "<video-js src='"+ user_profile.ce[ce_id].content +"' class='content_descr_closed' playsinline loop muted data-setup='{\"controls\": true, \"preload\": \"auto\", \"controlBar\": {\"fullscreenToggle\": false, \"pictureInPictureToggle\": false}, \"fluid\": true}'></video-js>";
+        document.getElementById('card_content_container').innerHTML = '<video-js id="card_content" src="'+ user_profile.ce[ce_id].content +'" class="content_descr_closed" playsinline loop muted></video-js>';
+
+        //setTimeout(() => {//let exit from function for child to append
+          videojs(document.getElementById('card_content'), {
+            controls: true,
+            preload: 'auto',
+            controlBar: {fullscreenToggle: false, pictureInPictureToggle: false},
+            fluid: true
+          });
+        //}, 0);
       }
       if(audios_ext.includes(ext)){
-        document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.png")';
-        document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
-        document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
+        document.getElementById('card_title').classList.add('descr_title_music');
+        document.getElementById('card_content_container').classList.add('music');
+        document.getElementById('card_content_container').innerHTML = '<video-js id="card_content" src="'+ user_profile.ce[ce_id].content +'" class="content_descr_closed content_music" playsinline loop></video-js>';
+
+        //setTimeout(() => {//let exit from function for child to append
+        videojs(document.getElementById('card_content'), {
+          controls: true,
+          preload: 'auto',
+          controlBar: {fullscreenToggle: false, pictureInPictureToggle: false},
+          fluid: true
+        });
+        //}, 0);
       }
     }
   }
@@ -785,6 +843,7 @@ fetch(URL_str).then((response) =>
 
               if(data.hasOwnProperty('city_village')){
                 document.getElementById('location_city').innerHTML = data.city_village;
+                document.getElementById('top_panel_location').innerHTML = data.city_village;
               } else {
                 document.getElementById('location_container').style.display = 'none';
               }
@@ -795,6 +854,7 @@ fetch(URL_str).then((response) =>
               }
               if(data.hasOwnProperty('telegram_alias')){
                 document.getElementById('telegram_alias').innerHTML = data.telegram_alias;
+                document.getElementById('top_panel_login').innerHTML = data.telegram_alias;
               } else {
                 document.getElementById('telegram_alias').style.display = 'none';
               }
@@ -1030,6 +1090,6 @@ fetch(URL_str).then((response) =>
        
 </script>
 
-
+<script src="https://vjs.zencdn.net/8.6.0/video.min.js"></script>
 </body>
 </html>
