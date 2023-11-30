@@ -157,7 +157,7 @@ $currentUrl = Yii::$app->request->pathInfo;
                 ],
             ];
 
-            $menu['items'][] =   [
+/*            $menu['items'][] =   [
                 'label' => 'Creative Types',
                 'icon' => 'sitemap fa-fw',
                 'url' => '#',
@@ -166,7 +166,7 @@ $currentUrl = Yii::$app->request->pathInfo;
                         'active' => strpos($currentUrl, 'creative-types') !== false,],
                     ['label' => 'Add New', 'icon' => 'pencil fa-fw', 'url' => ['/creative-types/create'],],
                 ],
-            ];
+            ];*/
             
           $menu['items'][] = [
             'label' => 'Settings',
