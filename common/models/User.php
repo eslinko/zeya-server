@@ -541,6 +541,6 @@ class User extends ActiveRecord implements IdentityInterface
                 $match_count++;
         }
         $one_perc = $user_1_count/100;
-        return $match_count/$one_perc;
+        return round($match_count/$one_perc);
     }
 }
