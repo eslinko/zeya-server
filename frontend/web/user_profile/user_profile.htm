@@ -395,7 +395,9 @@ p {
 
     #card_button_back{
       position: absolute;
-      margin: 9px;
+      margin-left: 9px;
+      margin-top: 9px;
+      margin-right: 9px;
       z-index: 1;
       cursor: pointer;
     }
@@ -619,6 +621,7 @@ function isValidUrl(urlString)	{
     //clean styles
     document.getElementById('card_title').className = '';
     document.getElementById('card').className = 'card';
+    document.getElementById('card_button_back').style.position = 'initial';
 
     document.getElementById('card_description').className = 'descr_text descr_text_close';
     document.getElementById('card_content_container').className = 'content_container_descr_closed';
@@ -658,7 +661,7 @@ function isValidUrl(urlString)	{
     {
       document.getElementById('card_title').classList.add('descr_title_text');
       document.getElementById('card_content_container').innerHTML = '<div id="card_content" class="img_fix text_container content_descr_closed">'+user_profile.ce[ce_id].content+'</div>';
-
+      document.getElementById('card_button_back').style.position = 'relative';
     }
     else
     {
