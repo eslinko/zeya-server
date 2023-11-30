@@ -116,6 +116,8 @@ body {
     }
     #social{
       text-align: center;
+      display: flex;
+      justify-content: space-around;
     }
     #match_of_interests{
       border: 1px solid rgba(0, 255, 41, 1);
@@ -889,7 +891,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('youtube')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.youtube;
                 social_image.src = window.location.origin + '/backend/web/assets/images/youtube.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -897,7 +899,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('tik_tok')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.tik_tok;
                 social_image.src = window.location.origin + '/backend/web/assets/images/tik_tok.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -905,7 +907,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('discord')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.discord;
                 social_image.src = window.location.origin + '/backend/web/assets/images/discord.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -913,7 +915,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('linkedin')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.linkedin;
                 social_image.src = window.location.origin + '/backend/web/assets/images/linkedin.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -921,7 +923,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('instagram')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.instagram;
                 social_image.src = window.location.origin + '/backend/web/assets/images/instagram.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -929,7 +931,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('twitter')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.twitter;
                 social_image.src = window.location.origin + '/backend/web/assets/images/twitter.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -937,7 +939,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('pinterest')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.pinterest;
                 social_image.src = window.location.origin + '/backend/web/assets/images/pinterest.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -945,7 +947,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('twitch')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.twitch;
                 social_image.src = window.location.origin + '/backend/web/assets/images/twitch.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
@@ -953,7 +955,7 @@ fetch(URL_str).then((response) =>
               if(data.hasOwnProperty('snapchat')){
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
-                social_link.href = data.facebook;
+                social_link.href = data.snapchat;
                 social_image.src = window.location.origin + '/backend/web/assets/images/snapchat.png';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
