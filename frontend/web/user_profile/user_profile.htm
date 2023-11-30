@@ -545,7 +545,7 @@ p {
   </div>
 </div>
 <script>
-  var user_id, user_profile;
+  var user_id, user_profile, curent_ce_id, card_description_opened = false;
   var images_ext = ["jpg", "jpeg", "gif", "png"];
   var videos_ext = ["mp4", "mov", "webm", "3gp", "ogg"];
   var audios_ext = ['mp3','aac','wav','wma','flac'];
@@ -621,7 +621,7 @@ function isValidUrl(urlString)	{
     //clean styles
     document.getElementById('card_title').className = '';
     document.getElementById('card').className = 'card';
-    document.getElementById('card_button_back').style.position = 'initial';
+    document.getElementById('card_button_back').style.removeProperty('position');
 
     document.getElementById('card_description').className = 'descr_text descr_text_close';
     document.getElementById('card_content_container').className = 'content_container_descr_closed';
@@ -632,6 +632,7 @@ function isValidUrl(urlString)	{
 
   }
   function show_ce_window(ce_id){
+  curent_ce_id = ce_id;
     document.getElementById('ce_window_container').classList.remove('hidden_small');
     document.getElementById('ce_window_container').classList.add('display_big');
     document.getElementById('profile_container').classList.add('hide');
@@ -661,7 +662,7 @@ function isValidUrl(urlString)	{
     {
       document.getElementById('card_title').classList.add('descr_title_text');
       document.getElementById('card_content_container').innerHTML = '<div id="card_content" class="img_fix text_container content_descr_closed">'+user_profile.ce[ce_id].content+'</div>';
-      document.getElementById('card_button_back').style.position = 'relative';
+
     }
     else
     {
@@ -707,14 +708,18 @@ function isValidUrl(urlString)	{
   function toggle_descr()
   {
 
-/*    if(card_description_opened == false)
+    if(card_description_opened == false)
     {
       card_description_opened = true;
     }
     else
     {
       card_description_opened = false;
-    }*/
+    }
+    if(isValidUrl(user_profile.ce[curent_ce_id].content) == false && card_description_opened == true)//text
+      document.getElementById('card_button_back').style.position = 'relative';
+    else
+      document.getElementById('card_button_back').style.removeProperty('position');
     //descr
     let element = document.getElementById('card_description');
     if(element == null) return;
