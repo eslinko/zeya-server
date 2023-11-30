@@ -857,7 +857,7 @@ fetch(URL_str).then((response) =>
               } else {
                 document.getElementById('location_container').style.display = 'none';
               }
-              if(data.hasOwnProperty('job')){
+              if(data.hasOwnProperty('creative_job')){
                 document.getElementById('job').innerHTML = data.creative_job;
               } else {
                 document.getElementById('job').style.display = 'none';
@@ -868,7 +868,7 @@ fetch(URL_str).then((response) =>
               } else {
                 document.getElementById('telegram_alias').style.display = 'none';
               }
-              if(data.hasOwnProperty('about_me')){
+              if(data.hasOwnProperty('about_you')){
                 document.getElementById('about_me').innerHTML = data.about_you;
               } else {
                 document.getElementById('about_me').style.display = 'none';
