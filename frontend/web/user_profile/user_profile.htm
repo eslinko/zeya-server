@@ -618,6 +618,10 @@ function isValidUrl(urlString)	{
     document.getElementById('ce_window_container').classList.add('hidden_small');
     document.getElementById('ce_window_container').classList.remove('display_big');
 
+
+    if(null != document.getElementById('card_content_container').querySelector('video-js')){
+      videojs(document.getElementById('card_content_container').querySelector('video-js')).dispose();
+    }
     //clean styles
     document.getElementById('card_title').className = '';
     document.getElementById('card').className = 'card';

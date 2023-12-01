@@ -1028,7 +1028,7 @@ class TelegramApiController extends AppController
         if (empty($data)) return ['status' => 'error'];
         $user = TelegramApi::validateAction($data);
         if (!$user) return ['status' => 'error', 'text' => 'Error! Try again later.'];
-        Notifications::setAsRead($data['notification_id']);
+        if(isset($data['notification_id'])) Notifications::setAsRead($data['notification_id']);
         $user_1 = User::find()->where(['id' => $data['user_id_1']])->one();
         $user_2 = User::find()->where(['id' => $data['user_id_2']])->one();
         Notifications::createNotification(Notifications::CONNECTION_ACCEPTED, $user_2, $user_1);
