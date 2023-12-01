@@ -154,7 +154,7 @@ class TelegramApiController extends AppController
     public function actionGetUserLastMessage()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = Yii::$app->request->post();
+        $data = Yii::$app->request->get();
 
         if (empty($data)) return ['status' => 'error'];
 
@@ -167,7 +167,7 @@ class TelegramApiController extends AppController
     public function actionSetUserLastMessage()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = Yii::$app->request->get();
+        $data = Yii::$app->request->post();
 
         if (empty($data)) return ['status' => 'error'];
 
