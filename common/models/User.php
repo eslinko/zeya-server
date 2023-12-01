@@ -8,6 +8,7 @@ use app\models\MatchAction;
 use app\models\Matches;
 use app\models\Notifications;
 use app\models\PartnerRuleAction;
+use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
 use app\models\User2Partner;
 use app\models\UserInterestsAnswers;
@@ -518,6 +519,13 @@ class User extends ActiveRecord implements IdentityInterface
             if($dat->delete() === false)
                 return 'shared interests';
         }
+
+        //last message
+        $data = TelegramChatsLastMessage::find()->where(['chat_id' => $user_id])->one();
+        if($data !== NULL)
+            if($data->delete() === false)
+                return 'last message';
+
 
         $data = User::find()->where(['id' => $user_id])->one()->delete();
         if($data === false)
