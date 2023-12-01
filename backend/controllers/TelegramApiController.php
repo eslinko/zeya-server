@@ -54,7 +54,7 @@ class TelegramApiController extends AppController
         ];
     }*/
     public function beforeAction($action) { //enable incoming POST requests
-        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression'];
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message'];
         if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
