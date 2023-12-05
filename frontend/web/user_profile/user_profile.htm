@@ -89,6 +89,8 @@ p {
       letter-spacing: 0.03em;
       text-align: center;
       color: rgba(179, 108, 255, 1);
+      max-height: 28px;
+      overflow: hidden;
     }
     #telegram_alias{
       font-family: Montserrat;
@@ -116,6 +118,8 @@ p {
       letter-spacing: 0.1px;
       text-align: center;
       color: rgba(245, 233, 255, 1);
+      max-height: 64px;
+      overflow: hidden;
     }
     #social{
       text-align: center;
@@ -379,6 +383,10 @@ p {
     line-height: 14px;
     letter-spacing: 0.01em;
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 70vw;
   }
     .hidden_small{
       visibility: collapse;
@@ -443,6 +451,10 @@ p {
       letter-spacing: 0.01em;
       text-align: left;
       color: rgba(245, 233, 255, 1);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 70vw;
     }
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
