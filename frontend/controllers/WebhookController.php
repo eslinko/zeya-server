@@ -39,4 +39,20 @@ class WebhookController extends Controller
 
         return 'OK';
     }
+    /**
+     *
+     * Route for /webhook/cron-at-8am-every-day
+     *
+     * @return string
+     */
+    public function actionCronAt8amEveryDay() {
+        try {
+            Daemon::unusedInvitationCodesReminder();
+            //Daemon::sendEcosystemGrowthNotification();
+        } catch (\Throwable $t) {
+            return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
+        }
+
+        return 'OK';
+    }
 }
