@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use app\models\InvitationCodes;
 use backend\models\ChatGPT;
 use backend\models\UserConnections;
 use backend\models\UsersWithSharedInterests;
