@@ -117,4 +117,27 @@ class Daemon {
             }
         }
     }
+
+    public static function unusedInvitationCodesReminder(){
+        $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();
+        foreach ($users as $user) {
+            if(empty($user->verificationCode)) continue;//skip non telegram admin accounts
+            $codes = InvitationCodes::find()->where(['user_id' => $user->id])->orderBy(['signup_date' => SORT_DESC])->all();
+            $unused_codes = InvitationCodes::find()->where(['user_id' => $user->id])->andWhere(['not',['registered_user_id' => NULL]])->all();
+
+            if(!empty($codes) AND count($unused_codes) > 0){
+                $last_date = $codes[0]->signup_date;
+                $days_after_last_signup = round((time() - $last_date) / (60*60*24));
+                if($days_after_last_signup >= 7){
+                    if($days_after_last_signup%7 == 0){
+                        //every 7th day
+                        $message = Translations::s("💌 Hey, spread the love! You have %d invite codes chillin", $user->language ?? 'en');
+                        $message = sprinf($message, count($unused_codes));
+                        TelegramApi::sendNotificationToUserTelegram($message, $user);
+
+                    }
+                }
+            }
+        }
+    }
 }
