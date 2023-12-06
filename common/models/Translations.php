@@ -104,6 +104,10 @@ Viimase 24h jooksul:
             'en' => "Connection request has been sent.",
             'ru' => "Запрос добавления в связи отправлен."
         ],
+        "Btn_My invitation codes" => [
+            'en' => "My Invitation Codes",
+            'ru' => "Мои коды приглашений"
+        ],
     ];
 
     public static function s($text, $lang = 'en'){
