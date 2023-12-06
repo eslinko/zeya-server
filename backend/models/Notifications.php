@@ -149,7 +149,7 @@ class Notifications extends ActiveRecord
                 break;
             case self::INVITE_CODE_UNUSED_REMINDER:
                 $buttons = [
-                    ['text' => "Btn_My invitation codes", 'callback_data' => 'my_lovestars'/*'my_invitation_codes'*/],
+                    ['text' => "Btn_My invitation codes", 'callback_data' => 'my_invitation_codes'],
                 ];
                 break;
             case self::CE_EXPIRATION_WARNING:
@@ -264,7 +264,7 @@ class Notifications extends ActiveRecord
                     $text = Translations::s($text, $user_to->language);
                     $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $additional_data);
-                    Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
+                    Notifications::pushMessage($user_to, $text, $buttons);
                 }
                 break;
             case self::CE_EXPIRATION_WARNING:
@@ -285,13 +285,16 @@ class Notifications extends ActiveRecord
         }
         return $buttons;
     }
-    static function pushMessage($user, $text, $buttons, $not_id) {
+    static function pushMessage($user, $text, $buttons, $not_id=NULL) {
         $data = ['chat_id' => $user->telegram, 'text' => $text];
         if(count($buttons) != 0)
         {
-            foreach ($buttons as $k=>$butt){
-                $buttons[$k]['callback_data'] .= '__'.$not_id;
+            if($not_id !== NULL){
+                foreach ($buttons as $k=>$butt){
+                    $buttons[$k]['callback_data'] .= '__'.$not_id;
+                }
             }
+
             $reply_markup = [];
             $reply_markup['inline_keyboard'] = [];
             $reply_markup['inline_keyboard'][0] = [];//first line of butons
