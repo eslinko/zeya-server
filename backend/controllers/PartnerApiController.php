@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use app\models\InvitationCodes;
+use backend\models\InvitationCodes;
 use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;

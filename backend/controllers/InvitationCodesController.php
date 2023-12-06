@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\InvitationCodes;
-use app\models\InvitationCodesLogs;
+use backend\models\InvitationCodes;
+use backend\models\InvitationCodesLogs;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -2,7 +2,7 @@
 namespace common\models;
 
 use app\models\CreativeExpressions;
-use app\models\InvitationCodes;
+use backend\models\InvitationCodes;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;

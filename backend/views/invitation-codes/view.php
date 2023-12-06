@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\InvitationCodes */
+/* @var $model backend\models\InvitationCodes */
 
 $this->title = 'Code: ' . $model->code;
 $this->params['breadcrumbs'][] = $this->title;
