@@ -5,10 +5,10 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 //use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
-use app\models\InvitationCodes;
+use backend\models\InvitationCodes;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\InvitationCodes */
+/* @var $model backend\models\InvitationCodes */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

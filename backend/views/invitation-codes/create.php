@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\InvitationCodes */
+/* @var $model backend\models\InvitationCodes */
 
 $this->title = 'New Teacher Outcome';
 $this->params['breadcrumbs'][] = $this->title;

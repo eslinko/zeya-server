@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use app\models\CreativeExpressions;
 use app\models\CreativeTypes;
-use app\models\InvitationCodesLogs;
+use backend\models\InvitationCodesLogs;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
@@ -16,7 +16,7 @@ use app\models\Settings;
 use app\models\UserInterestsAnswers;
 use backend\models\ChatGPT;
 use app\models\Events;
-use app\models\InvitationCodes;
+use backend\models\InvitationCodes;
 use app\models\Languages;
 use app\models\SendGridMailer;
 use app\models\Teacher;
@@ -681,7 +681,7 @@ class TelegramApiController extends AppController
             if(!empty($code_owner)) {
                 //PartnerRuleAction::createAction(2,$code_owner);
                 PartnerRuleAction::actionRegistrationGivesCodeOwnerLovestar($code_owner);
-                //file_put_contents('log.txt',"1\n",FILE_APPEND);
+
                 if(Settings::GiveLovestarViaConnections()==true){
                     $res = PartnerRuleAction::actionRegistrationGivesLovestarToCodeOwnerConnections($code_owner);
                     $result['code_owner_connections'] = $res;

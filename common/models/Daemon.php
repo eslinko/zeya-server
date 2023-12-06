@@ -2,8 +2,9 @@
 
 namespace common\models;
 
-use app\models\InvitationCodes;
+
 use backend\models\ChatGPT;
+use backend\models\InvitationCodes;
 use backend\models\UserConnections;
 use backend\models\UsersWithSharedInterests;
 use yii\db\Expression;
@@ -123,8 +124,8 @@ class Daemon {
         $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();
         foreach ($users as $user) {
             if(empty($user->verificationCode)) continue;//skip non telegram admin accounts
-            $codes = \app\models\InvitationCodes::find()->where(['user_id' => $user->id])->orderBy(['signup_date' => SORT_DESC])->all();
-            $unused_codes = \app\models\InvitationCodes::find()->where(['user_id' => $user->id])->andWhere(['not',['registered_user_id' => NULL]])->all();
+            $codes = InvitationCodes::find()->where(['user_id' => $user->id])->orderBy(['signup_date' => SORT_DESC])->all();
+            $unused_codes = InvitationCodes::find()->where(['user_id' => $user->id])->andWhere(['not',['registered_user_id' => NULL]])->all();
 
             if(!empty($codes) AND count($unused_codes) > 0){
                 $last_date = $codes[0]->signup_date;
@@ -133,7 +134,7 @@ class Daemon {
                     if($days_after_last_signup%7 == 0){
                         //every 7th day
                         $message = Translations::s("💌 Hey, spread the love! You have %d invite codes chillin", $user->language ?? 'en');
-                        $message = sprinf($message, count($unused_codes));
+                        $message = sprintf($message, count($unused_codes));
                         TelegramApi::sendNotificationToUserTelegram($message, $user);
 
                     }
