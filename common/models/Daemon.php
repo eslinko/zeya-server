@@ -3,7 +3,7 @@
 namespace common\models;
 
 
-use app\models\Notifications;
+use backend\models\Notifications;
 use backend\models\ChatGPT;
 use backend\models\InvitationCodes;
 use backend\models\UserConnections;
