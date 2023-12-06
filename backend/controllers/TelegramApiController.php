@@ -8,7 +8,7 @@ use backend\models\InvitationCodesLogs;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
-use app\models\Notifications;
+use backend\models\Notifications;
 use app\models\Partner;
 use app\models\PartnerRule;
 use app\models\PartnerRuleAction;

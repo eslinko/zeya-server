@@ -6,7 +6,7 @@ use backend\models\InvitationCodes;
 use app\models\Lovestar;
 use app\models\MatchAction;
 use app\models\Matches;
-use app\models\Notifications;
+use backend\models\Notifications;
 use app\models\PartnerRuleAction;
 use app\models\TelegramChatsLastMessage;
 use app\models\User2Teacher;
