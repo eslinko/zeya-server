@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use app\models\Notifications;
 use backend\models\ChatGPT;
 use backend\models\InvitationCodes;
 use backend\models\UserConnections;
@@ -133,9 +134,10 @@ class Daemon {
                 if($days_after_last_signup >= 7){
                     if($days_after_last_signup%7 == 0){
                         //every 7th day
-                        $message = Translations::s("💌 Hey, spread the love! You have %d invite codes chillin", $user->language ?? 'en');
-                        $message = sprintf($message, count($unused_codes));
-                        TelegramApi::sendNotificationToUserTelegram($message, $user);
+                        //$message = Translations::s("💌 Hey, spread the love! You have %d invite codes chillin", $user->language ?? 'en');
+                        //$message = sprintf($message, count($unused_codes));
+                        Notifications::createNotification(Notifications::INVITE_CODE_UNUSED_REMINDER, NULL, $user, count($unused_codes));
+                        //TelegramApi::sendNotificationToUserTelegram($message, $user);
 
                     }
                 }

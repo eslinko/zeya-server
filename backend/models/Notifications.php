@@ -148,7 +148,9 @@ class Notifications extends ActiveRecord
                 $buttons = [];
                 break;
             case self::INVITE_CODE_UNUSED_REMINDER:
-                $buttons = [];
+                $buttons = [
+                    ['text' => "Btn_My invitation codes", 'callback_data' => 'my_invitation_codes'],
+                ];
                 break;
             case self::CE_EXPIRATION_WARNING:
                 $buttons = [
