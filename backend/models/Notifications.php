@@ -154,7 +154,7 @@ class Notifications extends ActiveRecord
                 break;
             case self::CE_EXPIRATION_WARNING:
                 $buttons = [
-                    ['text' => 'Update_ce', 'callback_data' => 'update_creative_expression__'.$additional_data.'__'.$user_to->id],
+                    ['text' => 'My creative expressions', 'callback_data' => 'view_creative_expressions'],
                 ];
                 break;
             default: return false;
@@ -273,7 +273,7 @@ class Notifications extends ActiveRecord
                     $text = Translations::s($text, $user_to->language);
                     $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $additional_data);
-                    Notifications::pushMessage($user_to, $text, $buttons, $nt->id);
+                    Notifications::pushMessage($user_to, $text, $buttons);
                 }
                 break;
         }

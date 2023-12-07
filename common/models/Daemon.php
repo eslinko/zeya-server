@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use app\models\CreativeExpressions;
 use backend\models\Notifications;
 use backend\models\ChatGPT;
 use backend\models\InvitationCodes;
@@ -134,14 +135,28 @@ class Daemon {
                 if($days_after_last_signup >= 7){
                     if($days_after_last_signup%7 == 0){
                         //every 7th day
-                        //$message = Translations::s("💌 Hey, spread the love! You have %d invite codes chillin", $user->language ?? 'en');
-                        //$message = sprintf($message, count($unused_codes));
                         Notifications::createNotification(Notifications::INVITE_CODE_UNUSED_REMINDER, NULL, $user, count($unused_codes));
-                        //TelegramApi::sendNotificationToUserTelegram($message, $user);
-
                     }
                 }
             }
         }
     }
+
+    public static function CE_expiration_reminder(){
+        $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();//skip non telegram admin accounts
+        foreach ($users as $user) {
+            if(empty($user->verificationCode)) continue;//skip non telegram admin accounts
+            $ce_list = CreativeExpressions::getCreativeExpressionsByUser($user);
+            foreach ($ce_list as $ce){
+                if(empty($ce['content']))continue;
+                if($ce['active_period'] < time())continue;
+                $hours_left = ($ce['active_period'] - time()) / (60*60);
+                if($hours_left < (60*60*4))//4 hours
+                {
+                    Notifications::createNotification(Notifications::CE_EXPIRATION_WARNING, NULL, $user, round($hours_left));
+                    break;//send notification only once
+                }
+            }
+        }
+        }
 }
