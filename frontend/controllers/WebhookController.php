@@ -41,7 +41,7 @@ class WebhookController extends Controller
     }
     /**
      *
-     * Route for /webhook/cron-at-8am-every-day
+     * Route for /webhook/cron-every-15-minutes
      *
      * @return string
      */
@@ -56,6 +56,12 @@ class WebhookController extends Controller
 
         return 'OK';
     }
+    /**
+     *
+     * Route for /webhook/cron-at-8am-every-day
+     *
+     * @return string
+     */
     public function actionCronAt8amEveryDay() {
         try {
             Daemon::unusedInvitationCodesReminder();

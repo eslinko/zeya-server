@@ -146,6 +146,11 @@ class Daemon {
         $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();//skip non telegram admin accounts
         foreach ($users as $user) {
             if(empty($user->verificationCode)) continue;//skip non telegram admin accounts
+            if($user->ce_expiration_reminder_last_timestamp !== NULL) {
+                if((time() - $user->ce_expiration_reminder_last_timestamp) < (60*60*24)) {
+                    continue;//skip if we already sent notification in last 24 hours
+                }
+            }
             $ce_list = CreativeExpressions::getCreativeExpressionsByUser($user->id);
             foreach ($ce_list as $ce){
                 if(empty($ce['content']))continue;
@@ -154,6 +159,7 @@ class Daemon {
                 if($hours_left < 4)//4 hours
                 {
                     Notifications::createNotification(Notifications::CE_EXPIRATION_WARNING, NULL, $user, round($hours_left));
+                    User::update_ce_expiration_remainder_last_timestamp($user->id);
                     break;//send notification only once
                 }
             }

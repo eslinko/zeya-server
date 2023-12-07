@@ -551,4 +551,11 @@ class User extends ActiveRecord implements IdentityInterface
         $one_perc = $user_1_count/100;
         return round($match_count/$one_perc);
     }
+    public static function update_ce_expiration_remainder_last_timestamp($user_id){
+        $user = User::find()->where(['id' => $user_id])->one();
+        if($user === NULL) return false;
+        $user->ce_expiration_remainder_last_timestamp = time();
+        $user->save(false);
+        return true;
+    }
 }
