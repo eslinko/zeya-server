@@ -1,7 +1,7 @@
 <?php
 namespace common\models;
 
-use app\models\CreativeExpressions;
+use backend\models\CreativeExpressions;
 use backend\models\InvitationCodes;
 use app\models\Lovestar;
 use app\models\MatchAction;

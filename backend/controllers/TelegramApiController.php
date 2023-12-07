@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use app\models\CreativeExpressions;
+use backend\models\CreativeExpressions;
 use app\models\CreativeTypes;
 use backend\models\InvitationCodesLogs;
 use app\models\Lovestar;
