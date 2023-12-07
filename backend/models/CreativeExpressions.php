@@ -196,4 +196,12 @@ class CreativeExpressions extends ActiveRecord
 
         return true;
     }
+    public static function updateExpressionExpiration($expression_id, $hours) {
+        //set expression expiration to now + $hours
+        $ce = CreativeExpressions::find()->where(['id' => $expression_id])->one();
+        if($ce === NULL) return false;
+        $ce->active_period = time() + 3600*$hours;
+        $ce->save(false);
+        return true;
+    }
 }
