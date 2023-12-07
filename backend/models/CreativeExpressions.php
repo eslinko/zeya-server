@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use common\models\CurlHelper;
 use yii\db\ActiveRecord;

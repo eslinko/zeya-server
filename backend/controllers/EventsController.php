@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use app\components\PHPlibrary\simple_html_dom;
-use app\models\CreativeExpressions;
+use backend\models\CreativeExpressions;
 use backend\models\ChatGPT;
 use app\models\GoogleCloud;
 use Yii;
