@@ -151,7 +151,7 @@ class Daemon {
                 if(empty($ce['content']))continue;
                 if($ce['active_period'] < time())continue;
                 $hours_left = ($ce['active_period'] - time()) / (60*60);
-                if($hours_left < (60*60*4))//4 hours
+                if($hours_left < 4)//4 hours
                 {
                     Notifications::createNotification(Notifications::CE_EXPIRATION_WARNING, NULL, $user, round($hours_left));
                     break;//send notification only once
