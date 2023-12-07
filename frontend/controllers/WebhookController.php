@@ -45,11 +45,22 @@ class WebhookController extends Controller
      *
      * @return string
      */
+    public function actionCronEvery15minutes() {
+        try {
+            //Daemon::unusedInvitationCodesReminder();
+            Daemon::CE_expiration_reminder();
+
+        } catch (\Throwable $t) {
+            return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
+        }
+
+        return 'OK';
+    }
     public function actionCronAt8amEveryDay() {
         try {
             Daemon::unusedInvitationCodesReminder();
-            Daemon::CE_expiration_reminder();
-            //Daemon::sendEcosystemGrowthNotification();
+            //Daemon::CE_expiration_reminder();
+
         } catch (\Throwable $t) {
             return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
         }
