@@ -1788,4 +1788,17 @@ class TelegramApiController extends AppController
         TelegramApi::sendNotificationToUserTelegram(Translations::s('Connection request has been sent.', $res['user']['language']),$res['user']);
         return true;
     }
+    public function actionExpressionUpdateExpiration()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if ($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+
+        if(CreativeExpressions::updateExpressionExpiration($data['ce_id'],$data['expiration']))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error', 'text' => 'Unknown user'];
+    }
 }
