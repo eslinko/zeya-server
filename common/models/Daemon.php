@@ -146,7 +146,7 @@ class Daemon {
         $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();//skip non telegram admin accounts
         foreach ($users as $user) {
             if(empty($user->verificationCode)) continue;//skip non telegram admin accounts
-            $ce_list = CreativeExpressions::getCreativeExpressionsByUser($user);
+            $ce_list = CreativeExpressions::getCreativeExpressionsByUser($user->id);
             foreach ($ce_list as $ce){
                 if(empty($ce['content']))continue;
                 if($ce['active_period'] < time())continue;
