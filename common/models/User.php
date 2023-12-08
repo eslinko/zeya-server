@@ -558,4 +558,27 @@ class User extends ActiveRecord implements IdentityInterface
         $user->save(false);
         return true;
     }
+    public static function setNotification($user_id, $setting, $value){
+        $user = User::find()->where(['id' => $user_id])->one();
+        if($user === NULL) return false;
+        switch ($setting){
+            case 'connections':
+                $user->notify_connections = intval($value);
+                $user->save(false);
+                return true;
+            case 'matches':
+                $user->notify_matches = intval($value);
+                $user->save(false);
+                return true;
+            case 'invite_codes':
+                $user->notify_invite_codes = intval($value);
+                $user->save(false);
+                return true;
+            case 'ce_activity':
+                $user->notify_ce_activity = intval($value);
+                $user->save(false);
+                return true;
+            default: return false;
+        }
+    }
 }
