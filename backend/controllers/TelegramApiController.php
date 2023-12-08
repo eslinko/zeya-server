@@ -1801,4 +1801,17 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error', 'text' => 'Unknown user'];
     }
+    public function actionSetNotificationSettings()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if ($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+
+        if(User::setNotification($data['setting'],$data['value']))
+            return ['status' => 'success'];
+        else
+            return ['status' => 'error'];
+    }
 }

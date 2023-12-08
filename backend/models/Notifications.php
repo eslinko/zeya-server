@@ -308,4 +308,5 @@ class Notifications extends ActiveRecord
         CurlHelper::curl($url, $data, 'JSON');
     }
 
+
 }
