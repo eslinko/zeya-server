@@ -1814,4 +1814,20 @@ class TelegramApiController extends AppController
         else
             return ['status' => 'error'];
     }
+    public function actionGetUserNotificationSettings()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+        if ($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
+
+        $send_data = [];
+        $send_data['notify_connections'] = $user->notify_connections;
+        $send_data['notify_matches'] = $user->notify_matches;
+        $send_data['notify_invite_codes'] = $user->notify_invite_codes;
+        $send_data['notify_ce_activity'] = $user->notify_ce_activity;
+
+        return $send_data;
+    }
 }
