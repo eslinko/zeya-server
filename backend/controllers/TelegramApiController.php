@@ -1822,7 +1822,7 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if ($user === false) return ['status' => 'error', 'text' => 'Unknown user'];
 
-        $send_data = [];
+        $send_data = ['status' => 'success'];
         $send_data['notify_connections'] = $user->notify_connections;
         $send_data['notify_matches'] = $user->notify_matches;
         $send_data['notify_invite_codes'] = $user->notify_invite_codes;
