@@ -41,7 +41,7 @@ class Daemon {
             });
             $new_day_user_interests_count = count($new_day_user_interests);
 
-            /*if(empty($user->telegram)) continue;
+            if(empty($user->telegram)) continue;
             $message = Translations::s('ecosystemGrowthNotification', $user->language ?? 'en');
             $message = str_replace('{newDayUsersCount}', $new_day_users_count, $message);
             $message = str_replace('{countUsers}', $count_users, $message);
@@ -51,7 +51,7 @@ class Daemon {
 
             $message = str_replace('{newSecondaryUsersWithSharedInterests}', $new_day_user_interests_count, $message);
             $message = str_replace('{secondaryUsersWithSharedInterests}', $user_interests_count, $message);
-            TelegramApi::sendNotificationToUserTelegram($message, $user);*/
+            /*TelegramApi::sendNotificationToUserTelegram($message, $user);*/
         }
     }
 
