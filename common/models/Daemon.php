@@ -51,7 +51,7 @@ class Daemon {
 
             $message = str_replace('{newSecondaryUsersWithSharedInterests}', $new_day_user_interests_count, $message);
             $message = str_replace('{secondaryUsersWithSharedInterests}', $user_interests_count, $message);
-            /*TelegramApi::sendNotificationToUserTelegram($message, $user);*/
+            TelegramApi::sendNotificationToUserTelegram($message, $user);
         }
     }
 
