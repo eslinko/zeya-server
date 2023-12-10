@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use backend\models\CreativeExpressions;
 use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
