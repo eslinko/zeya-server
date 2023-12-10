@@ -17,12 +17,12 @@ class WebhookController extends Controller
      */
     public function actionSendEcosystemGrowthNotification() {
         try {
-            $resp = Daemon::sendEcosystemGrowthNotification();
+            Daemon::sendEcosystemGrowthNotification();
         } catch (\Throwable $t) {
             return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());
         }
 
-        return 'OK '.$resp;
+        return 'OK ';
     }
 
     /**

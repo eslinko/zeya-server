@@ -23,7 +23,7 @@ class Daemon {
         $new_day_users_count = count($new_day_users);
 
 //        $test_notification_user = User::find()->where(['in', 'telegram', ['476111864', '534621965']])->all();
-        $resp = '';
+
         foreach ($all_users as $user) {
 //        foreach ($test_notification_user as $user) {
             // Secondary users calculated
@@ -52,7 +52,7 @@ class Daemon {
 
             $message = str_replace('{newSecondaryUsersWithSharedInterests}', $new_day_user_interests_count, $message);
             $message = str_replace('{secondaryUsersWithSharedInterests}', $user_interests_count, $message);
-            $resp .= TelegramApi::sendNotificationToUserTelegram($message, $user);
+            TelegramApi::sendNotificationToUserTelegram($message, $user);
         }
         return $resp;
     }
