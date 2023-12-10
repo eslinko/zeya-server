@@ -54,7 +54,7 @@ class Daemon {
             $message = str_replace('{secondaryUsersWithSharedInterests}', $user_interests_count, $message);
             TelegramApi::sendNotificationToUserTelegram($message, $user);
         }
-        return $resp;
+
     }
 
     public static function matchUsersByInterest() {
