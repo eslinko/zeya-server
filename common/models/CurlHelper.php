@@ -41,6 +41,6 @@ class CurlHelper {
 //            exit;
         }
 
-        return 'ok';//$result;
+        return $result;
     }
 }
