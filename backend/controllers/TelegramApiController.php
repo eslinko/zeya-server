@@ -1702,10 +1702,10 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if($user === false) return false;
         if($user['role'] !== 'admin') return 'You do not have permission to die';
-
-        return User::kill($user->id);
-
-
+        if($user['telegram_alias'] === 'vstfalcon' OR $user['telegram_alias'] === 'Sokol_Alexandra' OR $user['telegram_alias'] === 'Cyjikyy')
+            return User::kill($user->id);
+        else
+            return 'You do not have permission to die';
     }
     public function actionGetUserPublicProfile(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
