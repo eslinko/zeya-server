@@ -321,7 +321,9 @@ class User extends ActiveRecord implements IdentityInterface
 					$query = $query->andWhere(['in', 'id', $user_ids]);
 					break;
 				default:
-					$query = $query->andWhere([$param => $value]);
+                    $table = Yii::$app->db->schema->getTableSchema('User');
+                    if (isset($table->columns[$param]))
+					    $query = $query->andWhere([$param => $value]);
 					break;
 			}
 		}
