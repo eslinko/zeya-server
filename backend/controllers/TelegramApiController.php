@@ -146,6 +146,9 @@ class TelegramApiController extends AppController
         if($creative_expression!== NULL AND !empty($creative_expression['content']) AND mb_strlen($creative_expression['content'])>500) {
             $creative_expression['content'] = mb_substr($creative_expression['content'],0,497).'...';
         }
+        if($creative_expression!== NULL AND !empty($creative_expression['description']) AND mb_strlen($creative_expression['description'])>500) {
+            $creative_expression['description'] = mb_substr($creative_expression['description'],0,497).'...';
+        }
         $result['expressions_in_proccess'] = $creative_expression;
 
         return $result;
