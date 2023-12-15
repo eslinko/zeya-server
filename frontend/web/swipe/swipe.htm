@@ -191,7 +191,7 @@ text-align: left;
 }
 .descr_title_image:before
 {
-content:url(brush.svg);
+content:url(image-symbol.svg);
 margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -201,7 +201,7 @@ margin-right: 2px;
 }
 .descr_title_video:before
 {
-	content:url(brush.svg);
+	content:url(video-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -211,7 +211,7 @@ margin-right: 2px;
 }
 .descr_title_music:before
 {
-	content:url(brush.svg);
+	content:url(music-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -221,7 +221,7 @@ margin-right: 2px;
 }
 .descr_title_text:before
 {
-	content:url(brush.svg);
+	content:url(text-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -393,16 +393,16 @@ color: #FFF;
 .button-primary-s-heart
 {
 /*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
-background: linear-gradient(93.79deg, #8D6AF1 -12.63%, #606EF1 47.13%, #3CC6E5 108.24%),linear-gradient(0deg, #FFFFFF, #FFFFFF),radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+/*background: linear-gradient(93.79deg, #8D6AF1 -12.63%, #606EF1 47.13%, #3CC6E5 108.24%),linear-gradient(0deg, #FFFFFF, #FFFFFF),radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
 
 border: 4px solid rgba(255, 255, 255, 1);
-border-radius: 24px;
+border-radius: 24px;*/
 width: 48px;
 height: 48px;
 position: relative;
 pointer-events: all;
 }
-.button-primary-s-heart:after
+/*.button-primary-s-heart:after
 {
 content:url(like_button8.png);
 position: absolute;
@@ -410,19 +410,20 @@ top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 height: 22px;
-}
+}*/
 .button-primary-s-nope
 {
 /*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
-background: rgba(98, 92, 123, 1);
+/*background: rgba(98, 92, 123, 1);
 border: 4px solid rgba(198, 194, 216, 1);
-border-radius: 24px;
+border-radius: 24px;*/
+
 width: 48px;
 height: 48px;
 position: relative;
 pointer-events: all;
 }
-.button-primary-s-nope:after
+/*.button-primary-s-nope:after
 {
 content: url(nope_button.png);
 position: absolute;
@@ -431,7 +432,7 @@ left: 50%;
 transform: translate(-50%, -50%);
 height: 20px;
 width: 20px;
-}
+}*/
 .hide
 {
 display:none;
@@ -892,9 +893,9 @@ video-js.video-js .vjs-load-progress div {
 		
 		<table id='buttons_bar_table'>
 	  		<tr>
-	    		<td style='text-align: left;'><button class='button-primary-s-nope' id="nope_button"></button></td>
+	    		<td style='text-align: left;'><img src="nope_button.svg" class='button-primary-s-nope' id="nope_button"/></td>
 				<td style='text-align: center; pointer-events: all;'><span class='button-skip' id="skip_button">SKIP</span></td>
-				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
+				<td style='text-align: right;'><img src="like_button8.svg" class='button-primary-s-heart' id="like_button"></td>
 			</tr>
 		</table>
   <button id="end_of_flight">END OF FLIGHT</button>
@@ -907,12 +908,12 @@ video-js.video-js .vjs-load-progress div {
 
 		  <table class="match_CE_icons"><tr>
 			  <td>
-				  <div id='user_1_CE' class="user_CE"><img id='user_1_CE_type_icon' class='CE_type_icon' src="brush.svg"></div>
+				  <div id='user_1_CE' class="user_CE"><img id='user_1_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p id='user_1_CE_title' class="match_expr_text">title</p>
 			  </td>
 			  <td><img src="love_big.png"></td>
 			  <td>
-				  <div id='user_2_CE' class="user_CE"><img id='user_2_CE_type_icon' class='CE_type_icon' src="brush.svg"></div>
+				  <div id='user_2_CE' class="user_CE"><img id='user_2_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p  id='user_2_CE_title' class="match_expr_text">title</p>
 			  </td>
 		  </tr></table>
