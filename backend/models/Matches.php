@@ -3,6 +3,7 @@
 namespace app\models;
 
 use backend\models\CreativeExpressions;
+use backend\models\UserConnections;
 use common\models\User;
 use Yii;
 use yii\db\ActiveRecord;
@@ -87,8 +88,14 @@ class Matches extends ActiveRecord
                 $user=User::findOne(['id' => $mat->user_2_id]);
             if($user === NULL) continue;
 
+            $connection = UserConnections::find()->where(['user_id_1' => $user_id])->orWhere(['user_id_2' => $user_id])->all();
+            if(empty($connection))
+                $connected = false;
+            else
+                $connected = true;
             $result[] = [
                 'user' => $user,
+                'connected' => $connected,
                 'timestamp' => $mat->timestamp
             ];
         }

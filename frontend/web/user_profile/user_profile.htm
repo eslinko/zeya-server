@@ -67,7 +67,7 @@ p {
       left: 0;
       text-align: center;
     }
-    .hide, #match_ce.hide
+    .hide, #match_ce.hide, #button_connect.hide
     {
       display:none;
     }
@@ -597,7 +597,16 @@ fetch(URL_str1).then((response) => {
   let params = new URLSearchParams(window.location.search);
   if(params.has('user_id') == false)throw new Error('wrong user_id');
   user_id = params.get("user_id");
-    console.log(user_id); //show C
+  if(params.has('hide_connect_button')){
+    if(params.get('hide_connect_button') === 'yes'){
+      document.getElementById('button_connect').classList.add('hide');
+    }
+  }
+  else
+  {
+    document.getElementById('button_connect').classList.add('hide');
+  }
+    //console.log(user_id);
 function isValidUrl(urlString)	{
 		try {
 			return Boolean(new URL(urlString));
