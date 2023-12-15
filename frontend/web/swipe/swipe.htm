@@ -827,7 +827,7 @@ video-js.video-js .vjs-load-progress div {
 	width: 100%;
 	position: absolute;
 	content: '';
-	background-image: url(music-background.png);
+	background-image: url(music-background.svg);
 	height: 100%;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -1358,7 +1358,7 @@ class Carousel {
 								"<div class='card_bottom card_bottom_descr_closed'>" +
 								"<div class='descr_container descr_container_descr_closed'>" +
 								"<table><tr><td>" +
-								"<p class='descr_title_video'>" + current_expr.description + "</p>" +
+								"<p class='descr_title_music'>" + current_expr.description + "</p>" +
 								"</td>" +
 								"<td>" +
 								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
@@ -1744,7 +1744,7 @@ class Carousel {
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
 		} else if (this.audios_ext.includes(ext)) {
-			document.getElementById('user_1_CE').style.backgroundImage = 'url(music-background.png)';
+			document.getElementById('user_1_CE').style.backgroundImage = 'url(music-background.svg)';
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
 		}
@@ -1764,7 +1764,7 @@ class Carousel {
 				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
 				document.getElementById('user_2_CE_type_icon').classList.add('hide');
 			} else if (this.audios_ext.includes(ext)) {
-				document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.png)';
+				document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.svg)';
 				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
 				document.getElementById('user_2_CE_type_icon').classList.add('hide');
 			}
