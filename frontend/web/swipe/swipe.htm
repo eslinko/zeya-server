@@ -521,7 +521,7 @@ background-color: red;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center top;
-	background-image: url(dome.png);
+	background-image: url(dome.svg);
 
 	position: absolute;
 	bottom: 0;
@@ -819,6 +819,9 @@ button.vjs-play-control
 video-js.video-js .vjs-load-progress div {
 	background: #857AAF;
 }
+	.vjs-modal-dialog div.vjs-modal-dialog-content {/*hide error message from bottom card on top of front card*/
+		z-index: initial;
+	}
 .music:before
 {
 	width: 100%;
@@ -901,9 +904,9 @@ video-js.video-js .vjs-load-progress div {
   <button id="end_of_flight">END OF FLIGHT</button>
 
   <div id='match' class="match_hidden_small">
-	  <img src="austronauts.png" class="match_austronauts">
+	  <img src="austronauts.svg" class="match_austronauts">
 	  <div class="match_dome_container">
-		  <img class='frequency_match_text' src="frequency_match_text.png">
+		  <img class='frequency_match_text' src="frequency_match_text.svg">
 		  <p id="match_resonated_text">You and <span id="new_friend_name"></span> resonated to each other’s expressions</p>
 
 		  <table class="match_CE_icons"><tr>
@@ -911,15 +914,15 @@ video-js.video-js .vjs-load-progress div {
 				  <div id='user_1_CE' class="user_CE"><img id='user_1_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p id='user_1_CE_title' class="match_expr_text">title</p>
 			  </td>
-			  <td><img src="love_big.png"></td>
+			  <td><img src="love_big.svg"></td>
 			  <td>
 				  <div id='user_2_CE' class="user_CE"><img id='user_2_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p  id='user_2_CE_title' class="match_expr_text">title</p>
 			  </td>
 		  </tr></table>
 		  <div class="match_buttons">
-			  <button id="keep_flying">KEEP FLYING <img src="icon-home.png" style="vertical-align: text-top;"></button>
-			  <button id="open_match">REVEAL DETAILS <img src="icon-heart.png" style="vertical-align: top;"></button>
+			  <button id="keep_flying">KEEP FLYING <img src="icon-home.svg" style="vertical-align: sub;"></button>
+			  <button id="open_match">REVEAL DETAILS <img src="icon-heart.svg" style="vertical-align: sub;"></button>
 		  </div>
 	  </div>
   </div>
@@ -1253,7 +1256,7 @@ class Carousel {
 							"<div class='card_bottom card_bottom_descr_closed'>"+
 							"<div class='descr_container descr_container_descr_closed'><tr>"+
 							"<table style='width: 100%;'><td>"+
-							"<p class='descr_title_image'>"+current_expr.description+"</p>"+
+							"<p class='descr_title_text'>"+current_expr.description+"</p>"+
 							"</td>"+
 							"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
