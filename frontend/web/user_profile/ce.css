@@ -125,7 +125,7 @@
 }
 .descr_title_image:before
 {
-    content:url(image-symbol.png);
+    content:url(image-symbol.svg);
     margin-right: 2px;
     display: inline-block;
     vertical-align: middle;
@@ -133,7 +133,7 @@
 }
 .descr_title_video:before
 {
-    content:url(video-symbol.png);
+    content:url(video-symbol.svg);
     margin-right: 2px;
     display: inline-block;
     vertical-align: middle;
@@ -141,7 +141,7 @@
 }
 .descr_title_music:before
 {
-    content:url(music-symbol.png);
+    content:url(music-symbol.svg);
     margin-right: 2px;
     display: inline-block;
     vertical-align: middle;
@@ -149,7 +149,7 @@
 }
 .descr_title_text:before
 {
-    content:url(text-symbol.png);
+    content:url(text-symbol.svg);
     margin-right: 2px;
     display: inline-block;
     vertical-align: middle;
@@ -179,7 +179,7 @@
 }
 .description_more_arrow_closed:after
 {
-    content:url(arrow-up.png);
+    content:url(arrow-up.svg);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -199,7 +199,7 @@
 }
 .description_more_arrow_opened:after
 {
-    content:url(arrow-up.png);
+    content:url(arrow-up.svg);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -336,7 +336,7 @@ video-js.video-js .vjs-load-progress div {
     width: 100%;
     position: absolute;
     content: '';
-    background-image: url(music-background.png);
+    background-image: url(music-background.svg);
     height: 100%;
     background-repeat: no-repeat;
     background-position: center;
