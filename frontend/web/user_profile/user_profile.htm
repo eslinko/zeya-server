@@ -586,7 +586,7 @@ URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str1).then((response) => {
 	response.json().then(data => {
 	
-	console.log ('validation: '+JSON.stringify(data));
+	//console.log ('validation: '+JSON.stringify(data));
 	if (data == false) throw new Error('User validation error');
 });
     //return response.json();
@@ -877,7 +877,7 @@ fetch(URL_str).then((response) =>
 	response.json().then(data => 
 		{
 		user_profile = data;
-		console.log (JSON.stringify(user_profile));
+		//console.log (JSON.stringify(user_profile));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -922,7 +922,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.facebook;
-                social_image.src = window.location.origin + '/backend/web/assets/images/facebook.svg';
+                social_image.src = 'facebook.svg';//window.location.origin + '/backend/web/assets/images/facebook.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -930,7 +930,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.youtube;
-                social_image.src = window.location.origin + '/backend/web/assets/images/youtube.svg';
+                social_image.src = 'youtube.svg';//window.location.origin + '/backend/web/assets/images/youtube.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -938,7 +938,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.tik_tok;
-                social_image.src = window.location.origin + '/backend/web/assets/images/tik_tok.svg';
+                social_image.src = 'tik_tok.svg';//window.location.origin + '/backend/web/assets/images/tik_tok.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -946,7 +946,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.discord;
-                social_image.src = window.location.origin + '/backend/web/assets/images/discord.svg';
+                social_image.src = 'discord.svg';//window.location.origin + '/backend/web/assets/images/discord.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -954,7 +954,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.linkedin;
-                social_image.src = window.location.origin + '/backend/web/assets/images/linkedin.svg';
+                social_image.src = 'linkedin.svg';//window.location.origin + '/backend/web/assets/images/linkedin.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -962,7 +962,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.instagram;
-                social_image.src = window.location.origin + '/backend/web/assets/images/instagram.svg';
+                social_image.src = 'instagram.svg';//window.location.origin + '/backend/web/assets/images/instagram.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -970,7 +970,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.twitter;
-                social_image.src = window.location.origin + '/backend/web/assets/images/twitter.svg';
+                social_image.src = 'twitter.svg';//window.location.origin + '/backend/web/assets/images/twitter.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -978,7 +978,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.pinterest;
-                social_image.src = window.location.origin + '/backend/web/assets/images/pinterest.svg';
+                social_image.src = 'pinterest.svg';//window.location.origin + '/backend/web/assets/images/pinterest.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -986,7 +986,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.twitch;
-                social_image.src = window.location.origin + '/backend/web/assets/images/twitch.svg';
+                social_image.src = 'twitch.svg';//window.location.origin + '/backend/web/assets/images/twitch.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -994,7 +994,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.snapchat;
-                social_image.src = window.location.origin + '/backend/web/assets/images/snapchat.svg';
+                social_image.src = 'snapchat.svg';//window.location.origin + '/backend/web/assets/images/snapchat.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }

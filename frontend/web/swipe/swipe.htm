@@ -969,7 +969,7 @@ URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str1).then((response) => {
 	response.json().then(data => {
 	
-	console.log ('validation: '+JSON.stringify(data));
+	//console.log ('validation: '+JSON.stringify(data));
 	if (data == false) throw new Error('User validation error');
 });
 
@@ -1078,7 +1078,7 @@ class Carousel {
 		let rotateY = 15 * (propX < 0.05 ? -1 : 1)
 
 		// enable transform transition
-		console.log('short transition');
+		//console.log('short transition');
 //		this.topCard.style.transition = 'transform 100ms ease-out'
 
 		// apply rotation around Y axis
@@ -1143,7 +1143,7 @@ class Carousel {
 			let successful = false
 
 			// set back transition properties
-			console.log('transition');
+			//console.log('transition');
 			this.topCard.style.transition = 'transform 600ms ease-out';
 			setTimeout(() => {
 				// remove swiped card
@@ -1481,7 +1481,7 @@ class Carousel {
 					{
 					response.json().then(data => 
 						{					
-						console.log(data);
+						//console.log(data);
 						if(data.hasOwnProperty('error'))
 							{
 							window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -1518,7 +1518,7 @@ class Carousel {
 	
 
 	likeButtonAction() {
-		console.log('click');
+		//console.log('click');
 
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
@@ -1540,7 +1540,7 @@ class Carousel {
 	}
 	nopeButtonAction() {
 
-		console.log('click');
+		//console.log('click');
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translate(-' + carousel.board.clientWidth + 'px, -400px) rotate(' + 20 + 'deg)'
@@ -1561,7 +1561,7 @@ class Carousel {
 	}
 	skipButtonAction() {
 
-		console.log('click');
+		//console.log('click');
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translateY(-800px)'
@@ -1805,7 +1805,7 @@ fetch(URL_str).then((response) =>
 	response.json().then(data => 
 		{
 		expr_queue = data;
-		console.log (JSON.stringify(expr_queue));
+		//console.log (JSON.stringify(expr_queue));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);
