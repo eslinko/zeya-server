@@ -80,7 +80,8 @@ class UserConnections extends ActiveRecord
                 'created_on' => $con->updated_at,
                 'username' => $username,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : '',
+                'telegram' => $user->telegram
             ];
         }
         $connections = UserConnections::find()->where(['user_id_2' => $user_id,'status'=>'accepted'])->all();
@@ -106,7 +107,8 @@ class UserConnections extends ActiveRecord
                 'created_on' => $con->updated_at,
                 'username' => $username,
                 'public_alias' => !empty($user->publicAlias) ? $user->publicAlias : '',
-                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : ''
+                'telegram_alias' => !empty($user->telegram_alias) ? $user->telegram_alias : '',
+                'telegram' => $user->telegram
             ];
         }
         return $result;

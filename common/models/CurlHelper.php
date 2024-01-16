@@ -31,16 +31,16 @@ class CurlHelper {
         $result = curl_exec($ch);
         curl_close($ch);
 
-        if ($result === false) {
-            return $url.' '.curl_error($ch).' '.curl_errno($ch);
-/*            echo "<pre>";
-            var_dump($url);
-            var_dump(curl_error($ch));
-            var_dump(curl_errno($ch));
-            echo "</pre>";*/
+        /*        if ($result === false) {
+                   return $url.' '.curl_error($ch).' '.curl_errnoh);
+       /*            echo "<pre>";
+                   var_dump($url);
+                   var_dump(curl_error($ch));
+                   var_dump(curl_errno($ch));
+                   echo "</pre>";
 //            exit;
-        }
+        }*/
 
-        return 'ok';//$result;
+        return $result;
     }
 }

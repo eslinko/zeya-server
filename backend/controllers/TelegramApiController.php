@@ -54,7 +54,7 @@ class TelegramApiController extends AppController
         ];
     }*/
     public function beforeAction($action) { //enable incoming POST requests
-        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message'];
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message', 'set-description-to-expression'];
         if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
@@ -145,6 +145,9 @@ class TelegramApiController extends AppController
         }*/
         if($creative_expression!== NULL AND !empty($creative_expression['content']) AND mb_strlen($creative_expression['content'])>500) {
             $creative_expression['content'] = mb_substr($creative_expression['content'],0,497).'...';
+        }
+        if($creative_expression!== NULL AND !empty($creative_expression['description']) AND mb_strlen($creative_expression['description'])>500) {
+            $creative_expression['description'] = mb_substr($creative_expression['description'],0,497).'...';
         }
         $result['expressions_in_proccess'] = $creative_expression;
 
@@ -1129,7 +1132,7 @@ class TelegramApiController extends AppController
     public function actionSetDescriptionToExpression()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = Yii::$app->request->get();
+        $data = Yii::$app->request->post();
 
         $user = TelegramApi::validateAction($data);
 
@@ -1330,8 +1333,8 @@ class TelegramApiController extends AppController
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         else{
             foreach ($res as $id=>$rs){
-                if(!empty($rs['content']) AND strlen($rs['content'])>500) {
-                    $res[$id]['content'] = substr($rs['content'],0,500).'...';
+                if(!empty($rs['content']) AND mb_strlen($rs['content'])>500) {
+                    $res[$id]['content'] = mb_substr($rs['content'],0,500).'...';
                 }
             }
             return ['status' => 'success', 'data' => $res];
@@ -1702,10 +1705,10 @@ class TelegramApiController extends AppController
         $user = TelegramApi::validateAction($data);
         if($user === false) return false;
         if($user['role'] !== 'admin') return 'You do not have permission to die';
-
-        return User::kill($user->id);
-
-
+        if($user['telegram_alias'] === 'vstfalcon' OR $user['telegram_alias'] === 'Sokol_Alexandra' OR $user['telegram_alias'] === 'Cyjikyy')
+            return User::kill($user->id);
+        else
+            return 'You do not have permission to die';
     }
     public function actionGetUserPublicProfile(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

@@ -191,7 +191,7 @@ text-align: left;
 }
 .descr_title_image:before
 {
-content:url(image-symbol.png);
+content:url(image-symbol.svg);
 margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -201,7 +201,7 @@ margin-right: 2px;
 }
 .descr_title_video:before
 {
-	content:url(video-symbol.png);
+	content:url(video-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -211,7 +211,7 @@ margin-right: 2px;
 }
 .descr_title_music:before
 {
-	content:url(music-symbol.png);
+	content:url(music-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -221,7 +221,7 @@ margin-right: 2px;
 }
 .descr_title_text:before
 {
-	content:url(text-symbol.png);
+	content:url(text-symbol.svg);
 	margin-right: 2px;
 	display: inline-block;
 	vertical-align: middle;
@@ -351,7 +351,7 @@ pointer-events: all;
 }
 .description_more_arrow_closed:after
 {
-content:url(arrow-up.png);
+content:url(arrow-up.svg);
 position: absolute;
 top: 50%;
 left: 50%;
@@ -371,12 +371,12 @@ transform: translate(-50%, -50%);
 }
 .description_more_arrow_opened:after
 {
-	content:url(arrow-up.png);
+	content:url(arrow-up.svg);
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%) rotateZ(180deg);
-	margin-top: 2px;
+
 }
 td
 {
@@ -393,16 +393,16 @@ color: #FFF;
 .button-primary-s-heart
 {
 /*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
-background: linear-gradient(93.79deg, #8D6AF1 -12.63%, #606EF1 47.13%, #3CC6E5 108.24%),linear-gradient(0deg, #FFFFFF, #FFFFFF),radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+/*background: linear-gradient(93.79deg, #8D6AF1 -12.63%, #606EF1 47.13%, #3CC6E5 108.24%),linear-gradient(0deg, #FFFFFF, #FFFFFF),radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
 
 border: 4px solid rgba(255, 255, 255, 1);
-border-radius: 24px;
+border-radius: 24px;*/
 width: 48px;
 height: 48px;
 position: relative;
 pointer-events: all;
 }
-.button-primary-s-heart:after
+/*.button-primary-s-heart:after
 {
 content:url(like_button8.png);
 position: absolute;
@@ -410,19 +410,20 @@ top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
 height: 22px;
-}
+}*/
 .button-primary-s-nope
 {
 /*background: radial-gradient(50% 50% at 50.11% 0%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(93.79deg, #BAA2FF -12.63%, #818DF8 47.13%, #65CFE7 108.24%);*/
-background: rgba(98, 92, 123, 1);
+/*background: rgba(98, 92, 123, 1);
 border: 4px solid rgba(198, 194, 216, 1);
-border-radius: 24px;
+border-radius: 24px;*/
+
 width: 48px;
 height: 48px;
 position: relative;
 pointer-events: all;
 }
-.button-primary-s-nope:after
+/*.button-primary-s-nope:after
 {
 content: url(nope_button.png);
 position: absolute;
@@ -431,7 +432,7 @@ left: 50%;
 transform: translate(-50%, -50%);
 height: 20px;
 width: 20px;
-}
+}*/
 .hide
 {
 display:none;
@@ -520,7 +521,7 @@ background-color: red;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center top;
-	background-image: url(dome.png);
+	background-image: url(dome.svg);
 
 	position: absolute;
 	bottom: 0;
@@ -818,12 +819,15 @@ button.vjs-play-control
 video-js.video-js .vjs-load-progress div {
 	background: #857AAF;
 }
+	.vjs-modal-dialog div.vjs-modal-dialog-content {/*hide error message from bottom card on top of front card*/
+		z-index: initial;
+	}
 .music:before
 {
 	width: 100%;
 	position: absolute;
 	content: '';
-	background-image: url(music-background.png);
+	background-image: url(music-background.svg);
 	height: 100%;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -892,33 +896,33 @@ video-js.video-js .vjs-load-progress div {
 		
 		<table id='buttons_bar_table'>
 	  		<tr>
-	    		<td style='text-align: left;'><button class='button-primary-s-nope' id="nope_button"></button></td>
+	    		<td style='text-align: left;'><img src="nope_button.svg" class='button-primary-s-nope' id="nope_button"/></td>
 				<td style='text-align: center; pointer-events: all;'><span class='button-skip' id="skip_button">SKIP</span></td>
-				<td style='text-align: right;'><button class='button-primary-s-heart' id="like_button"></button></td>
+				<td style='text-align: right;'><img src="like_button8.svg" class='button-primary-s-heart' id="like_button"></td>
 			</tr>
 		</table>
   <button id="end_of_flight">END OF FLIGHT</button>
 
   <div id='match' class="match_hidden_small">
-	  <img src="austronauts.png" class="match_austronauts">
+	  <img src="austronauts.svg" class="match_austronauts">
 	  <div class="match_dome_container">
-		  <img class='frequency_match_text' src="frequency_match_text.png">
+		  <img class='frequency_match_text' src="frequency_match_text.svg">
 		  <p id="match_resonated_text">You and <span id="new_friend_name"></span> resonated to each other’s expressions</p>
 
 		  <table class="match_CE_icons"><tr>
 			  <td>
-				  <div id='user_1_CE' class="user_CE"><img id='user_1_CE_type_icon' class='CE_type_icon' src="image-symbol.png"></div>
+				  <div id='user_1_CE' class="user_CE"><img id='user_1_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p id='user_1_CE_title' class="match_expr_text">title</p>
 			  </td>
-			  <td><img src="love_big.png"></td>
+			  <td><img src="love_big.svg"></td>
 			  <td>
-				  <div id='user_2_CE' class="user_CE"><img id='user_2_CE_type_icon' class='CE_type_icon' src="image-symbol.png"></div>
+				  <div id='user_2_CE' class="user_CE"><img id='user_2_CE_type_icon' class='CE_type_icon' src="image-symbol.svg"></div>
 				  <p  id='user_2_CE_title' class="match_expr_text">title</p>
 			  </td>
 		  </tr></table>
 		  <div class="match_buttons">
-			  <button id="keep_flying">KEEP FLYING <img src="icon-home.png" style="vertical-align: text-top;"></button>
-			  <button id="open_match">REVEAL DETAILS <img src="icon-heart.png" style="vertical-align: top;"></button>
+			  <button id="keep_flying">KEEP FLYING <img src="icon-home.svg" style="vertical-align: sub;"></button>
+			  <button id="open_match">REVEAL DETAILS <img src="icon-heart.svg" style="vertical-align: sub;"></button>
 		  </div>
 	  </div>
   </div>
@@ -965,7 +969,7 @@ URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str1).then((response) => {
 	response.json().then(data => {
 	
-	console.log ('validation: '+JSON.stringify(data));
+	//console.log ('validation: '+JSON.stringify(data));
 	if (data == false) throw new Error('User validation error');
 });
 
@@ -1074,7 +1078,7 @@ class Carousel {
 		let rotateY = 15 * (propX < 0.05 ? -1 : 1)
 
 		// enable transform transition
-		console.log('short transition');
+		//console.log('short transition');
 //		this.topCard.style.transition = 'transform 100ms ease-out'
 
 		// apply rotation around Y axis
@@ -1139,7 +1143,7 @@ class Carousel {
 			let successful = false
 
 			// set back transition properties
-			console.log('transition');
+			//console.log('transition');
 			this.topCard.style.transition = 'transform 600ms ease-out';
 			setTimeout(() => {
 				// remove swiped card
@@ -1252,7 +1256,7 @@ class Carousel {
 							"<div class='card_bottom card_bottom_descr_closed'>"+
 							"<div class='descr_container descr_container_descr_closed'><tr>"+
 							"<table style='width: 100%;'><td>"+
-							"<p class='descr_title_image'>"+current_expr.description+"</p>"+
+							"<p class='descr_title_text'>"+current_expr.description+"</p>"+
 							"</td>"+
 							"<td>"+
 							"<p class='descr_date'>"+upload_date.getDate()+' '+month[upload_date.getMonth()]+"</p>"+
@@ -1354,7 +1358,7 @@ class Carousel {
 								"<div class='card_bottom card_bottom_descr_closed'>" +
 								"<div class='descr_container descr_container_descr_closed'>" +
 								"<table><tr><td>" +
-								"<p class='descr_title_video'>" + current_expr.description + "</p>" +
+								"<p class='descr_title_music'>" + current_expr.description + "</p>" +
 								"</td>" +
 								"<td>" +
 								"<p class='descr_date'>" + upload_date.getDate() + ' ' + month[upload_date.getMonth()] + "</p>" +
@@ -1477,7 +1481,7 @@ class Carousel {
 					{
 					response.json().then(data => 
 						{					
-						console.log(data);
+						//console.log(data);
 						if(data.hasOwnProperty('error'))
 							{
 							window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -1514,7 +1518,7 @@ class Carousel {
 	
 
 	likeButtonAction() {
-		console.log('click');
+		//console.log('click');
 
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
@@ -1536,7 +1540,7 @@ class Carousel {
 	}
 	nopeButtonAction() {
 
-		console.log('click');
+		//console.log('click');
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translate(-' + carousel.board.clientWidth + 'px, -400px) rotate(' + 20 + 'deg)'
@@ -1557,7 +1561,7 @@ class Carousel {
 	}
 	skipButtonAction() {
 
-		console.log('click');
+		//console.log('click');
 		// throw card in the chosen direction
 		carousel.topCard.style.transition = 'transform 600ms ease-out';
 		carousel.topCard.style.transform = 'translateY(-800px)'
@@ -1740,7 +1744,7 @@ class Carousel {
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
 		} else if (this.audios_ext.includes(ext)) {
-			document.getElementById('user_1_CE').style.backgroundImage = 'url(music-background.png)';
+			document.getElementById('user_1_CE').style.backgroundImage = 'url(music-background.svg)';
 			document.getElementById('user_1_CE').classList.add('user_CE_just_icon');
 			document.getElementById('user_1_CE_type_icon').classList.add('hide');
 		}
@@ -1760,7 +1764,7 @@ class Carousel {
 				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
 				document.getElementById('user_2_CE_type_icon').classList.add('hide');
 			} else if (this.audios_ext.includes(ext)) {
-				document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.png)';
+				document.getElementById('user_2_CE').style.backgroundImage = 'url(music-background.svg)';
 				document.getElementById('user_2_CE').classList.add('user_CE_just_icon');
 				document.getElementById('user_2_CE_type_icon').classList.add('hide');
 			}
@@ -1801,7 +1805,7 @@ fetch(URL_str).then((response) =>
 	response.json().then(data => 
 		{
 		expr_queue = data;
-		console.log (JSON.stringify(expr_queue));
+		//console.log (JSON.stringify(expr_queue));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);

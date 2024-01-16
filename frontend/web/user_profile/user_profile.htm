@@ -67,7 +67,7 @@ p {
       left: 0;
       text-align: center;
     }
-    .hide, #match_ce.hide
+    .hide, #match_ce.hide, #button_connect.hide
     {
       display:none;
     }
@@ -124,7 +124,7 @@ p {
     #social{
       text-align: center;
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       margin-top: 12px;
       margin-bottom: 12px;
     }
@@ -274,11 +274,11 @@ p {
     background-size: cover;
   }
   .ce_text_icon_on_background{
-    background: no-repeat center url(text-roll64.png), rgba(88, 68, 166, 1);
+    background: no-repeat center url(text-roll64.svg), rgba(88, 68, 166, 1);
     background-blend-mode: overlay;
   }
     .ce_music_icon_on_background{
-      background: no-repeat center url(music54.png), rgba(88, 68, 166, 1);
+      background: no-repeat center url(music54.svg), rgba(88, 68, 166, 1);
       background-blend-mode: overlay;
     }
     .ce_video_icon_on_background{
@@ -463,7 +463,7 @@ p {
 <body>
 <div id="profile_container">
   <div id="top_panel">
-    <img id="button_back" src="button_back.png" onclick="window.Telegram.WebApp.close();"/>
+    <img id="button_back" src="button_back.svg" onclick="window.Telegram.WebApp.close();"/>
     <div id="top_panel_login_container">
       <span id="top_panel_login"></span>
       <span id="top_panel_location"></span>
@@ -472,7 +472,7 @@ p {
   </div>
   <div id="avatar">
     <div id="location_container">
-      <img id="location_icon" src="location.png"/>
+      <img id="location_icon" src="location.svg"/>
       <span id="location_city"></span>
     </div>
   </div>
@@ -483,7 +483,7 @@ p {
   <div id="social"></div>
   <div id="match_of_interests">
     <div id="match_of_interests_progress_container">
-      <img src="match_of_interests.png"/><span id="match_of_interests_title">Match of interests</span>
+      <img src="match_of_interests.svg"/><span id="match_of_interests_title">Match of interests</span>
       <br>
       <div id="match_of_interests_progress_bar_container">
         <div id="match_of_interests_progress_bar"></div>
@@ -500,9 +500,9 @@ p {
         <div id="match_ce_user_1" class="match_ce_user">
           <span id="match_ce_user_1_title" class="match_ce_user_title"></span>
         </div>
-        <img src="braided.png" style=" width:24px;"/>
-        <img src="matched_ce_heart.png" style=" width:56px;"/>
-        <img src="braided.png" style="width:24px;"/>
+        <img src="braided-left.svg" style=" width:24px;"/>
+        <img src="matched_ce_heart.svg" style=" width:56px;"/>
+        <img src="braided-right.svg" style="width:24px;"/>
         <div id="match_ce_user_2"  class="match_ce_user">
           <span id="match_ce_user_2_title" class="match_ce_user_title"></span>
         </div>
@@ -517,7 +517,7 @@ p {
 
   </div>
 
-  <button id="button_connect">CONNECT <img src="button_connect_icon.png" /></button>
+  <button id="button_connect">CONNECT <img src="button_connect_icon.svg" /></button>
 </div>
 <div id="screen_cover" class="hide">
   <p class="warning">&#8635; Yo, keep that phone upright!</p>
@@ -525,7 +525,7 @@ p {
 
 <div id="ce_window_container" class="hidden_small">
   <div id="card" class="card">
-    <img id="card_button_back" src="button_back.png" onclick="close_ce_window();"/>
+    <img id="card_button_back" src="button_back.svg" onclick="close_ce_window();"/>
     <div id="card_content_container" class='content_container_descr_closed'>
 
     </div>
@@ -586,7 +586,7 @@ URL_str1.searchParams.set('initData', window.Telegram.WebApp.initData);
 fetch(URL_str1).then((response) => {
 	response.json().then(data => {
 	
-	console.log ('validation: '+JSON.stringify(data));
+	//console.log ('validation: '+JSON.stringify(data));
 	if (data == false) throw new Error('User validation error');
 });
     //return response.json();
@@ -597,7 +597,16 @@ fetch(URL_str1).then((response) => {
   let params = new URLSearchParams(window.location.search);
   if(params.has('user_id') == false)throw new Error('wrong user_id');
   user_id = params.get("user_id");
-    console.log(user_id); //show C
+  if(params.has('hide_connect_button')){
+    if(params.get('hide_connect_button') === 'yes'){
+      document.getElementById('button_connect').classList.add('hide');
+    }
+  }
+  else
+  {
+    document.getElementById('button_connect').classList.add('hide');
+  }
+    //console.log(user_id);
 function isValidUrl(urlString)	{
 		try {
 			return Boolean(new URL(urlString));
@@ -868,7 +877,7 @@ fetch(URL_str).then((response) =>
 	response.json().then(data => 
 		{
 		user_profile = data;
-		console.log (JSON.stringify(user_profile));
+		//console.log (JSON.stringify(user_profile));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -913,7 +922,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.facebook;
-                social_image.src = window.location.origin + '/backend/web/assets/images/facebook.png';
+                social_image.src = 'facebook.svg';//window.location.origin + '/backend/web/assets/images/facebook.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -921,7 +930,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.youtube;
-                social_image.src = window.location.origin + '/backend/web/assets/images/youtube.png';
+                social_image.src = 'youtube.svg';//window.location.origin + '/backend/web/assets/images/youtube.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -929,7 +938,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.tik_tok;
-                social_image.src = window.location.origin + '/backend/web/assets/images/tik_tok.png';
+                social_image.src = 'tik_tok.svg';//window.location.origin + '/backend/web/assets/images/tik_tok.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -937,7 +946,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.discord;
-                social_image.src = window.location.origin + '/backend/web/assets/images/discord.png';
+                social_image.src = 'discord.svg';//window.location.origin + '/backend/web/assets/images/discord.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -945,7 +954,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.linkedin;
-                social_image.src = window.location.origin + '/backend/web/assets/images/linkedin.png';
+                social_image.src = 'linkedin.svg';//window.location.origin + '/backend/web/assets/images/linkedin.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -953,7 +962,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.instagram;
-                social_image.src = window.location.origin + '/backend/web/assets/images/instagram.png';
+                social_image.src = 'instagram.svg';//window.location.origin + '/backend/web/assets/images/instagram.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -961,7 +970,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.twitter;
-                social_image.src = window.location.origin + '/backend/web/assets/images/twitter.png';
+                social_image.src = 'twitter.svg';//window.location.origin + '/backend/web/assets/images/twitter.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -969,7 +978,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.pinterest;
-                social_image.src = window.location.origin + '/backend/web/assets/images/pinterest.png';
+                social_image.src = 'pinterest.svg';//window.location.origin + '/backend/web/assets/images/pinterest.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -977,7 +986,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.twitch;
-                social_image.src = window.location.origin + '/backend/web/assets/images/twitch.png';
+                social_image.src = 'twitch.svg';//window.location.origin + '/backend/web/assets/images/twitch.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -985,7 +994,7 @@ fetch(URL_str).then((response) =>
                 let social_link = document.createElement('a');
                 let social_image = document.createElement('img');
                 social_link.href = data.snapchat;
-                social_image.src = window.location.origin + '/backend/web/assets/images/snapchat.png';
+                social_image.src = 'snapchat.svg';//window.location.origin + '/backend/web/assets/images/snapchat.svg';
                 social_link.appendChild(social_image);
                 document.getElementById('social').appendChild(social_link);
               }
@@ -1011,7 +1020,7 @@ fetch(URL_str).then((response) =>
                     document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
                   if(audios_ext.includes(ext)){
-                    document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.png")';
+                    document.getElementById('match_ce_user_1').style.backgroundImage = 'url("music-background.svg")';
                     document.getElementById('match_ce_user_1').classList.add('match_ce_user_just_icon');
                     document.getElementById('match_ce_user_1_title').innerHTML = data.match_ce.user_1_ce.description;
                   }
@@ -1035,7 +1044,7 @@ fetch(URL_str).then((response) =>
                     document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                   }
                   if(audios_ext.includes(ext)){
-                    document.getElementById('match_ce_user_2').style.backgroundImage = 'url("music-background.png")';
+                    document.getElementById('match_ce_user_2').style.backgroundImage = 'url("music-background.svg")';
                     document.getElementById('match_ce_user_2').classList.add('match_ce_user_just_icon');
                     document.getElementById('match_ce_user_2_title').innerHTML = data.match_ce.user_2_ce.description;
                   }
@@ -1061,12 +1070,12 @@ fetch(URL_str).then((response) =>
                 {
                   document.getElementById('ce_container').innerHTML +=
                           '<div class="ce ce_text_icon_on_background" onclick="show_ce_window('+i+')">' +
-                              '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                              '<img src="like.svg" class="ce_like_icon" style="'+like_display+'"/>' +
                               '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                 '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
                               '</div> ' +
                               '<div class="ce_title_container">' +
-                                  '<img src="text-symbol.png" class="ce_title_icon"/> ' +
+                                  '<img src="text-symbol.svg" class="ce_title_icon"/> ' +
                                   '<span class="ce_title">'+ce.description+'</span>' +
                               '</div>' +
                           '</div>';
@@ -1075,12 +1084,12 @@ fetch(URL_str).then((response) =>
                   if(images_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
                             '<div class="ce ce_image" style="background-image: url('+ce.content+')" onclick="show_ce_window('+i+')">' +
-                                '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                                '<img src="like.svg" class="ce_like_icon" style="'+like_display+'"/>' +
                                '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                   '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
                                '</div> ' +
                                '<div class="ce_title_container">' +
-                               '<img src="image-symbol.png" class="ce_title_icon"/> ' +
+                               '<img src="image-symbol.svg" class="ce_title_icon"/> ' +
                                   '<span class="ce_title">'+ce.description+'</span>' +
                                '</div>' +
                             '</div>';
@@ -1088,12 +1097,12 @@ fetch(URL_str).then((response) =>
                   if(videos_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
                             '<div class="ce ce_video_icon_on_background" onclick="show_ce_window('+i+')">' +
-                                  '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                                  '<img src="like.svg" class="ce_like_icon" style="'+like_display+'"/>' +
                                   '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                         '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
                                   '</div> ' +
                                   '<div class="ce_title_container">' +
-                                  '<img src="video-symbol.png" class="ce_title_icon"/> ' +
+                                  '<img src="video-symbol.svg" class="ce_title_icon"/> ' +
                                       '<span class="ce_title">'+ce.description+'</span>' +
                                   '</div>' +
                             '</div>';
@@ -1101,12 +1110,12 @@ fetch(URL_str).then((response) =>
                   if(audios_ext.includes(ext)){
                     document.getElementById('ce_container').innerHTML +=
                             '<div class="ce ce_music_icon_on_background" onclick="show_ce_window('+i+')">' +
-                                '<img src="like.png" class="ce_like_icon" style="'+like_display+'"/>' +
+                                '<img src="like.svg" class="ce_like_icon" style="'+like_display+'"/>' +
                                 '<div class="ce_time_background" style="background: conic-gradient( transparent '+degrees+'deg, '+ time_color +degrees+'deg);">' +
                                     '<div class="ce_time">'+getHoursBetween(ce.active_period)+'h</div>' +
                                 '</div> ' +
                                 '<div class="ce_title_container">' +
-                                '<img src="music-symbol.png" class="ce_title_icon"/> ' +
+                                '<img src="music-symbol.svg" class="ce_title_icon"/> ' +
                                     '<span class="ce_title">'+ce.description+'</span>' +
                                 '</div>' +
                             '</div>';
