@@ -885,6 +885,11 @@ video-js.video-js .vjs-load-progress div {
 		max-height: initial;
 		margin-top: 15px;
 	}
+
+	.card_lovedo
+	{
+		border: 6px solid red;
+	}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="hammer.min.js"></script>
@@ -1227,6 +1232,9 @@ class Carousel {
 
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
+
+			if(current_expr.functionalType === 'LoveDO') card.classList.add('card_lovedo')
+
 			let url = current_expr.content;
 			let ext = current_expr.content.split('.').pop();
 			let pure_text = false;
@@ -1470,50 +1478,76 @@ class Carousel {
 		{
 		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
 			{
-				let URL_str = new URL(window.location.origin + '/admin/telegram-api/match-action');
-				URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
-				URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
-				URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
-				URL_str.searchParams.set('action_result', action);
-				let liked_user_id = this.expression_queue[this.top_card_i].user_id;
-				let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
-				fetch(URL_str).then((response) => 
+				if(this.expression_queue[this.top_card_i].functionalType === 'LoveDO' && action === 1)
+				{
+					let URL_str = new URL(window.location.origin + '/admin/telegram-api/vote-for-love-do');
+					URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+					URL_str.searchParams.set('creative_expression_id', this.expression_queue[this.top_card_i].id);
+					URL_str.searchParams.set('target_user_id', this.expression_queue[this.top_card_i].value_giver_id);
+
+
+					let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
+					fetch(URL_str).then((response) =>
 					{
-					response.json().then(data => 
-						{					
-						//console.log(data);
-						if(data.hasOwnProperty('error'))
+						response.json().then(data =>
+						{
+							//console.log(data);
+							if(data.hasOwnProperty('error'))
 							{
-							window.Telegram.WebApp.showAlert('Error: '+data.error);
+								window.Telegram.WebApp.showAlert('Error: '+data.error);
 							}
-						else
-							{
-							if(data.match == true)
-								{
-								//animate match
-								this.matched_user_id = 	liked_user_id;
-								this.show_match(data.CE, data.new_friend_name , this.expression_queue[current_top_card]);
-								}
 							else
+							{
+								if(data.match == true)
 								{
-								/*document.getElementById("match_popup").style.transform = 'translateY(31px)';
-								setTimeout(() => {			
-									document.getElementById("match_popup").style.transform = 'translateY(-31px)';
-									}, 1900);*/
-								
-								//window.Telegram.WebApp.showPopup({title:'Its a Match!', message: "Hey there! Great news – you've got a match with someone special!",buttons:[{type:'default',text:'Proceed watching'},{type:'default',text:'See my matches'}]});
+									//animate match
+									this.matched_user_id = 	liked_user_id;
+									this.show_match(data.CE, data.new_friend_name , this.expression_queue[current_top_card]);
 								}
-	
+
 							}
 						});
 					})
+				}
+				else
+				{
+					let URL_str = new URL(window.location.origin + '/admin/telegram-api/match-action');
+					URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+					URL_str.searchParams.set('expression_id', this.expression_queue[this.top_card_i].id);
+					URL_str.searchParams.set('expression_user_id', this.expression_queue[this.top_card_i].user_id);
+					URL_str.searchParams.set('action_result', action);
+					let liked_user_id = this.expression_queue[this.top_card_i].user_id;
+					let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
+					fetch(URL_str).then((response) =>
+					{
+						response.json().then(data =>
+						{
+							//console.log(data);
+							if(data.hasOwnProperty('error'))
+							{
+								window.Telegram.WebApp.showAlert('Error: '+data.error);
+							}
+							else
+							{
+								if(data.match == true)
+								{
+									//animate match
+									this.matched_user_id = 	liked_user_id;
+									this.show_match(data.CE, data.new_friend_name , this.expression_queue[current_top_card]);
+								}
+
+							}
+						});
+					})
+				}
+
 				//we swiped already, top card is next card
 				this.top_card_i++;
 
 
-				}
+			}
 
-        	}
+        }
 
 	
 

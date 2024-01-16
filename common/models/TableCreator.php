@@ -37,6 +37,7 @@ class TableCreator
         $this->Matches();
         $this->Notifications();
         $this->UserInterestsAnswers();
+        $this->LovestarEmissions();
     }
 
     private function updateTables(): void
@@ -150,6 +151,9 @@ class TableCreator
         if (!isset($table->columns['profile_data'])) {//bio, social networks etc
             $this->db->createCommand()->addColumn('User', 'profile_data', 'TEXT')->execute();
         }
+        if (!isset($table->columns['lovedo_votes'])) {//8 per months
+            $this->db->createCommand()->addColumn('User', 'lovedo_votes', 'TINYINT DEFAULT 8')->execute();
+        }
 
     }
     private function partnerUpdate(): void
@@ -193,6 +197,16 @@ class TableCreator
     private function creativeExpressionsUpdate(): void
     {
         $this->db->createCommand('ALTER TABLE `CreativeExpressions` CHANGE `upload_date` `upload_date` INT NULL DEFAULT NULL')->execute();
+
+        $table = $this->db->schema->getTableSchema('CreativeExpressions');
+        if (!isset($table->columns['functionalType'])){
+            $this->db->createCommand("ALTER TABLE CreativeExpressions ADD functionalType ENUM('LoveDO') DEFAULT NULL;")->execute();
+        }
+        if(!isset($table->columns['value_giver_id'])) {
+            $this->db->createCommand("ALTER TABLE CreativeExpressions
+ADD COLUMN value_giver_id int(11) DEFAULT NULL,
+ADD FOREIGN KEY (value_giver_id) REFERENCES User(id);")->execute();
+        }
     }
     private function InvitationCodesLogsUpdate(): void
     {
@@ -217,6 +231,20 @@ class TableCreator
     private function Matches(): void
     {
         $query = "
+                CREATE TABLE IF NOT EXISTS LovestarEmissions (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    lovestar_id INT NOT NULL,
+                    creative_expression_id INT NOT NULL,
+                    voter_id INT NOT NULL,
+                    vote_timestamp INT DEFAULT NULL
+                )
+            ";
+        $this->db->createCommand($query)->execute();
+    }
+
+    private function LovestarEmissions(): void
+    {
+        $query = "
                 CREATE TABLE IF NOT EXISTS Matches (
                     id INT PRIMARY KEY AUTO_INCREMENT,
                     user_1_id INT NOT NULL,
@@ -228,6 +256,4 @@ class TableCreator
             ";
         $this->db->createCommand($query)->execute();
     }
-
-
 }
