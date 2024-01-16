@@ -37,6 +37,10 @@ class TableCreator
         $this->Matches();
         $this->Notifications();
         $this->UserInterestsAnswers();
+        $this->LovestarEmissions();
+        $this->creativeExpressions();
+        $this->invitationCodes();
+        $this->invitationCodesLogs();
     }
 
     private function updateTables(): void
@@ -150,6 +154,9 @@ class TableCreator
         if (!isset($table->columns['profile_data'])) {//bio, social networks etc
             $this->db->createCommand()->addColumn('User', 'profile_data', 'TEXT')->execute();
         }
+        if (!isset($table->columns['lovedo_votes'])) {//8 per months
+            $this->db->createCommand()->addColumn('User', 'lovedo_votes', 'TINYINT DEFAULT 8')->execute();
+        }
 
     }
     private function partnerUpdate(): void
@@ -193,6 +200,16 @@ class TableCreator
     private function creativeExpressionsUpdate(): void
     {
         $this->db->createCommand('ALTER TABLE `CreativeExpressions` CHANGE `upload_date` `upload_date` INT NULL DEFAULT NULL')->execute();
+
+        $table = $this->db->schema->getTableSchema('CreativeExpressions');
+        if (!isset($table->columns['functionalType'])){
+            $this->db->createCommand("ALTER TABLE CreativeExpressions ADD functionalType ENUM('LoveDO') DEFAULT NULL;")->execute();
+        }
+        if(!isset($table->columns['value_giver_id'])) {
+            $this->db->createCommand("ALTER TABLE CreativeExpressions
+ADD COLUMN value_giver_id int(11) DEFAULT NULL,
+ADD FOREIGN KEY (value_giver_id) REFERENCES User(id);")->execute();
+        }
     }
     private function InvitationCodesLogsUpdate(): void
     {
@@ -217,6 +234,20 @@ class TableCreator
     private function Matches(): void
     {
         $query = "
+                CREATE TABLE IF NOT EXISTS LovestarEmissions (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    lovestar_id INT NOT NULL,
+                    creative_expression_id INT NOT NULL,
+                    voter_id INT NOT NULL,
+                    vote_timestamp INT DEFAULT NULL
+                )
+            ";
+        $this->db->createCommand($query)->execute();
+    }
+
+    private function LovestarEmissions(): void
+    {
+        $query = "
                 CREATE TABLE IF NOT EXISTS Matches (
                     id INT PRIMARY KEY AUTO_INCREMENT,
                     user_1_id INT NOT NULL,
@@ -228,6 +259,40 @@ class TableCreator
             ";
         $this->db->createCommand($query)->execute();
     }
-
-
+    private function creativeExpressions(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS CreativeExpressions (
+            id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            user_id int(11) DEFAULT NULL,
+            type_enum enum('Audio','Video','Text','Image','URL') DEFAULT NULL,
+            content mediumtext DEFAULT NULL,
+            description mediumtext DEFAULT NULL,
+            tags varchar(9000) DEFAULT NULL,
+            active_period int(11) DEFAULT NULL,
+            status varchar(50) DEFAULT NULL,
+            upload_date int(11) DEFAULT NULL,
+            ContentUploadUrl varchar(1024) DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+        $this->db->createCommand($query)->execute();
+    }
+    private function invitationCodes(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS InvitationCodes (
+          id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          user_id int(11) DEFAULT NULL,
+          code varchar(11) UNIQUE KEY DEFAULT NULL,
+          registered_user_id int(11) DEFAULT NULL,
+          ruleActionId int(1) DEFAULT NULL,
+          signup_date mediumtext DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
+        $this->db->createCommand($query)->execute();
+    }
+    private function invitationCodesLogs(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS InvitationCodesLogs (
+          id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          timestamp mediumtext DEFAULT NULL,
+          user_id mediumtext DEFAULT NULL,
+          inserted_code tinytext DEFAULT NULL,
+          error_type mediumtext DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
+        $this->db->createCommand($query)->execute();
+    }
 }
