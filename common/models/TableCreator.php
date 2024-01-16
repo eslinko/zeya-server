@@ -38,6 +38,9 @@ class TableCreator
         $this->Notifications();
         $this->UserInterestsAnswers();
         $this->LovestarEmissions();
+        $this->creativeExpressions();
+        $this->invitationCodes();
+        $this->invitationCodesLogs();
     }
 
     private function updateTables(): void
@@ -254,6 +257,42 @@ ADD FOREIGN KEY (value_giver_id) REFERENCES User(id);")->execute();
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )
             ";
+        $this->db->createCommand($query)->execute();
+    }
+    private function creativeExpressions(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS CreativeExpressions (
+            id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            user_id int(11) DEFAULT NULL,
+            type_enum enum('Audio','Video','Text','Image','URL') DEFAULT NULL,
+            content mediumtext DEFAULT NULL,
+            description mediumtext DEFAULT NULL,
+            tags varchar(9000) DEFAULT NULL,
+            active_period int(11) DEFAULT NULL,
+            status varchar(50) DEFAULT NULL,
+            upload_date int(11) DEFAULT NULL,
+            ContentUploadUrl varchar(1024) DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+        $this->db->createCommand($query)->execute();
+    }
+    private function invitationCodes(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS InvitationCodes (
+          id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          user_id int(11) DEFAULT NULL,
+          code varchar(11) UNIQUE KEY DEFAULT NULL,
+          registered_user_id int(11) DEFAULT NULL,
+          ruleActionId int(1) DEFAULT NULL,
+          signup_date mediumtext DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
+        $this->db->createCommand($query)->execute();
+    }
+    private function invitationCodesLogs(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS InvitationCodesLogs (
+          id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          timestamp mediumtext DEFAULT NULL,
+          user_id mediumtext DEFAULT NULL,
+          inserted_code tinytext DEFAULT NULL,
+          error_type mediumtext DEFAULT NULL) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin";
         $this->db->createCommand($query)->execute();
     }
 }
