@@ -65,7 +65,7 @@ class WebhookController extends Controller
     public function actionCronAt8amEveryDay() {
         try {
             Daemon::unusedInvitationCodesReminder();
-            //Daemon::CE_expiration_reminder();
+            Daemon::resetLoveDoVotes();
 
         } catch (\Throwable $t) {
             return sprintf('Error: (%d) %s. File: %s Line: %d', $t->getCode(), $t->getMessage(), $t->getFile(), $t->getLine());

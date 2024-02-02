@@ -166,5 +166,17 @@ class Daemon {
                 }
             }
         }
+    }
+    public static function resetLoveDoVotes(){
+        if(date('j') == 1)//first day of month
+        {
+            //loop through all users and reset love do votes
+            $users = User::find()->where(['not', ['invitation_code_id' => 0]])->andWhere(['not',['invitation_code_id' => NULL]])->all();//skip non telegram admin accounts
+            foreach ($users as $user) {
+                $user->lovedo_votes = 8;
+                $user->save(false);
+            }
         }
+    }
+
 }

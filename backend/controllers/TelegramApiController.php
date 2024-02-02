@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\LovestarEmissions;
 use backend\models\CreativeExpressions;
 use app\models\CreativeTypes;
 use backend\models\InvitationCodesLogs;
@@ -1068,6 +1069,7 @@ class TelegramApiController extends AppController
         if (!$user) {
             return ['status' => 'error', 'text' => 'Error! Try again later.'];
         }
+
         $new_expression = CreativeExpressions::find()
             ->where(['user_id' => $user->id])
             ->andWhere(['status' => 'process_of_creation'])
@@ -1077,6 +1079,11 @@ class TelegramApiController extends AppController
             $new_expression->user_id = $user->id;
             $new_expression->status = 'process_of_creation';
             if(isset($data['love_do']) AND $data['love_do'] == true) $new_expression->functionalType = 'LoveDO';
+
+            $new_expression->save(false);
+        } else {//if we started creation before but different type, we should reset lovedo parameter
+            if(isset($data['love_do']) AND $data['love_do'] == true) $new_expression->functionalType = 'LoveDO';
+
             $new_expression->save(false);
         }
         return ['status' => 'success'];
@@ -1151,6 +1158,34 @@ class TelegramApiController extends AppController
         }
 
         return ['status' => 'success'];
+    }
+
+    public function actionSetLovedoUseridToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['lovedo_userid'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+        $lovedo_userid = User::find()->where(['id' => $data['lovedo_userid']])->one();
+        if(empty($lovedo_userid) OR $user->id == $lovedo_userid->id) return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+        $user_name = $lovedo_userid->publicAlias;
+        if(!empty($lovedo_userid->telegram_alias))$user_name.=' (@'.$lovedo_userid->telegram_alias.')';
+
+        $cur_expression = CreativeExpressions::find()->where(['user_id' => $user->id,'status' => 'process_of_creation', 'functionalType' => 'LoveDO'])->one();
+
+        if(!empty($cur_expression)) {
+            $cur_expression->value_giver_id = intval($data['lovedo_userid']);
+            $cur_expression->save(false);
+            return ['status' => 'success', 'user_name' => $user_name];
+        }
+        else
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+
+
     }
 
     public function actionSetDescriptionToExpression()
@@ -1856,5 +1891,22 @@ class TelegramApiController extends AppController
         $send_data['notify_ce_activity'] = $user->notify_ce_activity;
 
         return $send_data;
+    }
+    public function actionVoteForLoveDO(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = \Yii::$app->request->get();
+
+        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        if ($res['status'] == false OR isset($data['creative_expression_id']) == false) {
+            return ['error' => 'Error! Try again later.'];
+        }
+        $user = $res['user'];
+        $ce = CreativeExpressions::find()->where(['id' => $data['creative_expression_id']])->one();
+        if($ce === NULL) return ['error' => 'Error! Try again later.'];
+        if($ce->functionalType !== 'LoveDO') return ['error' => 'Error! Try again later.'];
+
+        if(LovestarEmissions::VotedAlready($user->id,$ce->id)) return ['error' => 'Voted already'];
+        if($user->lovedo_votes < 1) return ['error' => 'Not enough votes'];
+
     }
 }

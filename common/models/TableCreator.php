@@ -157,9 +157,11 @@ class TableCreator
         if (!isset($table->columns['lovedo_votes'])) {//8 per months
             $this->db->createCommand()->addColumn('User', 'lovedo_votes', 'TINYINT DEFAULT 8')->execute();
         }
+
         if (!isset($table->columns['invitation_code_id'])) {//bio, social networks etc
             $this->db->createCommand()->addColumn('User', 'invitation_code_id', 'int DEFAULT 0 AFTER verificationCode')->execute();
         }
+
 
     }
     private function partnerUpdate(): void
