@@ -187,18 +187,18 @@ class PartnerRuleAction extends ActiveRecord
         }
         return $return_connections;
     }
-    static function actionLoveDoGivesTargetUserLovestar($target_user) {
+    static function actionLikeOnLoveDoPostGivesTargetUserLovestar($target_user) {
         //create BotPartner at first use
         $bot_partner = Partner::findOne(['id'=>1]);
         if($bot_partner === NULL) $bot_partner =  Partner::createBotPartner();
         if($bot_partner === NULL) return ['status' => false, 'message' => 'Error, cannot create BotPartner at first use'];
 
         //check do we have LoveDO posts rule
-        $reg_rule = PartnerRule::findOne(['id'=>4]);
-        if($reg_rule === NULL) $reg_rule =  PartnerRule::createRegistrationGivesCodeOwnerLovestarRule();
+        $reg_rule = PartnerRule::findOne(['id'=>5]);
+        if($reg_rule === NULL) $reg_rule =  PartnerRule::createRuleLikeOnLoveDoPost();
         if($reg_rule === NULL) return ['status' => false, 'message' => 'Error, cannot create rule at first use: Registration gives code owner 1 Lovestar'];
 
-        return PartnerRuleAction::createAction(2, $code_owner);
+        return PartnerRuleAction::createAction(5, $target_user);
 
     }
 }

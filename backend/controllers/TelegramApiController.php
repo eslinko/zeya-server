@@ -55,7 +55,7 @@ class TelegramApiController extends AppController
         ];
     }*/
     public function beforeAction($action) { //enable incoming POST requests
-        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message', 'set-description-to-expression'];
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message', 'set-description-to-expression','vote-for-love-do'];
         if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
@@ -1136,29 +1136,7 @@ class TelegramApiController extends AppController
 
         return ['status' => 'success'];
     }
-    public function actionSetLovedoUseridToExpression() {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = Yii::$app->request->get();
 
-        $user = TelegramApi::validateAction($data);
-
-        if (!$user || empty($data['lovedo_userid'])) {
-            return ['status' => 'error', 'text' => 'Error! Try again later.'];
-        }
-
-        $cur_expression = CreativeExpressions::find()
-            ->where(['user_id' => $user->id])
-            ->andWhere(['status' => 'process_of_creation'])
-            //->andWhere(['functionalType' => 'LoveDO'])
-            ->one();
-
-        if(!empty($cur_expression)) {
-            $cur_expression->value_giver_id = $data['lovedo_userid'];
-            $cur_expression->save(false);
-        }
-
-        return ['status' => 'success'];
-    }
 
     public function actionSetLovedoUseridToExpression() {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1894,7 +1872,7 @@ class TelegramApiController extends AppController
     }
     public function actionVoteForLoveDO(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = \Yii::$app->request->get();
+        $data = \Yii::$app->request->post();
 
         $res = TelegramApi::validateWebAppRequest($data['initData']);
         if ($res['status'] == false OR isset($data['creative_expression_id']) == false) {
@@ -1907,6 +1885,9 @@ class TelegramApiController extends AppController
 
         if(LovestarEmissions::VotedAlready($user->id,$ce->id)) return ['error' => 'Voted already'];
         if($user->lovedo_votes < 1) return ['error' => 'Not enough votes'];
-
+        PartnerRuleAction::actionLikeOnLoveDoPostGivesTargetUserLovestar($ce->value_giver_id);
+        $user_to = User::find()->where(['id' => $ce->value_giver_id])->one();
+        Notifications::createNotification(Notifications::LOVESTAR_RECEIVED, $res['user'], $user_to);
+        return ['status' => 'success'];
     }
 }

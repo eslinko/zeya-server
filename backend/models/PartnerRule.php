@@ -172,4 +172,24 @@ class PartnerRule extends ActiveRecord
             return NULL;
         }
     }
+
+    static function createRuleLikeOnLoveDoPost(){
+        $new_rule = PartnerRule::find()->where(['id' => 5])->one();
+        if($new_rule===NULL) {
+            $new_rule = new PartnerRule();
+            $new_rule->id = 5;
+        }
+
+        $new_rule->partnerId = 1;
+        $new_rule->title = 'Like on LoveDO post';
+        $new_rule->triggerName = 'Like on LoveDO post';
+        $new_rule->emissionCalculationBaseValue = 1;
+        $new_rule->emissionCalculationPercentage = 1;
+        if($new_rule->save(false)){
+            return $new_rule;
+        }
+        else{
+            return NULL;
+        }
+    }
 }

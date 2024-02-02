@@ -108,6 +108,10 @@ Viimase 24h jooksul:
             'en' => "My Invitation Codes",
             'ru' => "Мои коды приглашений"
         ],
+        "Yo! You just scored a fresh Lovestar! 🌟 Keep it up and spread the love!" => [
+            'en' => "Yo! You just scored a fresh Lovestar! 🌟 Keep it up and spread the love!",
+            'ru' => "Эй! Ты только что зацепил новый Лавстар! 🌟 Так держать и делись любовью!"
+        ]
     ];
 
     public static function s($text, $lang = 'en'){

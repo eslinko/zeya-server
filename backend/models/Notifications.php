@@ -33,7 +33,8 @@ class Notifications extends ActiveRecord
         'INVITE_CODE_USED' => "🌟 Get a Lovestar! %s joined Zeya4Eve space using your invite code!",
         'INVITE_CODE_USED_CONNECTIONS' => "🌟 Get a Lovestar! %s joined Zeya4Eve space via the invitation of your connection %s!",
         'INVITE_CODE_UNUSED_REMINDER' => "💌 Hey, spread the love! You have %d invite codes chillin",
-        'CE_EXPIRATION_WARNING' => "⏳ Quick! Your creative vibe fades in %d hours. Keep the fire alive and share your new expression!"
+        'CE_EXPIRATION_WARNING' => "⏳ Quick! Your creative vibe fades in %d hours. Keep the fire alive and share your new expression!",
+        'LOVESTAR_RECEIVED' => "Yo! You just scored a fresh Lovestar! 🌟 Keep it up and spread the love!"
     ];
     const CONNECTION_REQUEST = 'CONNECTION_REQUEST';
     const CONNECTION_ACCEPTED = 'CONNECTION_ACCEPTED';
@@ -43,6 +44,7 @@ class Notifications extends ActiveRecord
     const INVITE_CODE_USED_CONNECTIONS = 'INVITE_CODE_USED_CONNECTIONS';
     const INVITE_CODE_UNUSED_REMINDER = 'INVITE_CODE_UNUSED_REMINDER';
     const CE_EXPIRATION_WARNING = 'CE_EXPIRATION_WARNING';
+    const LOVESTAR_RECEIVED = 'LOVESTAR_RECEIVED';
 
     public static function tableName()
     {
@@ -157,6 +159,9 @@ class Notifications extends ActiveRecord
                     ['text' => 'My creative expressions', 'callback_data' => 'view_creative_expressions'],
                 ];
                 break;
+            case self::LOVESTAR_RECEIVED:
+                    $buttons = [];
+                    break;
             default: return false;
         }
         $nt = new Notifications();
@@ -268,13 +273,22 @@ class Notifications extends ActiveRecord
                 }
                 break;
             case self::CE_EXPIRATION_WARNING:
-                if ($user_to->notify_invite_codes == 1) {
+                if ($user_to->notify_ce_activity  == 1) {
                     $text = self::NOTIFICATION_TEXT[$type];
                     $text = Translations::s($text, $user_to->language);
                     $buttons = self::translateButtons($buttons, $user_to->language);
                     $text = sprintf($text, $additional_data);
                     Notifications::pushMessage($user_to, $text, $buttons);
                 }
+                break;
+            case self::LOVESTAR_RECEIVED:
+
+                    $text = self::NOTIFICATION_TEXT[$type];
+                    $text = Translations::s($text, $user_to->language);
+                    $buttons = self::translateButtons($buttons, $user_to->language);
+                    //$text = sprintf($text, $additional_data);
+                    Notifications::pushMessage($user_to, $text, $buttons);
+
                 break;
         }
 
