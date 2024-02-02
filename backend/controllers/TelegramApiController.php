@@ -1076,6 +1076,7 @@ class TelegramApiController extends AppController
             $new_expression = new CreativeExpressions();
             $new_expression->user_id = $user->id;
             $new_expression->status = 'process_of_creation';
+            if(isset($data['love_do']) AND $data['love_do'] == true) $new_expression->functionalType = 'LoveDO';
             $new_expression->save(false);
         }
         return ['status' => 'success'];
@@ -1123,6 +1124,29 @@ class TelegramApiController extends AppController
 
         if(!empty($cur_expression)) {
             $cur_expression->type_enum = $data['type'];
+            $cur_expression->save(false);
+        }
+
+        return ['status' => 'success'];
+    }
+    public function actionSetLovedoUseridToExpression() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+
+        $user = TelegramApi::validateAction($data);
+
+        if (!$user || empty($data['lovedo_userid'])) {
+            return ['status' => 'error', 'text' => 'Error! Try again later.'];
+        }
+
+        $cur_expression = CreativeExpressions::find()
+            ->where(['user_id' => $user->id])
+            ->andWhere(['status' => 'process_of_creation'])
+            //->andWhere(['functionalType' => 'LoveDO'])
+            ->one();
+
+        if(!empty($cur_expression)) {
+            $cur_expression->value_giver_id = $data['lovedo_userid'];
             $cur_expression->save(false);
         }
 
