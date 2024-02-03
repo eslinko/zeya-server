@@ -1875,13 +1875,18 @@ class TelegramApiController extends AppController
         $data = \Yii::$app->request->post();
 
         $res = TelegramApi::validateWebAppRequest($data['initData']);
-        if ($res['status'] == false OR isset($data['creative_expression_id']) == false) {
-            return ['error' => 'Error! Try again later.'];
+        if ($res['status'] == false)
+        {
+            return ['error' => 'Validation error.'];
         }
+        if(isset($data['creative_expression_id']) == false) {
+            return ['error' => 'CE id is missing'];
+        }
+
         $user = $res['user'];
         $ce = CreativeExpressions::find()->where(['id' => $data['creative_expression_id']])->one();
-        if($ce === NULL) return ['error' => 'Error! Try again later.'];
-        if($ce->functionalType !== 'LoveDO') return ['error' => 'Error! Try again later.'];
+        if($ce === NULL) return ['error' => 'CE not found'];
+        if($ce->functionalType !== 'LoveDO') return ['error' => 'CE is not lovedo'];
 
         if(LovestarEmissions::VotedAlready($user->id,$ce->id)) return ['error' => 'Voted already'];
         if($user->lovedo_votes < 1) return ['error' => 'Not enough votes'];
