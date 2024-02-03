@@ -1874,7 +1874,7 @@ class TelegramApiController extends AppController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $data = \Yii::$app->request->post();
 
-        $res = TelegramApi::validateWebAppRequest($data['initData']);
+        $res = TelegramApi::validateWebAppRequest(rawurldecode($data['initData']));
         if ($res['status'] == false)
         {
             return ['error' => 'Validation error.'];
