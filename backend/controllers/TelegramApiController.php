@@ -55,7 +55,7 @@ class TelegramApiController extends AppController
         ];
     }*/
     public function beforeAction($action) { //enable incoming POST requests
-        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message', 'set-description-to-expression','vote-for-love-do'];
+        $post_actions = ['notifications-delete','notifications-read','notifications-read-all','set-text-content-to-expression', 'set-user-last-message', 'set-description-to-expression'];//,'vote-for-love-do'];
         if(in_array($action->id, $post_actions)) {
             $this->enableCsrfValidation = false;
         }
@@ -1872,7 +1872,7 @@ class TelegramApiController extends AppController
     }
     public function actionVoteForLoveDO(){
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $data = \Yii::$app->request->post();
+        $data = \Yii::$app->request->get();
 
         $res = TelegramApi::validateWebAppRequest($data['initData']);
         if ($res['status'] == false OR isset($data['creative_expression_id']) == false) {
