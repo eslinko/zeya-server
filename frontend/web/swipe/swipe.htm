@@ -1485,10 +1485,19 @@ class Carousel {
 					URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 					URL_str.searchParams.set('creative_expression_id', this.expression_queue[this.top_card_i].id);
 					URL_str.searchParams.set('target_user_id', this.expression_queue[this.top_card_i].value_giver_id);
-
+					let params = {'initData': window.Telegram.WebApp.initData,
+						'creative_expression_id': this.expression_queue[this.top_card_i].id,
+						'target_user_id': this.expression_queue[this.top_card_i].value_giver_id
+					};
 
 					let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
-					fetch(URL_str).then((response) =>
+					fetch('/admin/telegram-api/vote-for-love-do', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json;charset=utf-8'
+						},
+						body: JSON.stringify(params)
+					}).then((response) =>
 					{
 						response.json().then(data =>
 						{
