@@ -6,7 +6,7 @@ class Translations {
     private static $tralsnates;
     public function __construct()
     {
-        $tralsnates = [
+        $this->tralsnates = [
             'ecosystemGrowthNotification' => [
                 'en' => 'Good morning!
 This is your personalised update on the growth of '.env('BOT_NAME').'-community.
