@@ -3,10 +3,10 @@
 namespace common\models;
 
 class Translations {
-    private static $tralsnates;
+    //private static $tralsnates;
     public function init()
     {
-        $this->tralsnates = [
+        return [
             'ecosystemGrowthNotification' => [
                 'en' => 'Good morning!
 This is your personalised update on the growth of '.env('BOT_NAME').'-community.
@@ -119,7 +119,7 @@ Viimase 24h jooksul:
     }
 
     public static function s($text, $lang = 'en'){
-        self::init();
-        return !empty(self::$tralsnates[$text]) && !empty(self::$tralsnates[$text][$lang]) ? self::$tralsnates[$text][$lang] : $text;
+        $tralsnates = init();
+        return !empty($tralsnates[$text]) && !empty($tralsnates[$text][$lang]) ? $tralsnates[$text][$lang] : $text;
     }
 }
