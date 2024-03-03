@@ -4,7 +4,7 @@ namespace common\models;
 
 class Translations {
     //private static $tralsnates;
-    public function init()
+    public static function init()
     {
         return [
             'ecosystemGrowthNotification' => [
