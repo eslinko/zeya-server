@@ -4,7 +4,7 @@ namespace common\models;
 
 class Translations {
     private static $tralsnates;
-    public function __construct()
+    public function init()
     {
         $this->tralsnates = [
             'ecosystemGrowthNotification' => [
@@ -119,6 +119,7 @@ Viimase 24h jooksul:
     }
 
     public static function s($text, $lang = 'en'){
+        self::init();
         return !empty(self::$tralsnates[$text]) && !empty(self::$tralsnates[$text][$lang]) ? self::$tralsnates[$text][$lang] : $text;
     }
 }
