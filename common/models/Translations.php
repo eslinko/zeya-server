@@ -119,7 +119,7 @@ Viimase 24h jooksul:
     }
 
     public static function s($text, $lang = 'en'){
-        $tralsnates = init();
+        $tralsnates = self::init();
         return !empty($tralsnates[$text]) && !empty($tralsnates[$text][$lang]) ? $tralsnates[$text][$lang] : $text;
     }
 }
