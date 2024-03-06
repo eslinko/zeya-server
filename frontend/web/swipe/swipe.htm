@@ -1436,6 +1436,14 @@ class Carousel {
 					card.innerHTML = "<div class='content_container content_container_descr_closed'><div class='content content_descr_closed img_fix text_container'>"+url+"</div></div>"+
 							"<div class='card_gradient'></div>"+
 							"<div class='card_bottom card_bottom_descr_closed'>"+
+
+							"<div class='lovedo_card_bottom'>"+
+							"<div class='lovedo_votes_container'><div class='lovestars_votes_oval'><span class='lovestars_left_text'>Lovestars left: </span><span class='lovestars_left_counter'>"+lovestars_left+"</span></div></div>"+
+							"<img class='lovedo_card_bottom_avatar_from' src='"+avatar_from+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>from</span><span class='lovedo_card_bottom_from_alias'>"+alias_from+"</span></div>"+
+							"<img class='lovedo_card_bottom_arrow' src='arrow_right.svg'>"+
+							"<img class='lovedo_card_bottom_avatar_to' src='"+avatar_to+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>to</span><span class='lovedo_card_bottom_from_alias'>"+alias_to+"</span></div>"+
+							"</div>"+
+
 							"<div class='descr_container descr_container_descr_closed'><tr>"+
 							"<table style='width: 100%;'><td>"+
 							"<p class='descr_title_text'>"+current_expr.description+"</p>"+
@@ -1496,6 +1504,14 @@ class Carousel {
 					} else if (this.videos_ext.includes(ext)) {
 						card.innerHTML = "<div class='card_gradient'></div>" +
 								"<div class='card_bottom card_bottom_descr_closed'>" +
+
+								"<div class='lovedo_card_bottom'>"+
+								"<div class='lovedo_votes_container'><div class='lovestars_votes_oval'><span class='lovestars_left_text'>Lovestars left: </span><span class='lovestars_left_counter'>"+lovestars_left+"</span></div></div>"+
+								"<img class='lovedo_card_bottom_avatar_from' src='"+avatar_from+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>from</span><span class='lovedo_card_bottom_from_alias'>"+alias_from+"</span></div>"+
+								"<img class='lovedo_card_bottom_arrow' src='arrow_right.svg'>"+
+								"<img class='lovedo_card_bottom_avatar_to' src='"+avatar_to+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>to</span><span class='lovedo_card_bottom_from_alias'>"+alias_to+"</span></div>"+
+								"</div>"+
+
 								"<div class='descr_container descr_container_descr_closed'>" +
 								"<table><tr><td>" +
 								"<p class='descr_title_video'>" + current_expr.description + "</p>" +
@@ -1546,6 +1562,14 @@ class Carousel {
 					} else if (this.audios_ext.includes(ext)) {
 						card.innerHTML = "<div class='card_gradient'></div>" +
 								"<div class='card_bottom card_bottom_descr_closed'>" +
+
+								"<div class='lovedo_card_bottom'>"+
+								"<div class='lovedo_votes_container'><div class='lovestars_votes_oval'><span class='lovestars_left_text'>Lovestars left: </span><span class='lovestars_left_counter'>"+lovestars_left+"</span></div></div>"+
+								"<img class='lovedo_card_bottom_avatar_from' src='"+avatar_from+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>from</span><span class='lovedo_card_bottom_from_alias'>"+alias_from+"</span></div>"+
+								"<img class='lovedo_card_bottom_arrow' src='arrow_right.svg'>"+
+								"<img class='lovedo_card_bottom_avatar_to' src='"+avatar_to+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>to</span><span class='lovedo_card_bottom_from_alias'>"+alias_to+"</span></div>"+
+								"</div>"+
+
 								"<div class='descr_container descr_container_descr_closed'>" +
 								"<table><tr><td>" +
 								"<p class='descr_title_music'>" + current_expr.description + "</p>" +
