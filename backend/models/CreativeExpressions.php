@@ -63,7 +63,7 @@ class CreativeExpressions extends ActiveRecord
     }
 
     public static function getCreativeExpressionsByUser($user_id){
-        return CreativeExpressions::find()->where(['user_id' => $user_id])->all();
+        return CreativeExpressions::find()->where(['user_id' => $user_id])->asArray()->all();
     }
 
     /**

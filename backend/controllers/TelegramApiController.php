@@ -1405,11 +1405,38 @@ class TelegramApiController extends AppController
         foreach ($users_with_shared_interests as $us) {
             //CreativeExpressions::setMockupData($us['id'],true);
             $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
+            $expr_user = User::find()->where(['id' => $us['user_id']])->one();
+            if(empty($expr_user->telegram_alias))
+                $expr_user_name = $expr_user->publicAlias;
+            else
+                $expr_user_name = '@'.$expr_user->telegram_alias;
+            if(!empty($expr_user->profile_data))
+                $expr_user_avatar = json_decode($expr_user->profile_data)->avatar;
+            else
+                $expr_user_avatar = '';
             foreach ($expr_list as $expr){
                 if(empty($expr['content']))continue;
                 if($expr['active_period'] < time())continue;
                 if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
                     if($expr['active_period'] == NULL)$expr['active_period'] = time()+24*60*60;
+                    $expr['user_name'] = $expr_user_name;
+                    $expr['user_avatar'] = $expr_user_avatar;
+                    $expr['lovestars_left'] = $user['lovedo_votes'];
+                    if($expr['functionalType'] === 'LoveDO'){
+                        $value_giver_user = User::find()->where(['id' => $expr['value_giver_id']])->one();
+                        $value_giver_avatar = '';
+                        $value_giver_name = '';
+                        if($value_giver_user !== NULL){
+                            if(empty($value_giver_user->telegram_alias))
+                                $value_giver_name = $value_giver_user->publicAlias;
+                            else
+                                $value_giver_name = '@'.$value_giver_user->telegram_alias;
+                            if(!empty($value_giver_user->profile_data))
+                                $value_giver_avatar = json_decode($value_giver_user->profile_data)->avatar;
+                        }
+                        $expr['value_giver_name'] = $value_giver_name;
+                        $expr['value_giver_avatar'] = $value_giver_avatar;
+                    }
                     $creative_expressions[] = $expr;
                 }
             }
@@ -1418,11 +1445,42 @@ class TelegramApiController extends AppController
         $user_friends = UserConnections::getUserConnections($user['id']);
         foreach ($user_friends as $us) {
             $expr_list = CreativeExpressions::getCreativeExpressionsByUser($us['user_id']);
+
+            $expr_user = User::find()->where(['id' => $us['user_id']])->one();
+            if(empty($expr_user->telegram_alias))
+                $expr_user_name = $expr_user->publicAlias;
+            else
+                $expr_user_name = '@'.$expr_user->telegram_alias;
+            if(!empty($expr_user->profile_data))
+                $expr_user_avatar = json_decode($expr_user->profile_data)->avatar;
+            else
+                $expr_user_avatar = '';
+
             foreach ($expr_list as $expr){
                 if(empty($expr['content']))continue;
                 if($expr['active_period'] < time())continue;
                 if(MatchAction::doesActionExist($user['id'], $expr['id']) == false){
                     if($expr['active_period'] == NULL)$expr['active_period'] = time()+24*60*60;
+
+                    $expr['user_name'] = $expr_user_name;
+                    $expr['user_avatar'] = $expr_user_avatar;
+                    $expr['lovestars_left'] = $user['lovedo_votes'];
+                    if($expr['functionalType'] === 'LoveDO'){
+                        $value_giver_user = User::find()->where(['id' => $expr['value_giver_id']])->one();
+                        $value_giver_avatar = '';
+                        $value_giver_name = '';
+                        if($value_giver_user !== NULL){
+                            if(empty($value_giver_user->telegram_alias))
+                                $value_giver_name = $value_giver_user->publicAlias;
+                            else
+                                $value_giver_name = '@'.$value_giver_user->telegram_alias;
+                            if(!empty($value_giver_user->profile_data))
+                                $value_giver_avatar = json_decode($value_giver_user->profile_data)->avatar;
+                        }
+                        $expr['value_giver_name'] = $value_giver_name;
+                        $expr['value_giver_avatar'] = $value_giver_avatar;
+                    }
+
                     $creative_expressions[] = $expr;
                 }
             }
@@ -1893,6 +1951,7 @@ class TelegramApiController extends AppController
         PartnerRuleAction::actionLikeOnLoveDoPostGivesTargetUserLovestar($ce->value_giver_id);
         $user_to = User::find()->where(['id' => $ce->value_giver_id])->one();
         Notifications::createNotification(Notifications::LOVESTAR_RECEIVED, $res['user'], $user_to);
+        User::lovedo_counter_decrease($user->id);
         return ['status' => 'success'];
     }
 }

@@ -583,4 +583,11 @@ class User extends ActiveRecord implements IdentityInterface
             default: return false;
         }
     }
+    public static function lovedo_counter_decrease($user_id){
+        $user = User::find()->where(['id' => $user_id])->one();
+        if($user === NULL) return false;
+        $user->lovedo_votes = $user->lovedo_votes - 1;
+        $user->save(false);
+        return true;
+    }
 }

@@ -889,7 +889,150 @@ video-js.video-js .vjs-load-progress div {
 
 	.lovedo
 	{
-		border: 4px solid red;
+		/*border: 4px solid red;*/
+	}
+	.lovedo_card_bottom_from
+	{
+		font-family: Montserrat;
+		font-size: 10px;
+		font-weight: 500;
+		line-height: 12px;
+		letter-spacing: 0em;
+		text-align: left;
+	}
+	.lovedo_card_bottom_from_alias
+	{
+		font-family: Montserrat;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 14px;
+		letter-spacing: 0.01em;
+		text-align: left;
+	}
+	.lovedo_card_bottom{
+		display: none;
+		padding-left: 16px;
+	}
+	.lovedo .lovedo_card_bottom{
+		display: flex;
+		height: 26px;
+		position: relative;
+	}
+	.lovedo_card_bottom_avatar_from{
+		height: 26px;
+		width: 26px;
+		border-radius: 50%;
+		border: 1px solid rgba(0, 255, 41, 1);
+	}
+	.lovedo_card_bottom_avatar_to{
+		height: 26px;
+		width: 26px;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 235, 53, 1)
+	}
+	.lovedo_card_bottom_text_container{
+		display: inline-flex;
+		flex-direction: column;
+		justify-content: center;
+		padding-left: 4px;
+	}
+	.lovedo_card_bottom_arrow{
+		margin-left: 9px;
+		margin-right: 9px;
+		width: 16px;
+	}
+	.lovedo .card_bottom_descr_closed{
+		height: 162px;
+	}
+	.lovedo .card_gradient{
+		height: 162px;
+	}
+	.lovedo_votes_container{
+		left: 50%;
+		transform: translateX(-50%);
+		position: absolute;
+		bottom: 39px;
+		border: 2px solid rgba(0, 255, 41, 1);
+		border: 2px solid rgba(0, 255, 41, 1);
+		border-radius: 24px;
+		padding: 4px 8px;
+	}
+	.lovestars_left_text{
+		font-family: Montserrat;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 14px;
+		letter-spacing: 0.01em;
+
+	}
+	.lovestars_left_counter{
+		font-family: Montserrat;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 14px;
+		letter-spacing: 0.01em;
+
+	}
+	.lovestars_votes_oval{
+		line-height: 14px;
+	}
+	.lovedo_popup{
+		display: none;
+		background-color: rgba(58, 50, 92, 1);
+		border-radius: 24px;
+		padding: 24px;
+		position: absolute;
+		left:50%;
+		top:50%;
+		transform: translate(-50%, -50%);
+		width: 80%;
+		color:#FFF;
+		text-align: center;
+	}
+	.lovedo_popup_title{
+		font-family: Montserrat;
+		font-size: 24px;
+		font-weight: 800;
+		line-height: 31px;
+		letter-spacing: 0.02em;
+		text-align: center;
+
+	}
+	#lovedo_popup_lovestars_left{
+		padding: 12px 10px;
+		border-radius: 32px;
+		border: 1px solid rgba(0, 255, 41, 1);
+		text-align: center;
+		margin-top: 18px;
+	}
+	#lovedo_popup_confirm{
+		padding: 14px 24px;
+		border-radius: 32px;
+		background: radial-gradient(100% 100% at 50% 0%, #C184FF 0%, #7557EF 100%);
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 18px;
+		letter-spacing: 0.08em;
+		color:#FFF;
+		border-width: 0;
+		margin-top: 18px;
+		cursor: pointer;
+	}
+	#lovedo_popup_skip{
+		padding: 14px 24px;
+		border-radius: 32px;
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 18px;
+		letter-spacing: 0.08em;
+		text-align: center;
+		color:#FFF;
+		border-width: 0;
+		margin-top: 18px;
+		background-color: transparent;
+		cursor: pointer;
 	}
 </style>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -931,6 +1074,12 @@ video-js.video-js .vjs-load-progress div {
 			  <button id="open_match">REVEAL DETAILS <img src="icon-heart.svg" style="vertical-align: sub;"></button>
 		  </div>
 	  </div>
+  </div>
+  <div id="lovedo_popup" class="lovedo_popup">
+	  <div class="lovedo_popup_title">You're about to vibe with this post by dropping a vote!</div>
+	  <div id="lovedo_popup_lovestars_left">You've got 8 votes left this month</div>
+	  <button id="lovedo_popup_confirm">LOCK IT IN!</button>
+	  <button id="lovedo_popup_skip">NAH, I'LL PASS</button>
   </div>
   <div id="screen_cover" class="hide">
 	  <p class="warning">&#8635; Yo, keep that phone upright!</p>
@@ -998,6 +1147,8 @@ class Carousel {
 	images_ext = ["jpg", "jpeg", "gif", "png"];
 	videos_ext = ["mp4", "mov", "webm", "3gp", "ogg"];
 	audios_ext = ['mp3','aac','wav','wma','flac'];
+	last_swiped_card;
+	lovestars_left;
 	constructor(element, expr) {
 		this.expression_queue = expr;
 		this.top_card_i = 0;//top card
@@ -1234,7 +1385,29 @@ class Carousel {
 			let current_expr = this.expression_queue[this.expr_queue_counter];
 			this.expr_queue_counter++;
 
-			if(current_expr.functionalType === 'LoveDO') card.classList.add('lovedo');
+			var avatar_from = '';
+			var avatar_to = '';
+			let alias_from = '';
+			let alias_to = '';
+			let lovestars_left = current_expr.lovestars_left;
+			this.lovestars_left = lovestars_left;
+			if(current_expr.functionalType === 'LoveDO') {
+				card.classList.add('lovedo');
+				if(current_expr.user_avatar === '')
+					avatar_from = 'grey_avatar.png';
+				else
+					avatar_from = window.location.origin + '/backend/web/uploads/avatars/' + current_expr.user_avatar;
+
+				if(current_expr.value_giver_avatar === '')
+					avatar_to = 'grey_avatar.png';
+				else
+					avatar_to = window.location.origin + '/backend/web/uploads/avatars/' + current_expr.value_giver_avatar;
+
+				alias_from = current_expr.user_name;
+				alias_to = current_expr.value_giver_name;
+			}
+			//avatar_from = window.location.origin + '/backend/web/assets/images/' + avatar_from;
+			//avatar_to = window.location.origin + '/backend/web/assets/images/' + avatar_to;
 
 			let url = current_expr.content;
 			let ext = current_expr.content.split('.').pop();
@@ -1291,6 +1464,14 @@ class Carousel {
 						card.innerHTML = "<div class='content_container content_container_descr_closed'><img src='" + url + "' class='content content_descr_closed img_fix'></div>" +
 								"<div class='card_gradient'></div>" +
 								"<div class='card_bottom card_bottom_descr_closed'>" +
+
+								"<div class='lovedo_card_bottom'>"+
+									"<div class='lovedo_votes_container'><div class='lovestars_votes_oval'><span class='lovestars_left_text'>Lovestars left: </span><span class='lovestars_left_counter'>"+lovestars_left+"</span></div></div>"+
+									"<img class='lovedo_card_bottom_avatar_from' src='"+avatar_from+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>from</span><span class='lovedo_card_bottom_from_alias'>"+alias_from+"</span></div>"+
+									"<img class='lovedo_card_bottom_arrow' src='arrow_right.svg'>"+
+									"<img class='lovedo_card_bottom_avatar_to' src='"+avatar_to+"'><div class='lovedo_card_bottom_text_container'><span class='lovedo_card_bottom_from'>to</span><span class='lovedo_card_bottom_from_alias'>"+alias_to+"</span></div>"+
+								"</div>"+
+
 								"<div class='descr_container descr_container_descr_closed'><tr>" +
 								"<table style='width: 100%;'><td>" +
 								"<p class='descr_title_image'>" + current_expr.description + "</p>" +
@@ -1475,29 +1656,65 @@ class Carousel {
 
 
         }
+	showLoveDoPopup()
+	{
+		document.getElementById('lovedo_popup').style.display = 'block';
+		document.getElementById('lovedo_popup_lovestars_left').innerHTML = "You\'ve got "+carousel.lovestars_left+" votes left this month";
+	}
+	hideLoveDoPopup()
+	{
+		document.getElementById('lovedo_popup').style.display = 'none';
+	}
+
+	LoveDoPopupSpendLovestar()
+	{
+		let URL_str = new URL(window.location.origin + '/admin/telegram-api/vote-for-love-do');
+		URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
+		URL_str.searchParams.set('creative_expression_id', carousel.last_swiped_card.id);
+		URL_str.searchParams.set('target_user_id', carousel.last_swiped_card.value_giver_id);
+
+		carousel.hideLoveDoPopup();
+		//let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
+
+		fetch(URL_str).then((response) =>
+		{
+			response.json().then(data =>
+			{
+				//console.log(data);
+				if(data.hasOwnProperty('error'))
+				{
+					window.Telegram.WebApp.showAlert('Error: '+data.error);
+				}
+				else
+				{
+					if(data.match == true)
+					{
+						//animate match
+						this.matched_user_id = 	liked_user_id;
+						this.show_match(data.CE, data.new_friend_name , carousel.last_swiped_card);
+					}
+
+				}
+			});
+		})
+	}
 	actionOnSwipe(action) 
 		{
 		if(this.expression_queue.length > this.top_card_i)//if(this.current_expr != undefined)
 			{
+				this.last_swiped_card = this.expression_queue[this.top_card_i];
 				if(this.expression_queue[this.top_card_i].functionalType === 'LoveDO' && action === 1)
 				{
+					this.showLoveDoPopup();
+					/*
 					let URL_str = new URL(window.location.origin + '/admin/telegram-api/vote-for-love-do');
 					URL_str.searchParams.set('initData', window.Telegram.WebApp.initData);
 					URL_str.searchParams.set('creative_expression_id', this.expression_queue[this.top_card_i].id);
 					URL_str.searchParams.set('target_user_id', this.expression_queue[this.top_card_i].value_giver_id);
-/*					let params = {'initData': window.Telegram.WebApp.initData,
-						'creative_expression_id': this.expression_queue[this.top_card_i].id,
-						'target_user_id': this.expression_queue[this.top_card_i].value_giver_id
-					};*/
+
 
 					let current_top_card = this.top_card_i;//by the time we send and get request top_card_i will increment
-/*					fetch(window.location.origin + '/admin/telegram-api/vote-for-love-do', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json;charset=utf-8'
-						},
-						body: JSON.stringify(params)
-					})*/
+
 					fetch(URL_str).then((response) =>
 					{
 						response.json().then(data =>
@@ -1518,7 +1735,7 @@ class Carousel {
 
 							}
 						});
-					})
+					})*/
 				}
 				else
 				{
@@ -1852,7 +2069,7 @@ fetch(URL_str).then((response) =>
 	response.json().then(data => 
 		{
 		expr_queue = data;
-		//console.log (JSON.stringify(expr_queue));
+		console.log (JSON.stringify(expr_queue));
 		if(data.hasOwnProperty('error'))
 			{
 			window.Telegram.WebApp.showAlert('Error: '+data.error);
@@ -1868,6 +2085,8 @@ fetch(URL_str).then((response) =>
 			document.getElementById("keep_flying").addEventListener("click", carousel.keepFlyingButtonAction);
 			document.getElementById("open_match").addEventListener("click", carousel.openMatchButtonAction);
 			document.getElementById("end_of_flight").addEventListener("click", carousel.EndOfFlightButtonAction);
+			document.getElementById('lovedo_popup_skip').addEventListener("click", carousel.hideLoveDoPopup);
+			document.getElementById('lovedo_popup_confirm').addEventListener("click", carousel.LoveDoPopupSpendLovestar);
 			}
 		});
 
