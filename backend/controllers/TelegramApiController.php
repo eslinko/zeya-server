@@ -1952,6 +1952,8 @@ class TelegramApiController extends AppController
         $user_to = User::find()->where(['id' => $ce->value_giver_id])->one();
         Notifications::createNotification(Notifications::LOVESTAR_RECEIVED, $res['user'], $user_to);
         User::lovedo_counter_decrease($user->id);
+        MatchAction::addAction($user['id'], intval($data['creative_expression_id']), $ce->value_giver_id, 1);
+
         return ['status' => 'success'];
     }
 }
