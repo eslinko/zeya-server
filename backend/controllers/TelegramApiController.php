@@ -1423,6 +1423,7 @@ class TelegramApiController extends AppController
                     $expr['user_avatar'] = $expr_user_avatar;
                     $expr['lovestars_left'] = $user['lovedo_votes'];
                     if($expr['functionalType'] === 'LoveDO'){
+                        if($user->lovedo_votes < 1) continue;
                         $value_giver_user = User::find()->where(['id' => $expr['value_giver_id']])->one();
                         $value_giver_avatar = '';
                         $value_giver_name = '';
@@ -1466,6 +1467,7 @@ class TelegramApiController extends AppController
                     $expr['user_avatar'] = $expr_user_avatar;
                     $expr['lovestars_left'] = $user['lovedo_votes'];
                     if($expr['functionalType'] === 'LoveDO'){
+                        if($user->lovedo_votes < 1) continue;
                         $value_giver_user = User::find()->where(['id' => $expr['value_giver_id']])->one();
                         $value_giver_avatar = '';
                         $value_giver_name = '';
